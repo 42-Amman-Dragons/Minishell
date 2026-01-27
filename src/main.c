@@ -14,7 +14,9 @@ char *get_prompt(char *username, char *servername)
     user_len = ft_strlen(username);
     server_len = ft_strlen(servername);
     buff_len = ft_strlen(buff);
-    prompt = malloc(buff_len + user_len + server_len + 1);
+    prompt = malloc(buff_len + user_len + server_len + 6);
+    if(!prompt)
+        return (NULL);
     ft_memcpy(prompt, username, user_len);
     ft_memcpy(prompt + user_len, "@", 1);
     ft_memcpy(prompt + user_len + 1, servername, server_len);
@@ -24,56 +26,41 @@ char *get_prompt(char *username, char *servername)
     return(prompt);
 }
 
-void load_history()
-{
-    int fd;
-
-    fd = open("./history", O_RDWR | O_CREAT, S_IRWXU);
-    if (access(fd, F_OK) != 0)
-        ft_putstr_fd("cannot find history file\n", 2);
-    if (access(fd, R_OK) != 0)
-        ft_putstr_fd("read permission denied in the history\n", 2);
-    if (access(fd, W_OK) != 0)
-        ft_putstr_fd("write permission denied in the history\n", 2);
-    // @todo: use get next line to get history from history file and remove the \n and add it to readline history
-}
-
-// @todo: create a function to save the content of the history list to the history file 
-
-int add_to_history(char *line, t_list **history)
-{
-    t_list *node;
-
-    add_history(line);
-    node = ft_lstnew(line);
-    if(!node)
-        return(0);
-    ft_lstadd_back(history, node);
-    return(1);
-}
-
 int main() {
 
     char *line;
     char *prompt;
     t_list *history;
-
+    
+    history = NULL;
+    load_history(&history);
     prompt = get_prompt("haya", "dragons");
+    if(!prompt)
+        return (1);
     while(1)
     {
         line = readline(prompt);
+        if(!line)
+            break;
         if(line[ft_strlen(line) ] == '\0' && ft_strlen(line) != 0)
         {
             if(!add_to_history(line, &history))
             {
                 free(line);
+                line = NULL;
                 free(prompt);
                 return(1);
             }
         }
         if(ft_strncmp("exit", line, 4) == 0)
+        {
+            free(line);
+            line = NULL;
             break;
         }
+        free(line);
+        line = NULL;
+    }
+    custom_save_history(&history);
     free(prompt);
-    free(line);
 }
