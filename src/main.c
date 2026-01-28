@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include <signal.h>
 
 char *get_prompt(char *username, char *servername)
 {
@@ -31,10 +32,14 @@ int main() {
     char *line;
     char *prompt;
     t_list *history;
+    int exit_status;
     
     history = NULL;
+    exit_status = 0;
     load_history(&history);
     prompt = get_prompt("haya", "dragons");
+    signal(SIGINT, ctrl_c_handler);
+    signal(SIGQUIT, ctrl_backslash);
     if(!prompt)
         return (1);
     while(1)
@@ -43,23 +48,13 @@ int main() {
         if(!line)
             break;
         if(line[ft_strlen(line) ] == '\0' && ft_strlen(line) != 0)
-        {
             if(!add_to_history(line, &history))
             {
-                free(line);
-                line = NULL;
                 free(prompt);
                 return(1);
             }
-        }
         if(ft_strncmp("exit", line, 4) == 0)
-        {
-            free(line);
-            line = NULL;
             break;
-        }
-        free(line);
-        line = NULL;
     }
     custom_save_history(&history);
     free(prompt);

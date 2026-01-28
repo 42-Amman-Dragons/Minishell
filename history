@@ -31,3 +31,27 @@ hello
 ll
 exit
 exit
+³?
+c
+4R
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+exit
+echo $?
+exit
+exit
+exit
+exit
+exit
+exit
