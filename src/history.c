@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 14:57:32 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/01/29 10:02:06 by haya             ###   ########.fr       */
+/*   Updated: 2026/01/29 10:32:36 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ void load_history(t_list **history)
     int fd;
     char *line;
 
-    fd = open("./history", O_RDWR | O_CREAT, S_IRWXU);
-    if (access("./history", F_OK) != 0)
+    fd = open("./.history", O_RDWR | O_CREAT, S_IRWXU);
+    if (access("./.history", F_OK) != 0)
         ft_putstr_fd("cannot find history file\n", 2);
-    if (access("./history", R_OK) != 0)
+    if (access("./.history", R_OK) != 0)
         ft_putstr_fd("read permission denied in the history\n", 2);
-    if (access("./history", W_OK) != 0)
+    if (access("./.history", W_OK) != 0)
         ft_putstr_fd("write permission denied in the history\n", 2);
     while (1)
     {
@@ -68,7 +68,7 @@ void custom_save_history(t_list **history)
     int fd;
     t_list *current;
 
-    fd = open("./history", O_RDWR | O_CREAT, S_IRWXU);
+    fd = open("./.history", O_RDWR | O_CREAT, S_IRWXU);
     current = *history;
     while(current)
     {
@@ -76,7 +76,5 @@ void custom_save_history(t_list **history)
         write(fd, "\n", 1);
         current = current->next;
     }
-    ft_lstclear(history, free);
-    rl_clear_history();
     close(fd);
 }

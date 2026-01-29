@@ -8,3 +8,7 @@
 [Signals in C language](https://www.geeksforgeeks.org/c/signals-c-language/)
 
 [Understanding Signals in the C Language: Harness the Power of Asynchronous Event Handling](http://medium.com/@razika28/signals-ad83f38f80b6)
+
+[termios(3)](https://man7.org/linux/man-pages/man3/termios.3.html)
+
+[What are Exit Codes in Linux?](https://itsfoss.com/linux-exit-codes/)
