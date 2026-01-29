@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
+/*   Updated: 2026/01/29 10:03:51 by haya             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include <signal.h>
 
@@ -27,35 +39,49 @@ char *get_prompt(char *username, char *servername)
     return(prompt);
 }
 
-int main() {
+t_minishell *init_minishell()
+{
+    t_minishell *shell;
 
-    char *line;
-    char *prompt;
-    t_list *history;
-    int exit_status;
+    shell = malloc(sizeof(t_minishell));
+    if(!shell)
+        return (NULL);
+    shell->history = NULL;
+    shell->line = NULL;
+    shell->exit_status = 0;
+    load_history(&(shell->history));
+    shell->prompt = get_prompt("haya", "dragons");
+    if(!shell->prompt)
+    {
+        free_all(shell);
+        return (NULL);
+    }
+    return (shell);
+}
+
+int main() 
+{
+    t_minishell *shell;
     
-    history = NULL;
-    exit_status = 0;
-    load_history(&history);
-    prompt = get_prompt("haya", "dragons");
+    shell = init_minishell();
+    if(!shell)
+        return (1);
     signal(SIGINT, ctrl_c_handler);
     signal(SIGQUIT, ctrl_backslash);
-    if(!prompt)
-        return (1);
     while(1)
     {
-        line = readline(prompt);
-        if(!line)
+        shell->line = readline(shell->prompt);
+        if(!shell->line)
             break;
-        if(line[ft_strlen(line) ] == '\0' && ft_strlen(line) != 0)
-            if(!add_to_history(line, &history))
-            {
-                free(prompt);
+        if(add_to_history(shell->line, &(shell->history)) == -1)
+        {
+                free_all(shell);
                 return(1);
-            }
-        if(ft_strncmp("exit", line, 4) == 0)
+        }
+        if(ft_strncmp("exit", shell->line, 4) == 0)
             break;
     }
-    custom_save_history(&history);
-    free(prompt);
+    custom_save_history(&(shell->history));
+    free_all(shell);
+    return (0);
 }

@@ -3,26 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   history.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 14:57:32 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/01/27 14:57:45 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/01/29 10:02:06 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+The add history function added a line to the history linked linst and the readline history
+returnd: 
+    -1: error
+    0: fail
+    1: success
+*/
 int add_to_history(char *line, t_list **history)
 {
     t_list *node;
-
+    if(ft_strlen(line) == 0)
+        return (0);
     add_history(line);
     node = ft_lstnew(line);
     if(!node)
-        return(0);
+        return(-1);
     ft_lstadd_back(history, node);
     return(1);
 }
+
+/*
+The load history function adde history lines from a history file and added them to the history linked linst and the readline history
+*/
 
 void load_history(t_list **history)
 {
@@ -48,6 +60,9 @@ void load_history(t_list **history)
     close(fd);
 }
 
+/*
+The custom save history function saves the content of the history linked list to the history file
+*/
 void custom_save_history(t_list **history)
 {
     int fd;
