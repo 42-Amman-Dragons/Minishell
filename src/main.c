@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/01/29 15:00:30 by haya             ###   ########.fr       */
+/*   Updated: 2026/01/29 15:12:19 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,5 +102,5 @@ int main()
     }
     custom_save_history(&(shell->history));
     free_all(shell);
-    return (shell->exit_status);
+    return (0);
 }
