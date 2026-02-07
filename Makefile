@@ -1,13 +1,13 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -I./include -I./libft
+CFLAGS = -Wall -Wextra -Werror -I./include -I./libft
 DEBUG_FLAG = -g3
 LDFLAGS = -lreadline -lhistory
 
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRC = main.c history.c signals.c free_all.c
+SRC = main.c history.c signals.c free_all.c tokenization.c
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 LIBFT_DIR= ./libft
