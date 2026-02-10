@@ -7,7 +7,7 @@ LDFLAGS = -lreadline -lhistory
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRC = main.c history.c signals.c free_all.c tokenization.c parsing.c
+SRC = main.c history.c signals.c free_all.c tokenization.c parsing.c print_tree.c create_command_node.c
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 LIBFT_DIR= ./libft

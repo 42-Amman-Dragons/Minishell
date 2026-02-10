@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/08 12:45:38 by haya             ###   ########.fr       */
+/*   Updated: 2026/02/10 14:53:18 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,9 @@ void				ctrl_c_handler(int signalNumber);
 void				ctrl_backslash(int signalNumber);
 void				free_all(t_minishell *shell);
 void				*tokeniztion(char *line);
-void				parse(t_list *tokens);
-
+t_tree				*parse(t_list *tokens);
+void				print_tree(t_tree *head);
+t_tree				*create_comand_node(t_list **tokens);
+void				print_arr(char **arr);
+t_tree				*parse_tree(t_list *tokens, int *parse_error);
 #endif
