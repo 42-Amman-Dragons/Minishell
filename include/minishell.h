@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/07 02:50:01 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/02/08 12:45:38 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,28 @@ typedef struct s_token
 	char			*content;
 }					t_token;
 
+typedef struct s_tree
+{
+	char *type;
+	char **argumnts;
+	char *redir_type;
+	char *filename;
+
+	struct s_tree *left;
+	struct s_tree *right;
+} t_tree;
+
+// enum TokenTypes {
+//     WORD,
+//     MONDAY,
+//     TUESDAY,
+//     WEDNESDAY,
+//     THURSDAY,
+//     FRIDAY,
+//     SATURDAY
+// };
+
+
 int					add_to_history(char *line, t_list **history);
 void				load_history(t_list **history);
 void				custom_save_history(t_list **history);
@@ -50,5 +72,6 @@ void				ctrl_c_handler(int signalNumber);
 void				ctrl_backslash(int signalNumber);
 void				free_all(t_minishell *shell);
 void				*tokeniztion(char *line);
+void				parse(t_list *tokens);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/02/06 23:30:12 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/02/08 14:15:37 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	main(void)
 	while (1)
 	{
 		shell->line = readline(shell->prompt);
-		tokeniztion(shell->line);
+		parse(tokeniztion(shell->line));
 		if (SIGNUM != 0)
 		{
 			shell->exit_status = 128 + SIGNUM;
@@ -100,6 +100,7 @@ int	main(void)
 			shell->exit_status = 0;
 			break ;
 		}
+        
 	}
 	custom_save_history(&(shell->history));
 	free_all(shell);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:17:32 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/08 00:33:51 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/02/08 10:35:19 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ char	*extract_word(char *line, int *i)
 	char	*op_check;
 
 	start = *i;
+	// the op_check is not initialized and not updated in the loop
 	while (line[*i] && !is_whitespace(line[*i]) && !is_operator(&line[*i],
 			&op_check))
 	{
@@ -131,6 +132,7 @@ void	*tokeniztion(char *line)
 		}
 		else
 		{
+			// what about the difference between the filename and the normal comand?
 			content = extract_word(line, &i);
 			new_node = create_token_node(content, "WORD");
 		}
