@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/10 12:23:50 by haya              #+#    #+#             */
-/*   Updated: 2026/02/10 14:15:39 by haya             ###   ########.fr       */
+/*   Updated: 2026/02/11 14:05:37 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,75 @@
 //     *tokens = current;
 //     return (node);
 // }
+static char	*safe_join(char *str1, char *str2)
+{
+	char	*result;
+
+	result = ft_strjoin(str1, str2);
+	free(str1);
+	return (result);
+}
+
+void	free_splitted(char **splitted)
+{
+	int	i;
+	
+	if (!splitted)
+		return ;
+	i = 0;
+	while (splitted[i])
+	{
+		free(splitted[i]);
+		i++;
+	}
+	free(splitted);
+}
+
+char	*absoulute_path(char *cmd)
+{
+	char	*path;
+	char	**paths;
+	char	*sub;
+	int		i;
+
+	path = getenv("PATH");
+	paths = ft_split(path, ':');
+	i = 0;
+	while (paths[i])
+	{
+		sub = ft_strjoin(paths[i], "/");
+		sub = safe_join(sub, cmd);
+		if (access(sub, F_OK) == 0)
+		{
+			errno = 0;
+			free_splitted(paths);
+			return (sub);
+		}
+		free(sub);
+		i++;
+	}
+	free_splitted(paths);
+	return (NULL);
+}
+
+int ft_strcmp(char *s1, char *s2)
+{
+    int len1;
+    int len2;
+    
+    len1 = ft_strlen(s1);
+    len2 = ft_strlen(s2);
+    if(len1 != len2)
+        return (-1);
+    return (ft_strncmp(s1, s2, len1));
+}
+
+int is_builtin_function(char *token)
+{
+    if (ft_strcmp(token, "exit") == 0)
+        return (1);
+    return (0);
+}
 
 static char **generate_args(t_list *tokens, int len)
 {
@@ -63,7 +132,17 @@ static char **generate_args(t_list *tokens, int len)
             tokens = tokens->next;
             continue;
         }
-        args[i] = ((t_token *)tokens->content)->content;
+        if(i == 0 && !is_builtin_function(((t_token *)tokens->content)->content))
+        {
+            args[i] = absoulute_path(((t_token *)tokens->content)->content);
+            if(args[i] == NULL)
+            {
+                free(args);
+                return (NULL);
+            }
+        }
+        else 
+            args[i] = ((t_token *)tokens->content)->content;
         tokens = tokens->next;
         i++;
     }

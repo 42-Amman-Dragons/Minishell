@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/02/08 14:15:37 by haya             ###   ########.fr       */
+/*   Updated: 2026/02/11 11:33:13 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,13 @@ t_minishell	*init_minishell(void)
 	return (shell);
 }
 
-int	main(void)
+int	main(int argc,char **argv, char *env[])
 {
+	if(argc != 1)
+		return 1;
+	// dummy code to silent the warnings
+	if(ft_strncmp(argv[0],"",1) == 1)
+		return 1;
 	t_minishell	*shell;
 
 	shell = init_minishell();
@@ -79,7 +84,7 @@ int	main(void)
 	while (1)
 	{
 		shell->line = readline(shell->prompt);
-		parse(tokeniztion(shell->line));
+		parse_and_execute(tokeniztion(shell->line), env);
 		if (SIGNUM != 0)
 		{
 			shell->exit_status = 128 + SIGNUM;

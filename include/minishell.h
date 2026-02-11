@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/10 14:53:18 by haya             ###   ########.fr       */
+/*   Updated: 2026/02/11 14:05:44 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <stdlib.h>
 # include <sys/ioctl.h>
 # include <sys/stat.h>
+#include <sys/wait.h>
 # include <termios.h>
 
 typedef struct s_minishell
@@ -72,9 +73,11 @@ void				ctrl_c_handler(int signalNumber);
 void				ctrl_backslash(int signalNumber);
 void				free_all(t_minishell *shell);
 void				*tokeniztion(char *line);
-t_tree				*parse(t_list *tokens);
+t_tree				*parse_and_execute(t_list *tokens, char *env[]);
+void				exec_tree(t_tree *node, char *env[],int *err);
 void				print_tree(t_tree *head);
 t_tree				*create_comand_node(t_list **tokens);
 void				print_arr(char **arr);
 t_tree				*parse_tree(t_list *tokens, int *parse_error);
+int					is_builtin_function(char *token);
 #endif
