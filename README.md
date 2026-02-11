@@ -12,3 +12,5 @@
 [termios(3)](https://man7.org/linux/man-pages/man3/termios.3.html)
 
 [What are Exit Codes in Linux?](https://itsfoss.com/linux-exit-codes/)
+
+[XV6-Shell-Implementation/shell.c (github)](https://github.com/ag6288/XV6-Shell-Implementation/blob/master/shell.c)
