@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/02/11 11:33:13 by haya             ###   ########.fr       */
+/*   Updated: 2026/02/16 10:26:17 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,9 @@ t_minishell	*init_minishell(void)
 
 int	main(int argc,char **argv, char *env[])
 {
+	rl_catch_signals = 0;
 	if(argc != 1)
 		return 1;
-	// dummy code to silent the warnings
 	if(ft_strncmp(argv[0],"",1) == 1)
 		return 1;
 	t_minishell	*shell;
