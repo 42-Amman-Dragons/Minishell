@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:17:32 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/08 10:35:19 by haya             ###   ########.fr       */
+/*   Updated: 2026/02/16 11:58:54 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,9 +139,9 @@ void	*tokeniztion(char *line)
 		if (new_node)
 		{
 			ft_lstadd_back(&head, new_node);
-			ft_printf("Token: %s, Type: %s\n",
-				((t_token *)new_node->content)->content,
-				((t_token *)new_node->content)->type);
+			// ft_printf("Token: %s, Type: %s\n",
+			// 	((t_token *)new_node->content)->content,
+			// 	((t_token *)new_node->content)->type);
 		}
 		else
 		{
