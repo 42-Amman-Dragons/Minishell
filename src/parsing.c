@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/08 10:56:26 by haya              #+#    #+#             */
-/*   Updated: 2026/02/15 12:22:03 by haya             ###   ########.fr       */
+/*   Updated: 2026/02/17 14:00:44 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ t_tree *parse_and_execute(t_list *tokens, char *env[])
         free_tree(node);
         return (NULL);
     }
-    print_tree(node);
+    // print_tree(node);
 
     id = fork();
     if (id == -1)
@@ -192,12 +192,7 @@ t_tree *parse_and_execute(t_list *tokens, char *env[])
     // note if no wait happened the readline will run again mixing the outputs of the prompt with the result output from the cmd.
     // when having a pipe the readline execute before the pipe finishes. I think this because there is no inner wait inside the exec_tree
     else if(id == 0)
-        execute(node, env, &err);
-    if(err == 1)
-    {
-        free_tree(node);
-        return (NULL);
-    }
+        exec_tree(node, env);
     else{
         waitpid(id, &status, 0);
         if (WIFEXITED(status))

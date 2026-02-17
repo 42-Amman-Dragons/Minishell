@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/15 12:20:35 by haya             ###   ########.fr       */
+/*   Updated: 2026/02/17 13:59:17 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,6 @@ typedef struct s_tree
 	struct s_tree *right;
 } t_tree;
 
-// enum TokenTypes {
-//     WORD,
-//     MONDAY,
-//     TUESDAY,
-//     WEDNESDAY,
-//     THURSDAY,
-//     FRIDAY,
-//     SATURDAY
-// };
-
 
 int					add_to_history(char *line, t_list **history);
 void				load_history(t_list **history);
@@ -74,11 +64,11 @@ void				ctrl_backslash(int signalNumber);
 void				free_all(t_minishell *shell);
 void				*tokeniztion(char *line);
 t_tree				*parse_and_execute(t_list *tokens, char *env[]);
-void				exec_tree(t_tree *node, char *env[],int *err, pid_t *last_id);
 void				print_tree(t_tree *head);
 t_tree				*create_comand_node(t_list **tokens);
 void				print_arr(char **arr);
 t_tree				*parse_tree(t_list *tokens, int *parse_error);
 int					is_builtin_function(char *token);
-void				execute(t_tree *node, char *env[],int *err);
+void				exec_tree(t_tree *node, char *env[]);
+int ft_strcmp(char *s1, char *s2);
 #endif
