@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 10:40:19 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/02/07 13:33:02 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/02/16 00:13:02 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,4 @@ t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 int					ft_printf(const char *format, ...);
 char				*get_next_line(int fd);
 char				*return_line(char **line, char **buffer, int bytes_read);
-// int		print_string(char *str);
-// int		print_pointer(void *pointer);
-// int		print_number(int num);
-// int		print_unsigned(unsigned int num);
-// int		print_hexa(unsigned int num, char type);
-
 #endif

@@ -1,73 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenization.c                                     :+:      :+:    :+:   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/06 23:17:32 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/16 00:31:48 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/02/16 00:14:20 by mabuqare          #+#    #+#             */
+/*   Updated: 2026/02/16 00:31:16 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "minishell.h"
 
-
-
-t_list	*create_token_node(char *content, char *type)
+/*This function checks if the character is a white space variant*/
+int	is_whitespace(char c)
 {
-	t_token	*new_token;
-	t_list	*node;
-
-	new_token = malloc(sizeof(t_token));
-	if (!new_token)
-		return (NULL);
-	new_token->content = content;
-	new_token->type = type;
-	node = ft_lstnew(new_token);
-	if (!node)
-	{
-		free(new_token);
-		return (NULL);
-	}
-	return (node);
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
+		|| c == '\r');
 }
 
-char	*extract_word(char *line, int *i)
+/*
+This function skips i number of white spaces
+(changes the value inside the i address)
+*/
+void	skip_whitespaces(char *ptr, int *i)
 {
-	int		start;
-	char	quote;
-	char	*word;
-	char	*op_check;
-
-	start = *i;
-	// the op_check is not initialized and not updated in the loop
-	while (line[*i] && !is_whitespace(line[*i]) && !is_operator(&line[*i],
-			&op_check))
+	while (ptr[*i])
 	{
-		if (line[*i] == '\'' || line[*i] == '"')
-		{
-			quote = line[*i];
-			(*i)++;
-			while (line[*i] && line[*i] != quote)
-				(*i)++;
-		}
-		if (line[*i])
+		if (is_whitespace(ptr[*i]))
 			(*i)++;
 	}
-	word = ft_substr(line, start, *i - start);
-	return (word);
 }
 
-void	*tokeniztion(char *line)
+/*This function returns a LL of unexpanded tokens*/
+void	*tokenizer(char *line)
 {
-	t_list	*head;
-	t_list	*new_node;
-	int		i;
-	char	*type;
-	int		op_len;
-	char	*content;
+	t_list *head;
+	t_list *new_node;
+	int i;
+	char *type;
+	int op_len;
+	char *content;
 
 	if (!line)
 		return (NULL);
@@ -75,11 +48,11 @@ void	*tokeniztion(char *line)
 	i = 0;
 	while (line[i])
 	{
-		while (line[i] && is_whitespace(line[i]))
-			i++;
+		skip_whitespaces(&line[i], &i);
 		if (!line[i])
 			break ;
-		op_len = is_operator(&line[i], &type);
+		if (is_operator(&line[i], &type);)
+			= is_operator(&line[i], &type);
 		if (op_len > 0)
 		{
 			content = ft_substr(line, i, op_len);
