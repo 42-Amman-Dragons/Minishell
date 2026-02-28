@@ -79,12 +79,17 @@ int	main(int argc,char **argv, char *env[])
 	shell = init_minishell();
 	if (!shell)
 		return (1);
+	shell->env = init_mutable_env(env);
+	if (!shell->env)
+	{
+		free_all(shell);
+		return (1);
+	}
 	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_backslash);
 	while (1)
 	{
 		shell->line = readline(shell->prompt);
-		parse_and_execute(tokeniztion(shell->line), env);
 		if (SIGNUM != 0)
 		{
 			shell->exit_status = 128 + SIGNUM;
@@ -103,9 +108,26 @@ int	main(int argc,char **argv, char *env[])
 		if (ft_strncmp("exit", shell->line, 4) == 0)
 		{
 			shell->exit_status = 0;
+			free(shell->line);
+			shell->line = NULL;
 			break ;
 		}
-        
+		{
+			t_list	*tokens;
+			t_tree	*tree;
+
+			/**/
+			tokens = tokenizer(shell->line);
+			tree = build_ast(tokens);
+			init_heredocs(tree, shell);
+			expander(tree, shell);
+			//executor(tree, shell);
+			print_tree(tree);
+			free_tree(tree);
+			ft_lstclear(&tokens, free_token);
+			free(shell->line);
+			shell->line = NULL;
+		}
 	}
 	custom_save_history(&(shell->history));
 	free_all(shell);

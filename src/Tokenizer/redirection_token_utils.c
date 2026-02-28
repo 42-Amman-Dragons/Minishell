@@ -1,40 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_all.c                                         :+:      :+:    :+:   */
+/*   redirection_token_utils.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/29 09:52:18 by haya              #+#    #+#             */
-/*   Updated: 2026/02/06 23:07:51 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/02/21 16:26:38 by mabuqare          #+#    #+#             */
+/*   Updated: 2026/02/21 22:24:14 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_env(char **env)
+t_dir_mode	identify_redirection_mode(char *str, int *i)
 {
-	int	i;
-
-	if (!env)
-		return ;
-	i = 0;
-	while (env[i])
-		free(env[i++]);
-	free(env);
-}
-
-void	free_all(t_minishell *shell)
-{
-	if (!shell)
-		return ;
-	tcsetattr(STDIN_FILENO, TCSANOW, &(shell->original_termos));
-	if (shell->history)
-		ft_lstclear(&(shell->history), free);
-	if (shell->prompt)
-		free(shell->prompt);
-	if (shell->line)
-		free(shell->line);
-	free_env(shell->env);
-	free(shell);
+	if (ft_strncmp("<<", str, 2) == 0)
+	{
+		(*i) += 2;
+		return (DIR_IN_HEREDOC);
+	}
+	else if (ft_strncmp(">>", str, 2) == 0)
+	{
+		(*i) += 2;
+		return (DIR_OUT_APPEND);
+	}
+	else if (ft_strncmp("<", str, 1) == 0)
+	{
+		(*i)++;
+		return (DIR_IN_FILE);
+	}
+	else if (ft_strncmp(">", str, 1) == 0)
+	{
+		(*i)++;
+		return (DIR_OUT_TRUNC);
+	}
+	return (DIR_IN_FILE);
 }
