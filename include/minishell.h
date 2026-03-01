@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/22 22:26:56 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/01 12:39:39 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,5 +212,14 @@ void			skip_whitespaces(char *ptr, int *i);
 t_dir_mode		identify_redirection_mode(char *str, int *i);
 char			*extract_word(char *str, int *i);
 int				word_boundary(char *str);
+
+
+// Execution
+void			exec_tree(t_tree *node, char *env[]);
+void			exec_cmd(t_tree *node, char *env[]);
+void			exec_pipe(t_tree *node, char *env[]);
+void			exec_and_or(t_tree *node, char *env[]);
+void			secure_close(int fd); // @TODO:this is general not execution move it to another section
+void			handle_redirections(t_list *redir);
 
 #endif

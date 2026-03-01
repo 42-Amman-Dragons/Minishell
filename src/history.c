@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   history.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 14:57:32 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/02/06 23:07:50 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/01 11:46:01 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	load_history(t_list **history)
 			line[ft_strlen(line) - 1] = '\0';
 		add_to_history(line, history);
 	}
-	close(fd);
+	secure_close(fd);
 }
 
 /*
@@ -77,5 +77,5 @@ void	custom_save_history(t_list **history)
 		write(fd, "\n", 1);
 		current = current->next;
 	}
-	close(fd);
+	secure_close(fd);
 }

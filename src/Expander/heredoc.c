@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 15:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/27 15:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/01 11:46:05 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static void	setup_heredoc_fd(t_redir_data *rd, t_minishell *shell, int idx)
 	if (fd < 0)
 		return (free(tmp));
 	heredoc_line_input(fd, limiter, rd, shell);
-	close(fd);
+	secure_close(fd);
 	rd->heredoc_fd = open(tmp, O_RDONLY);
 	unlink(tmp);
 	free(tmp);

@@ -19,10 +19,14 @@ PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_fre
 EXPAND_DIR = Expander
 EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c mutable_env.c
 
+EXECUTION_DIR = Execution
+EXECUTION_SRC = execution.c execute_cmd.c execute_pipe.c execute_oper.c execution_utils.c
+
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
-	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o))
+	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXECUTION_DIR)/, $(EXECUTION_SRC:.c=.o)) \
 
 LIBFT_DIR= ./libft
 LIBFT= ./libft/libft.a
@@ -64,6 +68,10 @@ $(OBJ_DIR)/$(PARSER_DIR)/%.o: $(SRC_DIR)/$(PARSER_DIR)/%.c
 
 $(OBJ_DIR)/$(EXPAND_DIR)/%.o: $(SRC_DIR)/$(EXPAND_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/$(EXPAND_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(EXECUTION_DIR)/%.o: $(SRC_DIR)/$(EXECUTION_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(EXECUTION_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
