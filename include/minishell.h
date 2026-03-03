@@ -145,8 +145,13 @@ void			load_history(t_list **history);
 void			custom_save_history(t_list **history);
 void			ctrl_c_handler(int signalNumber);
 void			ctrl_backslash(int signalNumber);
-char			**init_mutable_env(char **env);
+int				init_mutable_env(char **env, t_minishell *shell);
 void			free_env(char **env);
+char			*get_env_value(char *name, char **env);
+int				set_env_value(char *name, char *value, t_minishell *shell);
+void			del_env_value(char *name, t_minishell *shell);
+int				add_env(char *entry, t_minishell *shell);
+char			*mk_env_entry(char *name, char *value);
 void			free_all(t_minishell *shell);
 void			print_tree(t_tree *head);
 void			print_arr(char **arr);
@@ -212,5 +217,16 @@ void			skip_whitespaces(char *ptr, int *i);
 t_dir_mode		identify_redirection_mode(char *str, int *i);
 char			*extract_word(char *str, int *i);
 int				word_boundary(char *str);
+
+/*Builtins*/
+int				is_builtin(char *cmd);
+int				ft_echo(char **args);
+int				ft_cd(char **args, t_minishell *shell);
+int				ft_pwd(t_minishell *shell);
+int				ft_export(char **args, t_minishell *shell);
+int				print_sorted_env(t_minishell *shell);
+int				ft_unset(char **args, t_minishell *shell);
+int				ft_env(t_minishell *shell);
+int				ft_exit(char **args, t_minishell *shell);
 
 #endif

@@ -17,12 +17,17 @@ PARSER_DIR = Parser
 PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_free.c
 
 EXPAND_DIR = Expander
-EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c mutable_env.c
+EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c
+
+BUILTIN_DIR = Builtins
+BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c exit.c export.c export_sort.c \
+	unset.c mutable_env.c env_crud.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
-	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o))
+	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o))
 
 LIBFT_DIR= ./libft
 LIBFT= ./libft/libft.a
@@ -64,6 +69,10 @@ $(OBJ_DIR)/$(PARSER_DIR)/%.o: $(SRC_DIR)/$(PARSER_DIR)/%.c
 
 $(OBJ_DIR)/$(EXPAND_DIR)/%.o: $(SRC_DIR)/$(EXPAND_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/$(EXPAND_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(BUILTIN_DIR)/%.o: $(SRC_DIR)/$(BUILTIN_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(BUILTIN_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

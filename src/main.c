@@ -79,8 +79,7 @@ int	main(int argc,char **argv, char *env[])
 	shell = init_minishell();
 	if (!shell)
 		return (1);
-	shell->env = init_mutable_env(env);
-	if (!shell->env)
+	if (init_mutable_env(env, shell) != 0)
 	{
 		free_all(shell);
 		return (1);

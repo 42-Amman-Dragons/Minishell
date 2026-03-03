@@ -44,24 +44,7 @@ char	*append_str(char *result, char *s)
 	return (joined);
 }
 
-static char	*get_env_value(char *name, char **env)
-{
-	int	i;
-	int	len;
 
-	if (!env)
-		return (ft_strdup(""));
-	len = ft_strlen(name);
-	i = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], name, len) == 0
-			&& env[i][len] == '=')
-			return (ft_strdup(&env[i][len + 1]));
-		i++;
-	}
-	return (ft_strdup(""));
-}
 
 static char	*extract_var_name(char *str, int *i)
 {
@@ -95,6 +78,6 @@ char	*expand_dollar(char *word, t_expand *ctx)
 	value = get_env_value(name, ctx->env);
 	free(name);
 	if (!value)
-		return (NULL);
-	return (value);
+		return (ft_strdup(""));
+	return (ft_strdup(value));
 }

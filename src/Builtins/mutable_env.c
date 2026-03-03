@@ -3,44 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   mutable_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/28 00:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/03 04:36:00 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	free_partial(char **arr, int count)
+
+
+char	*mk_env_entry(char *name, char *value)
 {
-	while (count-- > 0)
-		free(arr[count]);
-	free(arr);
+	char	*tmp;
+	char	*entry;
+
+	tmp = ft_strjoin(name, "=");
+	if (!tmp)
+		return (NULL);
+	entry = ft_strjoin(tmp, value);
+	free(tmp);
+	return (entry);
 }
 
-char	**init_mutable_env(char **env)
+int	init_mutable_env(char **env, t_minishell *shell)
 {
-	char	**new_env;
+	char	*entry;
 	int		i;
 
-	i = 0;
-	while (env[i])
-		i++;
-	new_env = malloc(sizeof(char *) * (i + 1));
-	if (!new_env)
-		return (NULL);
+	shell->env = malloc(sizeof(char *));
+	if (!shell->env)
+		return (1);
+	shell->env[0] = NULL;
 	i = 0;
 	while (env[i])
 	{
-		new_env[i] = ft_strdup(env[i]);
-		if (!new_env[i])
+		entry = ft_strdup(env[i]);
+		if (!entry || add_env(entry, shell) != 0)
 		{
-			free_partial(new_env, i);
-			return (NULL);
+			free(entry);
+			free_env(shell->env);
+			shell->env = NULL;
+			return (1);
 		}
 		i++;
 	}
-	new_env[i] = NULL;
-	return (new_env);
+	return (0);
 }
