@@ -7,8 +7,29 @@ LDFLAGS = -lreadline -lhistory
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRC = main.c history.c signals.c free_all.c tokenization.c parsing.c print_tree.c create_command_node.c execution.c
-OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
+SRC = history.c signals.c free_all.c print_tree.c
+
+TOK_DIR = Tokenizer
+TOK_SRC = tokenizer.c tokenizer_utils.c tokenizer_factory.c \
+	word_token_utils.c redirection_token_utils.c
+
+PARSER_DIR = Parser
+PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_free.c
+
+EXPAND_DIR = Expander
+EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c mutable_env.c
+
+EXECUTION_DIR = Execution
+EXECUTION_SRC = execution.c execute_cmd.c execute_pipe.c execute_oper.c execution_utils.c execute_subshell.c
+
+MAIN_DIR = Main
+MAIN_SRC = main.c build_in.c init_minishell.c parse_and_execute.c
+OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXECUTION_DIR)/, $(EXECUTION_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
 
 LIBFT_DIR= ./libft
 LIBFT= ./libft/libft.a
@@ -40,6 +61,26 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJ_DIR)/$(TOK_DIR)/%.o: $(SRC_DIR)/$(TOK_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(TOK_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(PARSER_DIR)/%.o: $(SRC_DIR)/$(PARSER_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(PARSER_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(EXPAND_DIR)/%.o: $(SRC_DIR)/$(EXPAND_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(EXPAND_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(EXECUTION_DIR)/%.o: $(SRC_DIR)/$(EXECUTION_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(EXECUTION_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(MAIN_DIR)/%.o: $(SRC_DIR)/$(MAIN_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(MAIN_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
 	rm -f $(LIBFT_OBJ) $(OBJ) $(LIB)
 	make clean -C $(LIBFT_DIR)
@@ -49,3 +90,6 @@ fclean: clean
 	make fclean -C $(LIBFT_DIR)
 
 re: fclean all
+
+TOK_OBJ = $(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o))
+

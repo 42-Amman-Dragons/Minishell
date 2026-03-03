@@ -1,27 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   init_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/02/16 10:26:17 by hal-lawa         ###   ########.fr       */
+/*   Created: 2026/03/03 13:30:32 by haya              #+#    #+#             */
+/*   Updated: 2026/03/03 13:54:29 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <signal.h>
 
-int			SIGNUM = 0;
-
-char	*get_prompt(char *username, char *servername)
+char *get_prompt(char *username, char *servername)
 {
-	char	buff[PATH_MAX];
-	char	*prompt;
-	int		user_len;
-	int		server_len;
-	int		buff_len;
+	char buff[PATH_MAX];
+	char *prompt;
+	int user_len;
+	int server_len;
+	int buff_len;
 
 	ft_bzero(buff, PATH_MAX);
 	if (getcwd(buff, PATH_MAX) == NULL)
@@ -41,9 +38,9 @@ char	*get_prompt(char *username, char *servername)
 	return (prompt);
 }
 
-t_minishell	*init_minishell(void)
+t_minishell *init_minishell(void)
 {
-	t_minishell	*shell;
+	t_minishell *shell;
 
 	shell = malloc(sizeof(t_minishell));
 	if (!shell)
@@ -51,7 +48,8 @@ t_minishell	*init_minishell(void)
 	shell->history = NULL;
 	shell->line = NULL;
 	shell->exit_status = 0;
-	load_history(&(shell->history));
+	if(load_history(&(shell->history)) == -1)
+		free(shell);
 	shell->prompt = get_prompt("haya", "dragons");
 	tcgetattr(STDIN_FILENO, &(shell->original_termos));
 	shell->new_termos = shell->original_termos;
@@ -62,52 +60,9 @@ t_minishell	*init_minishell(void)
 	if (!shell->prompt)
 	{
 		free_all(shell);
+		/* no more references to shell */
+		shell = NULL;
 		return (NULL);
 	}
 	return (shell);
-}
-
-int	main(int argc,char **argv, char *env[])
-{
-	rl_catch_signals = 0;
-	if(argc != 1)
-		return 1;
-	if(ft_strncmp(argv[0],"",1) == 1)
-		return 1;
-	t_minishell	*shell;
-
-	shell = init_minishell();
-	if (!shell)
-		return (1);
-	signal(SIGINT, ctrl_c_handler);
-	signal(SIGQUIT, ctrl_backslash);
-	while (1)
-	{
-		shell->line = readline(shell->prompt);
-		parse_and_execute(tokeniztion(shell->line), env);
-		if (SIGNUM != 0)
-		{
-			shell->exit_status = 128 + SIGNUM;
-			SIGNUM = 0;
-		}
-		if (!shell->line)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (add_to_history(shell->line, &(shell->history)) == -1)
-		{
-			free_all(shell);
-			return (1);
-		}
-		if (ft_strncmp("exit", shell->line, 4) == 0)
-		{
-			shell->exit_status = 0;
-			break ;
-		}
-        
-	}
-	custom_save_history(&(shell->history));
-	free_all(shell);
-	return (0);
 }

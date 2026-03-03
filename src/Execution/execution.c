@@ -1,37 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/01 09:12:58 by haya              #+#    #+#             */
-/*   Updated: 2026/03/01 09:12:59 by haya             ###   ########.fr       */
+/*   Created: 2026/02/11 10:38:10 by haya              #+#    #+#             */
+/*   Updated: 2026/03/03 11:08:07 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int	SIGNUM;
-
-void	ctrl_c_handler(int signalNumber)
+void exec_tree(t_tree *node, t_minishell *shell)
 {
-	SIGNUM = signalNumber;
-	rl_replace_line("", 1);
-	printf("^C\n");
-	rl_redisplay();
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	ctrl_d_handler(int signalNumber)
-{
-	SIGNUM = signalNumber;
-	exit(0);
-}
-
-void	ctrl_backslash(int signalNumber)
-{
-	SIGNUM = signalNumber;
-	rl_redisplay();
+    if (!node)
+        return;
+    if (node->type == NODE_AND || node->type == NODE_OR)
+    {
+        exec_and_or(node, shell);
+        return;
+    }
+    if (node->type == NODE_PIPE)
+    {
+        exec_pipe(node, shell);
+        return;
+    }
+    if (node->type == NODE_SUBSHELL)
+    {
+        exec_subshell(node, shell);
+        return;
+    }
+    exec_cmd(node, shell);
 }
