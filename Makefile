@@ -7,7 +7,7 @@ LDFLAGS = -lreadline -lhistory
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRC = main.c history.c signals.c free_all.c print_tree.c
+SRC = history.c signals.c free_all.c print_tree.c
 
 TOK_DIR = Tokenizer
 TOK_SRC = tokenizer.c tokenizer_utils.c tokenizer_factory.c \
@@ -20,13 +20,16 @@ EXPAND_DIR = Expander
 EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c mutable_env.c
 
 EXECUTION_DIR = Execution
-EXECUTION_SRC = execution.c execute_cmd.c execute_pipe.c execute_oper.c execution_utils.c
+EXECUTION_SRC = execution.c execute_cmd.c execute_pipe.c execute_oper.c execution_utils.c execute_subshell.c
 
+MAIN_DIR = Main
+MAIN_SRC = main.c build_in.c init_minishell.c parse_and_execute.c
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXECUTION_DIR)/, $(EXECUTION_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
 
 LIBFT_DIR= ./libft
 LIBFT= ./libft/libft.a
@@ -72,6 +75,10 @@ $(OBJ_DIR)/$(EXPAND_DIR)/%.o: $(SRC_DIR)/$(EXPAND_DIR)/%.c
 
 $(OBJ_DIR)/$(EXECUTION_DIR)/%.o: $(SRC_DIR)/$(EXECUTION_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/$(EXECUTION_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(MAIN_DIR)/%.o: $(SRC_DIR)/$(MAIN_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(MAIN_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

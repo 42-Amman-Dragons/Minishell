@@ -6,28 +6,41 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:42:48 by haya              #+#    #+#             */
-/*   Updated: 2026/03/01 14:04:16 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/03 13:03:53 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void secure_close(int fd)
+void secure_close(int fd,t_tree *node ,t_minishell *shell)
 {
     if(close(fd) == -1)
     {
         perror("Close file error");
-        exit (1);
+        free_and_exit(node, shell, 1);
     }
 }
 
-void handle_redirections(t_list *redir)
+void free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
 {
+    free_tree(node);
+    free_all(shell);
+    exit(exit_code);
+}
+
+void handle_redirections(t_tree *node, t_minishell *shell)
+{
+    t_list *redir;
     t_redir_data *redir_data;
     int fd;
     
+    redir = NULL;
     redir_data = NULL;
     fd = 0;
+    if(node->type == NODE_CMD)
+        redir = node->data.cmd.redirections;
+    else if (node->type == NODE_SUBSHELL)
+        redir = node->data.subshell.redirections;
     while(redir)
     {
         redir_data = (t_redir_data *)redir->content;        
@@ -48,7 +61,7 @@ void handle_redirections(t_list *redir)
             if(fd == -1)
             {
                 perror(redir_data->filename);
-                exit (1);
+                free_and_exit(node, shell, 1);
             }
             dup2(fd, STDOUT_FILENO);
         }
@@ -62,11 +75,11 @@ void handle_redirections(t_list *redir)
             if(fd == -1)
             {
                 perror(redir_data->filename);
-                exit (1);
+                free_and_exit(node, shell, 1);
             }
             dup2(fd, STDOUT_FILENO);
         }
-        secure_close(fd);
+        secure_close(fd, node, shell);
         redir = redir->next;
     }
 }
