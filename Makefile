@@ -7,7 +7,7 @@ LDFLAGS = -lreadline -lhistory
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRC = main.c history.c signals.c free_all.c print_tree.c
+SRC = history.c signals.c free_all.c print_tree.c
 
 TOK_DIR = Tokenizer
 TOK_SRC = tokenizer.c tokenizer_utils.c tokenizer_factory.c \
@@ -17,11 +17,7 @@ PARSER_DIR = Parser
 PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_free.c
 
 EXPAND_DIR = Expander
-EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c
-
-BUILTIN_DIR = Builtins
-BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c exit.c export.c export_sort.c \
-	unset.c mutable_env.c env_crud.c
+EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c mutable_env.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \

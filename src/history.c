@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   history.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 14:57:32 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/02/06 23:07:50 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/03 13:10:42 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,14 @@ int	add_to_history(char *line, t_list **history)
 The load history function adde history lines from a history file and added them to the history linked linst and the readline history
 */
 
-void	load_history(t_list **history)
+int	load_history(t_list **history)
 {
 	int		fd;
 	char	*line;
 
 	fd = open("./.history", O_RDWR | O_CREAT, S_IRWXU);
+	if (fd == -1)
+		return -1;
 	if (access("./.history", F_OK) != 0)
 		ft_putstr_fd("cannot find history file\n", 2);
 	if (access("./.history", R_OK) != 0)
@@ -58,24 +60,26 @@ void	load_history(t_list **history)
 			line[ft_strlen(line) - 1] = '\0';
 		add_to_history(line, history);
 	}
-	close(fd);
+	if(close(fd) == -1)
+		return -1;
+	return (0);
 }
 
 /*
 The custom save history function saves the content of the history linked list to the history file
 */
-void	custom_save_history(t_list **history)
+void	custom_save_history(t_minishell *shell)
 {
 	int fd;
 	t_list *current;
 
 	fd = open("./.history", O_RDWR | O_CREAT, S_IRWXU);
-	current = *history;
+	current = shell->history;
 	while (current)
 	{
 		write(fd, current->content, ft_strlen(current->content));
 		write(fd, "\n", 1);
 		current = current->next;
 	}
-	close(fd);
+	secure_close(fd, NULL, shell);
 }

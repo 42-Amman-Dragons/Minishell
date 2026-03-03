@@ -1,37 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   build_in.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/01 09:12:58 by haya              #+#    #+#             */
-/*   Updated: 2026/03/01 09:12:59 by haya             ###   ########.fr       */
+/*   Created: 2026/03/03 13:17:34 by haya              #+#    #+#             */
+/*   Updated: 2026/03/03 13:46:55 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int	SIGNUM;
-
-void	ctrl_c_handler(int signalNumber)
+int ft_strcmp(char *s1, char *s2)
 {
-	SIGNUM = signalNumber;
-	rl_replace_line("", 1);
-	printf("^C\n");
-	rl_redisplay();
-	rl_on_new_line();
-	rl_redisplay();
+	int len1;
+	int len2;
+
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	if (len1 != len2)
+		return (-1);
+	return (ft_strncmp(s1, s2, len1));
 }
 
-void	ctrl_d_handler(int signalNumber)
+int is_builtin_function(char *token)
 {
-	SIGNUM = signalNumber;
-	exit(0);
-}
-
-void	ctrl_backslash(int signalNumber)
-{
-	SIGNUM = signalNumber;
-	rl_redisplay();
+	if (ft_strcmp(token, "exit") == 0)
+		return (1);
+	return (0);
 }

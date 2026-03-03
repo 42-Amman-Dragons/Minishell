@@ -3,17 +3,61 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:17:32 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/16 00:31:48 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/02/16 11:58:54 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minishell.h"
 
+int	is_whitespace(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
+		|| c == '\r');
+}
 
+int	is_operator(char *s, char **type)
+{
+	if (ft_strncmp(">>", s, 2) == 0)
+	{
+		*type = "DIR_OUT_FILE";
+		return (2);
+	}
+	if (ft_strncmp("<<", s, 2) == 0)
+	{
+		*type = "DIR_IN_HEREDOC";
+		return (2);
+	}
+	if (ft_strncmp("&&", s, 2) == 0)
+	{
+		*type = "AND";
+		return (2);
+	}
+	if (ft_strncmp("||", s, 2) == 0)
+	{
+		*type = "OR";
+		return (2);
+	}
+	if (ft_strncmp("|", s, 1) == 0)
+	{
+		*type = "PIPE";
+		return (1);
+	}
+	if (ft_strncmp(">", s, 1) == 0)
+	{
+		*type = "DIR_OUT";
+		return (1);
+	}
+	if (ft_strncmp("<", s, 1) == 0)
+	{
+		*type = "DIR_IN";
+		return (1);
+	}
+	return (0);
+}
 
 t_list	*create_token_node(char *content, char *type)
 {
@@ -95,9 +139,9 @@ void	*tokeniztion(char *line)
 		if (new_node)
 		{
 			ft_lstadd_back(&head, new_node);
-			ft_printf("Token: %s, Type: %s\n",
-				((t_token *)new_node->content)->content,
-				((t_token *)new_node->content)->type);
+			// ft_printf("Token: %s, Type: %s\n",
+			// 	((t_token *)new_node->content)->content,
+			// 	((t_token *)new_node->content)->type);
 		}
 		else
 		{
