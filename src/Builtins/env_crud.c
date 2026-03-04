@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-
-
 static int	update_env(char *entry, char *name, t_minishell *shell)
 {
 	int	len;

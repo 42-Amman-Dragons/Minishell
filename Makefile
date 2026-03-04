@@ -17,13 +17,26 @@ PARSER_DIR = Parser
 PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_free.c
 
 EXPAND_DIR = Expander
-EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c mutable_env.c
+EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c
+
+BUILTIN_DIR = Builtins
+BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c export.c export_sort.c \
+	unset.c mutable_env.c env_crud.c
+
+MAIN_DIR = Main
+MAIN_SRC = main.c init_minishell.c parse_and_execute.c
+
+EXEC_DIR = Execution
+EXEC_SRC = execution.c execute_cmd.c execute_oper.c execute_pipe.c \
+	execute_subshell.c execution_utils.c handle_redirections.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o)) \
-	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o))
+	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXEC_DIR)/, $(EXEC_SRC:.c=.o))
 
 LIBFT_DIR= ./libft
 LIBFT= ./libft/libft.a
@@ -71,8 +84,16 @@ $(OBJ_DIR)/$(BUILTIN_DIR)/%.o: $(SRC_DIR)/$(BUILTIN_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/$(BUILTIN_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJ_DIR)/$(MAIN_DIR)/%.o: $(SRC_DIR)/$(MAIN_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(MAIN_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(EXEC_DIR)/%.o: $(SRC_DIR)/$(EXEC_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(EXEC_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	rm -f $(LIBFT_OBJ) $(OBJ) $(LIB)
+	rm -rf $(OBJ_DIR)
 	make clean -C $(LIBFT_DIR)
 
 fclean: clean

@@ -35,3 +35,31 @@ int	is_builtin(char *cmd)
 	}
 	return (-1);
 }
+
+int	ft_exit(char **args, t_minishell *shell)
+{
+	(void)args;
+	ft_putstr_fd("exit\n", 1);
+	free_all(shell);
+	exit(0);
+	return (0);
+}
+
+int	call_builtin(int idx, char **args, t_minishell *shell)
+{
+	if (idx == 0)
+		return (ft_echo(args));
+	if (idx == 1)
+		return (ft_cd(args, shell));
+	if (idx == 2)
+		return (ft_pwd(shell));
+	if (idx == 3)
+		return (ft_export(args, shell));
+	if (idx == 4)
+		return (ft_unset(args, shell));
+	if (idx == 5)
+		return (ft_env(shell));
+	if (idx == 6)
+		return (ft_exit(args, shell));
+	return (1);
+}

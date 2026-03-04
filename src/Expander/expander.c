@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/27 04:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/04 22:14:24 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 
 static void	expand_node(t_tree *node, t_minishell *shell)
 {
-	int		i;
-	int		count;
+	int	i;
+	int	count;
 
 	i = 0;
 	count = 0;
