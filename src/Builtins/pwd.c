@@ -1,32 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   build_in.c                                         :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/03 13:17:34 by haya              #+#    #+#             */
-/*   Updated: 2026/03/03 13:46:55 by haya             ###   ########.fr       */
+/*   Created: 2026/03/03 02:57:13 by mabuqare          #+#    #+#             */
+/*   Updated: 2026/03/03 03:23:00 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_strcmp(char *s1, char *s2)
+int	ft_pwd(t_minishell *shell)
 {
-	int len1;
-	int len2;
+	char	*pwd;
 
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	if (len1 != len2)
-		return (-1);
-	return (ft_strncmp(s1, s2, len1));
-}
-
-int is_builtin_function(char *token)
-{
-	if (ft_strcmp(token, "exit") == 0)
-		return (1);
+	pwd = get_env_value("PWD", shell->env);
+	if (!pwd)
+	{
+		pwd = getcwd(NULL, 0);
+		if (!pwd)
+			return (1);
+		ft_putstr_fd(pwd, 1);
+		write(1, "\n", 1);
+		free(pwd);
+		return (0);
+	}
+	ft_putstr_fd(pwd, 1);
+	write(1, "\n", 1);
 	return (0);
 }

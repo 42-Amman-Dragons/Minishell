@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 15:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/03 13:13:19 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/04 22:14:43 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ static void	setup_heredoc_fd(t_redir_data *rd, t_minishell *shell, int idx)
 	if (fd < 0)
 		return (free(tmp));
 	heredoc_line_input(fd, limiter, rd, shell);
-	secure_close(fd,NULL, shell);  // @mabuquare: will the tree be initialted at this part of the code ?
+	secure_close(fd, NULL, shell);
+		// @mabuquare: will the tree be initialted at this part of the code ?
 	rd->heredoc_fd = open(tmp, O_RDONLY);
 	unlink(tmp);
 	free(tmp);

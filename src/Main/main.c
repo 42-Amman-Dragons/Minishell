@@ -3,34 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/03/03 13:46:27 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/04 23:00:00 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <signal.h>
 
-int SIGNUM = 0;
+int	SIGNUM = 0;
 
+static void	handle_signal_status(t_minishell *shell)
+{
+	if (SIGNUM != 0)
+	{
+		shell->exit_status = 128 + SIGNUM;
+		SIGNUM = 0;
+	}
+}
 
-int runshell(t_minishell *shell)
+int	runshell(t_minishell *shell)
 {
 	while (1)
 	{
-		parse_and_execute(shell);
 		shell->line = readline(shell->prompt);
-		if (SIGNUM != 0)
-		{
-			shell->exit_status = 128 + SIGNUM;
-			SIGNUM = 0;
-		}
+		handle_signal_status(shell);
 		if (!shell->line)
 		{
 			printf("exit\n");
-			break;
+			break ;
+		}
+		if (ft_strlen(shell->line) == 0)
+		{
+			free(shell->line);
+			shell->line = NULL;
+			continue ;
 		}
 		if (add_to_history(shell->line, &(shell->history)) == -1)
 		{
@@ -38,42 +47,35 @@ int runshell(t_minishell *shell)
 			shell = NULL;
 			return (-1);
 		}
-		if (ft_strncmp("exit", shell->line, 4) == 0)
-		{
-			break;
-		}
+		parse_and_execute(shell);
+		free(shell->line);
+		shell->line = NULL;
 	}
-	return(0);
+	return (0);
 }
 
-
-int main(int argc, char **argv, char *env[])
+int	main(int argc, char **argv, char *env[])
 {
-	if (argc != 1)
-		return 1;
-	// dummy code to silent the warnings
-	if (ft_strncmp(argv[0], "", 1) == 1)
-		return 1;
-	t_minishell *shell;
+	t_minishell	*shell;
 
+	(void)argv;
+	if (argc != 1)
+		return (1);
 	shell = init_minishell();
 	if (!shell)
 		return (1);
-	shell->env = init_mutable_env(env);
-	if (!shell->env)
+	if (init_mutable_env(env, shell) != 0)
 	{
 		free_all(shell);
-		/* clear local pointer so valgrind doesn’t see it on exit */
 		shell = NULL;
 		return (1);
 	}
 	signal(SIGINT, ctrl_c_handler);
 	signal(SIGQUIT, ctrl_backslash);
-	if(runshell(shell) == -1)
+	if (runshell(shell) == -1)
 		return (1);
 	custom_save_history(shell);
 	free_all(shell);
-	/* avoid regaining pointer after free */
 	shell = NULL;
 	return (0);
 }

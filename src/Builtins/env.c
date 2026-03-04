@@ -1,29 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution_utils.c                                  :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/01 11:42:48 by haya              #+#    #+#             */
-/*   Updated: 2026/03/04 22:13:49 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/03 04:19:00 by mabuqare          #+#    #+#             */
+/*   Updated: 2026/03/03 04:19:00 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	secure_close(int fd, t_tree *node, t_minishell *shell)
+int	ft_env(t_minishell *shell)
 {
-	if (close(fd) == -1)
-	{
-		perror("Close file error");
-		free_and_exit(node, shell, 1);
-	}
-}
+	int	i;
 
-void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
-{
-	free_tree(node);
-	free_all(shell);
-	exit(exit_code);
+	i = 0;
+	while (shell->env[i])
+	{
+		if (ft_strchr(shell->env[i], '='))
+		{
+			ft_putstr_fd(shell->env[i], 1);
+			ft_putchar_fd('\n', 1);
+		}
+		i++;
+	}
+	return (0);
 }

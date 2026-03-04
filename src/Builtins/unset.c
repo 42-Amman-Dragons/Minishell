@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execution_utils.c                                  :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/01 11:42:48 by haya              #+#    #+#             */
-/*   Updated: 2026/03/04 22:13:49 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/03 04:19:00 by mabuqare          #+#    #+#             */
+/*   Updated: 2026/03/03 04:29:00 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	secure_close(int fd, t_tree *node, t_minishell *shell)
+int	ft_unset(char **args, t_minishell *shell)
 {
-	if (close(fd) == -1)
-	{
-		perror("Close file error");
-		free_and_exit(node, shell, 1);
-	}
-}
+	int	i;
 
-void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
-{
-	free_tree(node);
-	free_all(shell);
-	exit(exit_code);
+	i = 1;
+	while (args[i])
+	{
+		del_env_value(args[i], shell);
+		i++;
+	}
+	return (0);
 }

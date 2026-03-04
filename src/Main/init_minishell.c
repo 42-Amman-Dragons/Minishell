@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   init_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:30:32 by haya              #+#    #+#             */
-/*   Updated: 2026/03/03 13:54:29 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/04 22:15:59 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *get_prompt(char *username, char *servername)
+char	*get_prompt(char *username, char *servername)
 {
-	char buff[PATH_MAX];
-	char *prompt;
-	int user_len;
-	int server_len;
-	int buff_len;
+	char	buff[PATH_MAX];
+	char	*prompt;
+	int		user_len;
+	int		server_len;
+	int		buff_len;
 
 	ft_bzero(buff, PATH_MAX);
 	if (getcwd(buff, PATH_MAX) == NULL)
@@ -38,9 +38,9 @@ char *get_prompt(char *username, char *servername)
 	return (prompt);
 }
 
-t_minishell *init_minishell(void)
+t_minishell	*init_minishell(void)
 {
-	t_minishell *shell;
+	t_minishell	*shell;
 
 	shell = malloc(sizeof(t_minishell));
 	if (!shell)
@@ -48,7 +48,7 @@ t_minishell *init_minishell(void)
 	shell->history = NULL;
 	shell->line = NULL;
 	shell->exit_status = 0;
-	if(load_history(&(shell->history)) == -1)
+	if (load_history(&(shell->history)) == -1)
 		free(shell);
 	shell->prompt = get_prompt("haya", "dragons");
 	tcgetattr(STDIN_FILENO, &(shell->original_termos));

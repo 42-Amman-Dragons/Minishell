@@ -3,30 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/03 13:14:46 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/04 22:12:45 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *safe_join(char *str1, char *str2)
+static char	*safe_join(char *str1, char *str2)
 {
-	char *result;
+	char	*result;
 
 	result = ft_strjoin(str1, str2);
 	free(str1);
 	return (result);
 }
 
-void free_splitted(char **splitted)
+void	free_splitted(char **splitted)
 {
-	int i;
+	int	i;
 
 	if (!splitted)
-		return;
+		return ;
 	i = 0;
 	while (splitted[i])
 	{
@@ -36,12 +36,12 @@ void free_splitted(char **splitted)
 	free(splitted);
 }
 
-char *absoulute_path(char *cmd)
+char	*absoulute_path(char *cmd)
 {
-	char *path;
-	char **paths;
-	char *sub;
-	int i;
+	char	*path;
+	char	**paths;
+	char	*sub;
+	int		i;
 
 	path = getenv("PATH");
 	paths = ft_split(path, ':');
@@ -63,7 +63,7 @@ char *absoulute_path(char *cmd)
 	return (NULL);
 }
 
-void exec_cmd(t_tree *node,t_minishell *shell)
+void	exec_cmd(t_tree *node, t_minishell *shell)
 {
 	handle_redirections(node, shell);
 	if (!node->data.cmd.args)
