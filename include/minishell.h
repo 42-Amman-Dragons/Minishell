@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/04 22:12:27 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/05 13:23:16 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,13 +231,13 @@ int					ft_exit(char **args, t_minishell *shell);
 int					call_builtin(int idx, char **args, t_minishell *shell);
 
 // Execution
-void				exec_tree(t_tree *node, t_minishell *shell);
-void				exec_cmd(t_tree *node, t_minishell *shell);
-void				exec_pipe(t_tree *node, t_minishell *shell);
-void				exec_and_or(t_tree *node, t_minishell *shell);
+int 				exec_tree(t_tree *node, t_minishell *shell);
+int 				exec_cmd(t_tree *node, t_minishell *shell);
+int					exec_pipe(t_tree *node, t_minishell *shell);
+int 				exec_and_or(t_tree *node, t_minishell *shell);
 void				secure_close(int fd, t_tree *node, t_minishell *shell);
 void				handle_redirections(t_tree *node, t_minishell *shell);
-void				exec_subshell(t_tree *node, t_minishell *shell);
+int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
 
@@ -246,6 +246,6 @@ t_minishell			*init_minishell(void);
 void				parse_and_execute(t_minishell *shell);
 void				free_splitted(char **splitted);
 char				*get_prompt(char *username, char *servername);
-char				*absoulute_path(char *cmd);
+char				*absoulute_path(char *cmd, char **env);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/03/04 23:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/05 13:41:04 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ int	runshell(t_minishell *shell)
 int	main(int argc, char **argv, char *env[])
 {
 	t_minishell	*shell;
-
 	(void)argv;
 	if (argc != 1)
 		return (1);
