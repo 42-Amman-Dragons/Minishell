@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_execute.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/04 23:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/05 12:49:53 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,7 @@ static t_tree	*build_tree(t_minishell *shell)
 
 static void	exec_external(t_tree *tree, t_minishell *shell)
 {
-	int	id;
-	int	status;
-
-	id = fork();
-	if (id == -1)
-	{
-		perror("minishell: fork");
-		return ;
-	}
-	if (id == 0)
-		exec_tree(tree, shell);
-	waitpid(id, &status, 0);
-	if (WIFEXITED(status))
-		shell->exit_status = WEXITSTATUS(status);
+	exec_tree(tree, shell);
 	rl_on_new_line();
 }
 

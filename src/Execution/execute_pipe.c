@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:14:26 by haya              #+#    #+#             */
-/*   Updated: 2026/03/04 22:13:15 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/05 12:32:30 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,23 +83,29 @@ static pid_t	handle_right_pipe(int *fd, t_tree *node, t_minishell *shell)
 	return (right_id);
 }
 
-void	exec_pipe(t_tree *node, t_minishell *shell)
+int	exec_pipe(t_tree *node, t_minishell *shell)
 {
 	int		fd[2];
 	pid_t	right_id;
 	int		exit_code;
+	int temp_stdin;
+	int temp_stdout;
 
+	temp_stdin = STDIN_FILENO;
+	temp_stdout = STDOUT_FILENO;
 	right_id = 0;
 	exit_code = 0;
 	if (pipe(fd) == -1)
 	{
 		perror("PIPE ERROR: ");
-		free_and_exit(node, shell, 1);
+		return (1);
 	}
 	handle_left_pipe(fd, node, shell);
 	right_id = handle_right_pipe(fd, node, shell);
-	secure_close(fd[0], node, shell);
-	secure_close(fd[1], node, shell);
+	close(fd[0]);
+	close(fd[1]);
+	dup2(STDIN_FILENO, temp_stdin);
+	dup2(STDOUT_FILENO, temp_stdout);
 	exit_code = wait_all(right_id);
-	free_and_exit(node, shell, exit_code);
+	return(exit_code);
 }

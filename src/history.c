@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/27 14:57:32 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/03/03 13:10:42 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/05 13:15:58 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	add_to_history(char *line, t_list **history)
 	if (ft_strlen(line) == 0)
 		return (0);
 	add_history(line);
-	node = ft_lstnew(line);
+	node = ft_lstnew(ft_strdup(line));
 	if (!node)
 		return (-1);
 	ft_lstadd_back(history, node);
