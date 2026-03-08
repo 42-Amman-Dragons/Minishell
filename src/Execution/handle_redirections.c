@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 22:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/04 22:14:13 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/08 16:56:24 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static int	redirect_input(t_redir_data *rd, t_tree *node, t_minishell *shell)
 {
 	int	fd;
 
+	// @TODO: bash: $ltrl: ambiguous redirect
 	if (access(rd->filename, R_OK) != 0)
 	{
 		ft_putstr_fd(rd->filename, 2);

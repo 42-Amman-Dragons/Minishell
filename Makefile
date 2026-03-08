@@ -18,6 +18,7 @@ PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_fre
 
 EXPAND_DIR = Expander
 EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c
+EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c expand_utils.c heredoc.c expand_astersk.c
 
 BUILTIN_DIR = Builtins
 BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c export.c export_sort.c \
@@ -34,6 +35,14 @@ OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXEC_DIR)/, $(EXEC_SRC:.c=.o))
+
+BONUS_OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC_BONUS:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXEC_DIR)/, $(EXEC_SRC:.c=.o))
@@ -58,6 +67,9 @@ all: $(NAME)
 $(NAME) :  $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
 
+bonus:  $(LIBFT) $(BONUS_OBJ) 
+	$(CC) $(CFLAGS) $(BONUS_OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
+	
 debug: $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
 

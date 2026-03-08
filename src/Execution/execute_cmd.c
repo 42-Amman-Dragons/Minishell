@@ -6,27 +6,27 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/05 13:32:35 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/08 17:35:32 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*safe_join(char *str1, char *str2)
+static char *safe_join(char *str1, char *str2)
 {
-	char	*result;
+	char *result;
 
 	result = ft_strjoin(str1, str2);
 	free(str1);
 	return (result);
 }
 
-void	free_splitted(char **splitted)
+void free_splitted(char **splitted)
 {
-	int	i;
+	int i;
 
 	if (!splitted)
-		return ;
+		return;
 	i = 0;
 	while (splitted[i])
 	{
@@ -36,11 +36,10 @@ void	free_splitted(char **splitted)
 	free(splitted);
 }
 
-
-static char	*get_path(char **env)
+static char *get_path(char **env)
 {
-	char	*path;
-	int		i;
+	char *path;
+	int i;
 
 	i = 0;
 	path = NULL;
@@ -56,14 +55,16 @@ static char	*get_path(char **env)
 	return (path);
 }
 
-char	*absoulute_path(char *cmd, char **env)
+char *absoulute_path(char *cmd, char **env)
 {
-	char	*path;
-	char	**paths;
-	char	*sub;
-	int		i;
+	char *path;
+	char **paths;
+	char *sub;
+	int i;
 
-	path =  get_path(env);
+	path = get_path(env);
+	if (!path)
+		return (NULL);
 	paths = ft_split(path, ':');
 	i = 0;
 	while (paths[i])
@@ -87,9 +88,24 @@ void execve_cmd(t_tree *node, t_minishell *shell)
 {
 	char *cmd_name;
 	handle_redirections(node, shell);
-	if (!node->data.cmd.args)
+	/*
+	______________________
+	Bash behaviour:
+	______________________
+	haya@haya:~/minishell$ ls l*welkfj
+	ls: cannot access 'l*welkfj': No such file or directory
+	haya@haya:~/minishell$ echo $?
+	2
+	haya@haya:~/minishell$ ls l*welkfj > outfile
+	ls: cannot access 'l*welkfj': No such file or directory
+	haya@haya:~/minishell$ echo $?
+	2
+	*/
+	if (!node->data.cmd.args) //@: take a closer look at this logic
 	{
-		free_and_exit(node, shell, 0);
+		if (node->data.cmd.redirections)
+			free_and_exit(node, shell, 0);
+		free_and_exit(node, shell, 1);
 	}
 	cmd_name = ft_strdup(node->data.cmd.args[0]);
 	node->data.cmd.args[0] = absoulute_path(node->data.cmd.args[0], shell->env);
@@ -110,17 +126,18 @@ void execve_cmd(t_tree *node, t_minishell *shell)
 	free_and_exit(node, shell, 0);
 }
 
-int	exec_cmd(t_tree *node, t_minishell *shell)
+int exec_cmd(t_tree *node, t_minishell *shell)
 {
-	int	id;
-	int	status;
+	int id;
+	int status;
 	int idx;
 
 	idx = -1;
-	if(node->data.cmd.args)
+	if (node->data.cmd.args)
 	{
+		//@TODO: handle_redirections(node, shell);
 		idx = is_builtin(node->data.cmd.args[0]);
-		if ( idx >= 0)
+		if (idx >= 0)
 			return (call_builtin(idx, node->data.cmd.args, shell));
 	}
 	id = fork();
