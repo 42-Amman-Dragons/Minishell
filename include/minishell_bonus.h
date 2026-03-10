@@ -38,7 +38,8 @@ typedef enum e_tokenType
 	OR,
 	OPEN_PAREN,
 	CLOSE_PAREN,
-	ASTERISK
+	ASTERISK,
+	BACKGROUND
 }					t_tokenType;
 
 typedef enum e_dir_mode
@@ -146,8 +147,11 @@ typedef struct s_tree
 int					add_to_history(char *line, t_list **history);
 int					load_history(t_list **history);
 void				custom_save_history(t_minishell *shell);
-void				ctrl_c_handler(int signalNumber);
-void				ctrl_backslash(int signalNumber);
+void				handle_sigint(int sig);
+void				set_signals_prompt(void);
+void				set_signals_exec(void);
+void				set_signals_child(void);
+void				set_signals_heredoc(void);
 int					init_mutable_env(char **env, t_minishell *shell);
 void				free_env(char **env);
 char				*get_env_value(char *name, char **env);
@@ -201,7 +205,7 @@ char				*expand_word(char *word, char **env, int exit_status);
 char				*expand_dollar(char *word, t_expand *ctx);
 char				*append_char(char *result, char c);
 char				*append_str(char *result, char *s);
-void				init_heredocs(t_tree *tree, t_minishell *shell);
+int					init_heredocs(t_tree *tree, t_minishell *shell);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
 char				**expand_one_arg(char **args, int i, t_minishell *shell);
@@ -213,6 +217,7 @@ t_list				*tokenizer(char *line);
 void				free_token(void *ptr);
 t_token				*creat_token(char *str, int *i);
 t_token				*create_pipe_token(char *str, int *i);
+t_token				*create_background_token(char *str, int *i);
 t_token				*create_redirect_token(char *str, int *i);
 t_token				*create_and_or_token(char *str, int *i);
 t_token				*create_paren_token(char *str, int *i);
@@ -241,7 +246,7 @@ int 				exec_cmd(t_tree *node, t_minishell *shell);
 int					exec_pipe(t_tree *node, t_minishell *shell);
 int 				exec_and_or(t_tree *node, t_minishell *shell);
 void				secure_close(int fd, t_tree *node, t_minishell *shell);
-void				handle_redirections(t_tree *node, t_minishell *shell);
+int					handle_redirections(t_tree *node, t_minishell *shell);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);

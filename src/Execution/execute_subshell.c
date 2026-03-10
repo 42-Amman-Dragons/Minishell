@@ -18,6 +18,8 @@ static int	wait_exit_code(pid_t pid)
 
 	status = 0;
 	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (0);
@@ -28,19 +30,24 @@ int	exec_subshell(t_tree *node, t_minishell *shell)
 	pid_t	pid;
 	int		exit_code;
 
+	set_signals_exec();
 	pid = fork();
 	exit_code = 0;
 	if (pid == -1)
 	{
 		perror("Fork Error");
-		return(1);
+		set_signals_prompt();
+		return (1);
 	}
 	if (pid == 0)
 	{
-		handle_redirections(node, shell);
+		set_signals_child();
+		if (handle_redirections(node, shell) == -1)
+			free_and_exit(node, shell, 1);
 		exec_tree(node->data.subshell.child, shell);
-		free_and_exit(node, shell, 0); // Most likely a dead code.
+		free_and_exit(node, shell, 0);
 	}
 	exit_code = wait_exit_code(pid);
-	return(exit_code);
+	set_signals_prompt();
+	return (exit_code);
 }

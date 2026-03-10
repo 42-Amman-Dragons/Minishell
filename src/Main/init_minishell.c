@@ -49,7 +49,10 @@ t_minishell	*init_minishell(void)
 	shell->line = NULL;
 	shell->exit_status = 0;
 	if (load_history(&(shell->history)) == -1)
+	{
 		free(shell);
+		return (NULL);
+	}
 	shell->prompt = get_prompt("haya", "dragons");
 	tcgetattr(STDIN_FILENO, &(shell->original_termos));
 	shell->new_termos = shell->original_termos;

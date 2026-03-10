@@ -32,6 +32,8 @@ t_token	*creat_token(char *str, int *i)
 	type = identify_token(str);
 	if (type == PIPE)
 		return (create_pipe_token(str, i));
+	else if (type == BACKGROUND)
+		return (create_background_token(str, i));
 	else if (type == REDIRECT)
 		return (create_redirect_token(str, i));
 	else if (type == AND || type == OR)

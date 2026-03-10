@@ -91,42 +91,44 @@ char **generate_expanded_list(char **args, int i, char *expanded)
 	return(new_args);
 }
 
- char **add_to_args(char **args, int i, char *expanded)
+ char **add_to_args(char **args, int i, char *expanded, int is_wc)
 {
-	if(expanded && contains(expanded, ' ') == 1)
+	if (is_wc && expanded && contains(expanded, ' ') == 1)
 		args = generate_expanded_list(args, i, expanded);
 	else
 	{
 		free(args[i]);
 		args[i] = expanded;
 	}
-	return(args);
+	return (args);
 }
 
-char 	**expand_one_arg(char **args, int i, t_minishell *shell)
+char	**expand_one_arg(char **args, int i, t_minishell *shell)
 {
 	char	*expanded;
 	int		quoted;
+	int		is_wc; // this means 
 
 	quoted = word_has_quotes(args[i]);
+	is_wc = (!quoted && contains(args[i], '*'));
 	expanded = expand_word(args[i], shell->env, shell->exit_status);
 	if (!expanded)
 		return (args);
 	if (!quoted && expanded[0] == '\0')
 	{
-		if(contains(args[i], '*'))
+		if (is_wc)
 		{
-			ft_putstr_fd("minishell: ", 2); 
+			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd("no matches found: ", 2);
 			ft_putstr_fd(args[i], 2);
 			ft_putstr_fd("\n", 2);
 			free(expanded);
 			expanded = NULL;
-			return(NULL);
+			return (NULL);
 		}
 		free(expanded);
 		expanded = NULL;
 	}
-	args = add_to_args(args, i, expanded);
-	return(args);
+	args = add_to_args(args, i, expanded, is_wc);
+	return (args);
 }

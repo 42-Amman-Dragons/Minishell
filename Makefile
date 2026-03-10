@@ -67,9 +67,12 @@ all: $(NAME)
 $(NAME) :  $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
 
-bonus:  $(LIBFT) $(BONUS_OBJ) 
+bonus: .bonus
+
+.bonus: $(LIBFT) $(BONUS_OBJ)
 	$(CC) $(CFLAGS) $(BONUS_OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
-	
+	@touch .bonus
+
 debug: $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
 
@@ -105,7 +108,7 @@ $(OBJ_DIR)/$(EXEC_DIR)/%.o: $(SRC_DIR)/$(EXEC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_DIR) .bonus
 	make clean -C $(LIBFT_DIR)
 
 fclean: clean

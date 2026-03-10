@@ -16,18 +16,14 @@ static int	redirect_input(t_redir_data *rd, t_tree *node, t_minishell *shell)
 {
 	int	fd;
 
-	// @TODO: bash: $ltrl: ambiguous redirect
-	if (access(rd->filename, R_OK) != 0)
-	{
-		ft_putstr_fd(rd->filename, 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-		return (-1);
-	}
+	(void)node;
+	(void)shell;
 	fd = open(rd->filename, O_RDONLY);
 	if (fd == -1)
 	{
+		ft_putstr_fd("minishell: ", 2);
 		perror(rd->filename);
-		free_and_exit(node, shell, 1);
+		return (-1);
 	}
 	dup2(fd, STDIN_FILENO);
 	close(fd);
@@ -38,11 +34,14 @@ static int	redirect_output(t_redir_data *rd, t_tree *node, t_minishell *shell)
 {
 	int	fd;
 
+	(void)node;
+	(void)shell;
 	fd = open(rd->filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
+		ft_putstr_fd("minishell: ", 2);
 		perror(rd->filename);
-		free_and_exit(node, shell, 1);
+		return (-1);
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
@@ -53,11 +52,14 @@ static int	redirect_append(t_redir_data *rd, t_tree *node, t_minishell *shell)
 {
 	int	fd;
 
+	(void)node;
+	(void)shell;
 	fd = open(rd->filename, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
+		ft_putstr_fd("minishell: ", 2);
 		perror(rd->filename);
-		free_and_exit(node, shell, 1);
+		return (-1);
 	}
 	dup2(fd, STDOUT_FILENO);
 	close(fd);
@@ -67,10 +69,11 @@ static int	redirect_append(t_redir_data *rd, t_tree *node, t_minishell *shell)
 static int	redirect_heredoc(t_redir_data *rd)
 {
 	dup2(rd->heredoc_fd, STDIN_FILENO);
+	close(rd->heredoc_fd);
 	return (0);
 }
 
-void	handle_redirections(t_tree *node, t_minishell *shell)
+int		handle_redirections(t_tree *node, t_minishell *shell)
 {
 	t_list			*redir;
 	t_redir_data	*rd;
@@ -86,14 +89,21 @@ void	handle_redirections(t_tree *node, t_minishell *shell)
 		if (rd->mode == DIR_IN_FILE)
 		{
 			if (redirect_input(rd, node, shell) == -1)
-				return ;
+				return (-1);
 		}
 		else if (rd->mode == DIR_OUT_TRUNC)
-			redirect_output(rd, node, shell);
+		{
+			if (redirect_output(rd, node, shell) == -1)
+				return (-1);
+		}
 		else if (rd->mode == DIR_IN_HEREDOC)
 			redirect_heredoc(rd);
 		else if (rd->mode == DIR_OUT_APPEND)
-			redirect_append(rd, node, shell);
+		{
+			if (redirect_append(rd, node, shell) == -1)
+				return (-1);
+		}
 		redir = redir->next;
 	}
+	return (0);
 }

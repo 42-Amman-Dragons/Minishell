@@ -43,7 +43,8 @@ t_tree	*parse_logic_expr(t_list **cur, int *err)
 	left = parse_pipe_seq(cur, err);
 	if (*err)
 		return (NULL);
-	while (cur_type(cur) == AND || cur_type(cur) == OR)
+	while (cur_type(cur) == AND || cur_type(cur) == OR
+		|| cur_type(cur) == BACKGROUND)
 	{
 		if (cur_type(cur) == AND)
 			type = NODE_AND;

@@ -59,6 +59,7 @@ int	load_history(t_list **history)
 		if (line[ft_strlen(line) - 1] == '\n')
 			line[ft_strlen(line) - 1] = '\0';
 		add_to_history(line, history);
+		free(line);
 	}
 	if(close(fd) == -1)
 		return -1;

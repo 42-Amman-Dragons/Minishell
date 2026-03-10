@@ -69,8 +69,7 @@ int	main(int argc, char **argv, char *env[])
 		shell = NULL;
 		return (1);
 	}
-	signal(SIGINT, ctrl_c_handler);
-	signal(SIGQUIT, ctrl_backslash);
+	set_signals_prompt();
 	if (runshell(shell) == -1)
 		return (1);
 	custom_save_history(shell);
