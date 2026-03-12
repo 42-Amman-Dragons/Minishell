@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:18 by haya              #+#    #+#             */
-/*   Updated: 2026/03/05 13:12:10 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/12 11:54:29 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,11 @@ void free_all(t_minishell *shell)
 	shell->history = NULL;
 	if (shell->prompt)
 		free(shell->prompt);
-	free_env(shell->env);
-	shell->env = NULL;
+	if(shell->env)
+	{
+		free_env(shell->env);
+		shell->env = NULL;
+	}
 	ft_bzero(shell, sizeof(*shell));
 	free(shell);
 }

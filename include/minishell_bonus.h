@@ -6,14 +6,13 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/08 17:54:18 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/12 17:25:43 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_BONUS_H
 # define MINISHELL_BONUS_H
 
-// # define _DEFAULT_SOURCE
 # include "fcntl.h"
 # include "libft.h"
 # include <errno.h>
@@ -28,6 +27,12 @@
 # include <termios.h>
 #include <dirent.h>
 #include <sys/types.h>
+
+# define DRAGON_GREEN "\001\033[1;32m\002"
+# define DRAGON_CYAN "\001\033[0;36m\002"
+# define SUCESS_EMOJI "🐉"
+# define ERROR_EMOJI "🔥"
+# define RESET "\001\033[0m\002"
 
 typedef enum e_tokenType
 {
@@ -163,7 +168,7 @@ void				free_all(t_minishell *shell);
 void				print_tree(t_tree *head);
 void				print_arr(char **arr);
 int					calc_len_args(char **args);
-
+void				update_prompt_path(t_minishell *shell);
 /*Parser*/
 t_tree				*build_ast(t_list *tokens);
 t_tree				*parse_logic_expr(t_list **cur, int *err);
@@ -251,11 +256,17 @@ int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
 
+
 // Main
 t_minishell			*init_minishell(void);
 void				parse_and_execute(t_minishell *shell);
 void				free_splitted(char **splitted);
-char				*get_prompt(char *username, char *servername);
+char				*get_prompt(t_minishell *shell);
 char				*absoulute_path(char *cmd, char **env);
+char				*safe_join(char *str1, char *str2);
+void				consider_home_dir(char *buff, char **env);
+void				change_color(char **prompt, char *color);
+void				prepare_prompt_beggining(char **prompt,t_minishell *shell);
+void				prepare_prompt_path(char **prompt, char *buff);
 
 #endif

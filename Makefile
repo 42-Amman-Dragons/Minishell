@@ -7,7 +7,7 @@ LDFLAGS = -lreadline -lhistory
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRC = history.c signals.c free_all.c print_tree.c
+SRC = history.c signals.c free_all.c 
 
 TOK_DIR = Tokenizer
 TOK_SRC = tokenizer.c tokenizer_utils.c tokenizer_factory.c \
@@ -25,7 +25,7 @@ BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c export.c export_sort.c 
 	unset.c mutable_env.c env_crud.c
 
 MAIN_DIR = Main
-MAIN_SRC = main.c init_minishell.c parse_and_execute.c
+MAIN_SRC = main.c init_minishell.c parse_and_execute.c prompt.c prompt_utils.c
 
 EXEC_DIR = Execution
 EXEC_SRC = execution.c execute_cmd.c execute_oper.c execute_pipe.c \
@@ -73,8 +73,8 @@ bonus: .bonus
 	$(CC) $(CFLAGS) $(BONUS_OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
 	@touch .bonus
 
-debug: $(LIBFT) $(OBJ)
-	$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
+debug: CFLAGS += $(DEBUG_FLAG)
+debug: re
 
 $(LIBFT): $(LIBFT_OBJ)
 	make bonus -C $(LIBFT_DIR)

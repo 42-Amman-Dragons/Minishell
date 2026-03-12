@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/08 17:55:29 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/12 17:26:20 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static void	handle_squote(char *word, t_expand *ctx)
 		ctx->result = append_char(ctx->result, word[ctx->i++]);
 }
 
-// @TODO: The quotes skip any additional spaces.
 static void	handle_dquote(char *word, t_expand *ctx)
 {
 	if (word[ctx->i] == '"')

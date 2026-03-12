@@ -3,30 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 09:12:58 by haya              #+#    #+#             */
-/*   Updated: 2026/03/10 16:54:23 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/12 17:29:25 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <signal.h>
 
-extern int	SIGNUM;
+extern int g_SIGNUM;
 
-void	handle_sigint(int sig)
+// @TODO: @mabuquare update the dragon emoji status when SIGINT
+void handle_sigint(int sig)
 {
-	SIGNUM = sig;
+	g_SIGNUM = sig;
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
-void	set_signals_prompt(void)
+void set_signals_prompt(void)
 {
-	struct sigaction	sa;
+	struct sigaction sa;
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
@@ -36,9 +37,9 @@ void	set_signals_prompt(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void	set_signals_exec(void)
+void set_signals_exec(void)
 {
-	struct sigaction	sa;
+	struct sigaction sa;
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
@@ -47,9 +48,9 @@ void	set_signals_exec(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void	set_signals_child(void)
+void set_signals_child(void)
 {
-	struct sigaction	sa;
+	struct sigaction sa;
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
@@ -58,9 +59,9 @@ void	set_signals_child(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void	set_signals_heredoc(void)
+void set_signals_heredoc(void)
 {
-	struct sigaction	sa;
+	struct sigaction sa;
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;

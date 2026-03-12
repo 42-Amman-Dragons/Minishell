@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 12:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/08 17:55:50 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/12 17:13:57 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,13 +118,9 @@ char	**expand_one_arg(char **args, int i, t_minishell *shell)
 	{
 		if (is_wc)
 		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd("no matches found: ", 2);
-			ft_putstr_fd(args[i], 2);
-			ft_putstr_fd("\n", 2);
 			free(expanded);
 			expanded = NULL;
-			return (NULL);
+			return (args);
 		}
 		free(expanded);
 		expanded = NULL;

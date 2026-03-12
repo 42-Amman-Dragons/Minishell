@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/08 11:04:31 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/12 15:02:23 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@
 # include <termios.h>
 #include <dirent.h>
 #include <sys/types.h>
+
+# define DRAGON_GREEN "\001\033[1;32m\002"
+# define DRAGON_CYAN "\001\033[0;36m\002"
+# define SUCESS_EMOJI "🐉"
+# define ERROR_EMOJI "🔥"
+# define RESET "\001\033[0m\002"
+
 
 typedef enum e_tokenType
 {
@@ -101,6 +108,8 @@ typedef struct s_minishell
 	struct termios	original_termos;
 	int				is_interactive;
 	int				exit_status;
+	char			*username;
+	char			*servername;
 }					t_minishell;
 
 /*AST Node Types*/
@@ -163,6 +172,7 @@ void				free_all(t_minishell *shell);
 void				print_tree(t_tree *head);
 void				print_arr(char **arr);
 int					calc_len_args(char **args);
+void				update_prompt_path(t_minishell *shell);
 
 /*Parser*/
 t_tree				*build_ast(t_list *tokens);
@@ -255,7 +265,11 @@ void				free_and_exit(t_tree *node, t_minishell *shell,
 t_minishell			*init_minishell(void);
 void				parse_and_execute(t_minishell *shell);
 void				free_splitted(char **splitted);
-char				*get_prompt(char *username, char *servername);
+char				*get_prompt(t_minishell *shell);
 char				*absoulute_path(char *cmd, char **env);
-
+char				*safe_join(char *str1, char *str2);
+void				consider_home_dir(char *buff, char **env);
+void				change_color(char **prompt, char *color);
+void				prepare_prompt_beggining(char **prompt,t_minishell *shell);
+void				prepare_prompt_path(char **prompt, char *buff);
 #endif

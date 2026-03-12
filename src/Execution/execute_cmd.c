@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/09 02:36:59 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/12 17:24:04 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*safe_join(char *str1, char *str2)
+char	*safe_join(char *str1, char *str2)
 {
 	char	*result;
 
