@@ -12,62 +12,18 @@
 
 #include "minishell.h"
 
-// static int	handel_left_oper(t_tree *node, t_minishell *shell)
-// {
-// 	pid_t	left_id;
-// 	int		status;
-// 	int		left_exit_code;
-
-// 	left_exit_code = 0;
-// 	left_id = fork();
-// 	status = 0;
-// 	if (left_id == -1)
-// 	{
-// 		perror("PIPE ERROR: ");
-// 		return(1);
-// 	}
-// 	else if (left_id == 0)
-// 	{
-// 		exit(exec_tree(node->data.oper.left, shell));
-// 	}
-// 	waitpid(left_id, &status, 0);
-// 	if (WIFEXITED(status))
-// 		left_exit_code = WEXITSTATUS(status);
-// 	return (left_exit_code);
-// }
-
-// static int	handle_right_oper(t_tree *node, t_minishell *shell)
-// {
-// 	pid_t	right_id;
-// 	int		status;
-// 	int		right_exit_code;
-
-// 	right_id = fork();
-// 	if (right_id == -1)
-// 	{
-// 		perror("PIPE ERROR: ");
-// 		return(1);
-// 	}
-// 	else if (right_id == 0)
-// 	{
-// 		exit(exec_tree(node->data.oper.right, shell));
-// 	}
-// 	waitpid(right_id, &status, 0);
-// 	if (WIFEXITED(status))
-// 		right_exit_code = WEXITSTATUS(status);
-// 	return (right_exit_code);
-// }
-
 int	exec_and_or(t_tree *node, t_minishell *shell)
 {	
 	int left_exit_code;
 	int right_exit_code;
 
 	left_exit_code = exec_tree(node->data.oper.left, shell);
+	shell->exit_status = left_exit_code;
 	if (node->type == NODE_AND && left_exit_code != 0)
-		return(left_exit_code);
+		return (left_exit_code);
 	else if (node->type == NODE_OR && left_exit_code == 0)
-		return(left_exit_code);
+		return (left_exit_code);
 	right_exit_code = exec_tree(node->data.oper.right, shell);
-	return(right_exit_code);
+	shell->exit_status = right_exit_code;
+	return (right_exit_code);
 }

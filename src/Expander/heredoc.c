@@ -3,19 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 15:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/04 22:14:43 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/12 17:29:25 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	push_heredoc_line(int fd, char *line, t_redir_data *rd,
-		t_minishell *shell)
+extern int g_SIGNUM;
+
+static void push_heredoc_line(int fd, char *line, t_redir_data *rd,
+							  t_minishell *shell)
 {
-	char	*expanded;
+	char *expanded;
 
 	if (rd->heredoc_expand)
 	{
@@ -34,79 +36,132 @@ static void	push_heredoc_line(int fd, char *line, t_redir_data *rd,
 	}
 }
 
-static void	heredoc_line_input(int fd, char *limiter, t_redir_data *rd,
-		t_minishell *shell)
+static void heredoc_child(int fd, char *limiter, t_redir_data *rd,
+						  t_minishell *shell)
 {
-	char	*line;
+	char *line;
 
+	set_signals_child();
+	if (!isatty(STDIN_FILENO))
+	{
+		close(fd);
+		exit(0);
+	}
 	line = readline("> ");
 	while (line)
 	{
-		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0
-			&& ft_strlen(line) == ft_strlen(limiter))
+		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0 && ft_strlen(line) == ft_strlen(limiter))
 		{
 			free(line);
-			break ;
+			break;
 		}
 		push_heredoc_line(fd, line, rd, shell);
 		free(line);
 		line = readline("> ");
 	}
+	close(fd);
+	exit(0);
 }
 
-static void	setup_heredoc_fd(t_redir_data *rd, t_minishell *shell, int idx)
+static int setup_heredoc_fd(t_redir_data *rd, t_minishell *shell, int idx)
 {
-	int		fd;
-	char	*limiter;
-	char	*num;
-	char	*tmp;
+	int fd;
+	pid_t pid;
+	int status;
+	char *num;
+	char *tmp;
 
-	limiter = expand_word(rd->filename, NULL, 0);
-	free(rd->filename);
-	rd->filename = limiter;
 	num = ft_itoa(idx);
 	tmp = ft_strjoin("/tmp/.minishell_heredoc_", num);
 	free(num);
 	fd = open(tmp, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
-		return (free(tmp));
-	heredoc_line_input(fd, limiter, rd, shell);
-	secure_close(fd, NULL, shell);
-		// @mabuquare: will the tree be initialted at this part of the code ?
+		return (free(tmp), -1);
+	set_signals_exec();
+	pid = fork();
+	if (pid == 0)
+		heredoc_child(fd, rd->filename, rd, shell);
+	close(fd);
+	waitpid(pid, &status, 0);
+	set_signals_prompt();
+	if (WIFSIGNALED(status))
+	{
+		g_SIGNUM = WTERMSIG(status);
+		write(1, "\n", 1);
+		return (unlink(tmp), free(tmp), -1);
+	}
 	rd->heredoc_fd = open(tmp, O_RDONLY);
 	unlink(tmp);
 	free(tmp);
+	return (0);
 }
 
-static void	process_redir_list(t_list *redirs, t_minishell *shell, int *idx)
+static char *strip_quotes(char *str)
 {
-	t_redir_data	*rd;
+	char *result;
+	int i;
+	int j;
+	int sq;
+	int dq;
+
+	result = malloc(ft_strlen(str) + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	sq = 0;
+	dq = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' && !dq)
+			sq = !sq;
+		else if (str[i] == '"' && !sq)
+			dq = !dq;
+		else
+			result[j++] = str[i];
+		i++;
+	}
+	result[j] = '\0';
+	return (result);
+}
+
+static int process_redir_list(t_list *redirs, t_minishell *shell, int *idx)
+{
+	t_redir_data *rd;
+	char *stripped;
 
 	while (redirs)
 	{
 		rd = (t_redir_data *)redirs->content;
 		if (rd->mode == DIR_IN_HEREDOC)
-			setup_heredoc_fd(rd, shell, (*idx)++);
+		{
+			stripped = strip_quotes(rd->filename);
+			free(rd->filename);
+			rd->filename = stripped;
+			if (setup_heredoc_fd(rd, shell, (*idx)++) == -1)
+				return (-1);
+		}
 		redirs = redirs->next;
 	}
+	return (0);
 }
 
-void	init_heredocs(t_tree *tree, t_minishell *shell)
+int init_heredocs(t_tree *tree, t_minishell *shell)
 {
-	static int	idx = 0;
+	static int idx = 0;
 
 	if (!tree)
-		return ;
+		return (0);
 	if (tree->type == NODE_CMD)
-		process_redir_list(tree->data.cmd.redirections, shell, &idx);
+		return (process_redir_list(tree->data.cmd.redirections, shell, &idx));
 	else if (tree->type == NODE_SUBSHELL)
 	{
-		process_redir_list(tree->data.subshell.redirections, shell, &idx);
-		init_heredocs(tree->data.subshell.child, shell);
+		if (process_redir_list(tree->data.subshell.redirections, shell, &idx) ==
+			-1)
+			return (-1);
+		return (init_heredocs(tree->data.subshell.child, shell));
 	}
-	else
-	{
-		init_heredocs(tree->data.oper.left, shell);
-		init_heredocs(tree->data.oper.right, shell);
-	}
+	if (init_heredocs(tree->data.oper.left, shell) == -1)
+		return (-1);
+	return (init_heredocs(tree->data.oper.right, shell));
 }

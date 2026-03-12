@@ -7,7 +7,7 @@ LDFLAGS = -lreadline -lhistory
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRC = history.c signals.c free_all.c print_tree.c
+SRC = history.c signals.c free_all.c 
 
 TOK_DIR = Tokenizer
 TOK_SRC = tokenizer.c tokenizer_utils.c tokenizer_factory.c \
@@ -18,13 +18,14 @@ PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_fre
 
 EXPAND_DIR = Expander
 EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c
+EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c expand_utils.c heredoc.c expand_astersk.c
 
 BUILTIN_DIR = Builtins
 BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c export.c export_sort.c \
 	unset.c mutable_env.c env_crud.c
 
 MAIN_DIR = Main
-MAIN_SRC = main.c init_minishell.c parse_and_execute.c
+MAIN_SRC = main.c init_minishell.c parse_and_execute.c prompt.c prompt_utils.c
 
 EXEC_DIR = Execution
 EXEC_SRC = execution.c execute_cmd.c execute_oper.c execute_pipe.c \
@@ -34,6 +35,14 @@ OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXEC_DIR)/, $(EXEC_SRC:.c=.o))
+
+BONUS_OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC_BONUS:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXEC_DIR)/, $(EXEC_SRC:.c=.o))
@@ -58,8 +67,14 @@ all: $(NAME)
 $(NAME) :  $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
 
-debug: $(LIBFT) $(OBJ)
-	$(CC) $(CFLAGS) $(DEBUG_FLAG) $(OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
+bonus: .bonus
+
+.bonus: $(LIBFT) $(BONUS_OBJ)
+	$(CC) $(CFLAGS) $(BONUS_OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
+	@touch .bonus
+
+debug: CFLAGS += $(DEBUG_FLAG)
+debug: re
 
 $(LIBFT): $(LIBFT_OBJ)
 	make bonus -C $(LIBFT_DIR)
@@ -93,7 +108,7 @@ $(OBJ_DIR)/$(EXEC_DIR)/%.o: $(SRC_DIR)/$(EXEC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJ_DIR)
+	rm -rf $(OBJ_DIR) .bonus
 	make clean -C $(LIBFT_DIR)
 
 fclean: clean

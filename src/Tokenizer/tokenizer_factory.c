@@ -26,6 +26,19 @@ t_token	*create_pipe_token(char *str, int *i)
 	return (token);
 }
 
+t_token	*create_background_token(char *str, int *i)
+{
+	t_token	*token;
+
+	(void)str;
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = BACKGROUND;
+	(*i)++;
+	return (token);
+}
+
 t_token	*create_redirect_token(char *str, int *i)
 {
 	t_token	*token;

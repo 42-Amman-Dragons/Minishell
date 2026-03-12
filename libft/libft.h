@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 10:40:19 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/02/20 04:52:55 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/08 10:11:47 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,6 @@ t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 int					ft_printf(const char *format, ...);
 char				*get_next_line(int fd);
 char				*return_line(char **line, char **buffer, int bytes_read);
+int					contains(char const *set, char c);
+int					cal_len(char const *s, char c);
 #endif

@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 13:26:52 by hal-lawa          #+#    #+#             */
-/*   Updated: 2025/08/19 15:31:34 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/08 10:11:27 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdio.h>
 
-static int	cal_len(char const *s, char c)
+int	cal_len(char const *s, char c)
 {
 	int	j;
 	int	k;

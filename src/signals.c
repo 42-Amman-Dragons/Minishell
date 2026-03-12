@@ -6,32 +6,67 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 09:12:58 by haya              #+#    #+#             */
-/*   Updated: 2026/03/01 09:12:59 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/12 17:29:25 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <signal.h>
 
-extern int	SIGNUM;
+extern int g_SIGNUM;
 
-void	ctrl_c_handler(int signalNumber)
+// @TODO: @mabuquare update the dragon emoji status when SIGINT
+void handle_sigint(int sig)
 {
-	SIGNUM = signalNumber;
-	rl_replace_line("", 1);
-	printf("^C\n");
-	rl_redisplay();
+	g_SIGNUM = sig;
+	write(1, "\n", 1);
 	rl_on_new_line();
+	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
-void	ctrl_d_handler(int signalNumber)
+void set_signals_prompt(void)
 {
-	SIGNUM = signalNumber;
-	exit(0);
+	struct sigaction sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_RESTART;
+	sa.sa_handler = handle_sigint;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
 }
 
-void	ctrl_backslash(int signalNumber)
+void set_signals_exec(void)
 {
-	SIGNUM = signalNumber;
-	rl_redisplay();
+	struct sigaction sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+}
+
+void set_signals_child(void)
+{
+	struct sigaction sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = SIG_DFL;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+}
+
+void set_signals_heredoc(void)
+{
+	struct sigaction sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sa.sa_handler = handle_sigint;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
 }

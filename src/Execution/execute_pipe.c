@@ -25,8 +25,12 @@ static int	wait_all(pid_t pid)
 	{
 		id = waitpid(-1, &status, 0);
 		if (id == pid)
-			if (WIFEXITED(status))
+		{
+			if (WIFSIGNALED(status))
+				err = 128 + WTERMSIG(status);
+			else if (WIFEXITED(status))
 				err = WEXITSTATUS(status);
+		}
 		if (id <= 0)
 			break ;
 	}
@@ -45,6 +49,7 @@ static pid_t	handle_left_pipe(int *fd, t_tree *node, t_minishell *shell)
 	}
 	else if (left_id == 0)
 	{
+		set_signals_child();
 		secure_close(fd[0], node, shell);
 		if (dup2(fd[1], STDOUT_FILENO) == -1)
 		{
@@ -53,7 +58,7 @@ static pid_t	handle_left_pipe(int *fd, t_tree *node, t_minishell *shell)
 		}
 		exec_tree(node->data.oper.left, shell);
 		secure_close(fd[1], node, shell);
-		free_and_exit(node, shell, 0);
+		free_and_exit(node, shell, shell->exit_status);
 	}
 	return (left_id);
 }
@@ -70,6 +75,7 @@ static pid_t	handle_right_pipe(int *fd, t_tree *node, t_minishell *shell)
 	}
 	else if (right_id == 0)
 	{
+		set_signals_child();
 		secure_close(fd[1], node, shell);
 		if (dup2(fd[0], STDIN_FILENO) == -1)
 		{
@@ -78,7 +84,7 @@ static pid_t	handle_right_pipe(int *fd, t_tree *node, t_minishell *shell)
 		}
 		exec_tree(node->data.oper.right, shell);
 		secure_close(fd[0], node, shell);
-		free_and_exit(node, shell, 0);
+		free_and_exit(node, shell, shell->exit_status);
 	}
 	return (right_id);
 }
@@ -88,11 +94,11 @@ int	exec_pipe(t_tree *node, t_minishell *shell)
 	int		fd[2];
 	pid_t	right_id;
 	int		exit_code;
-	int temp_stdin;
-	int temp_stdout;
+	int		temp_stdin;
+	int		temp_stdout;
 
-	temp_stdin = STDIN_FILENO;
-	temp_stdout = STDOUT_FILENO;
+	temp_stdin = dup(STDIN_FILENO);
+	temp_stdout = dup(STDOUT_FILENO);
 	right_id = 0;
 	exit_code = 0;
 	if (pipe(fd) == -1)
@@ -100,12 +106,17 @@ int	exec_pipe(t_tree *node, t_minishell *shell)
 		perror("PIPE ERROR: ");
 		return (1);
 	}
+	set_signals_exec();
 	handle_left_pipe(fd, node, shell);
 	right_id = handle_right_pipe(fd, node, shell);
 	close(fd[0]);
 	close(fd[1]);
-	dup2(STDIN_FILENO, temp_stdin);
-	dup2(STDOUT_FILENO, temp_stdout);
+	dup2(temp_stdin, STDIN_FILENO);
+	dup2(temp_stdout, STDOUT_FILENO);
+	close(temp_stdin);
+	close(temp_stdout);
 	exit_code = wait_all(right_id);
-	return(exit_code);
+	set_signals_prompt();
+	shell->exit_status = exit_code;
+	return (exit_code);
 }

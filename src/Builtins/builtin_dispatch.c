@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 03:03:59 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/05 12:01:33 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/08 11:31:08 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,10 @@ int	is_all_num(char *str)
 	int	i;
 
 	i = 0;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	if (!str[i])
+		return (0);
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
@@ -50,7 +54,7 @@ int	is_all_num(char *str)
 	return (1);
 }
 
-int	calc_len(char **args)
+int	calc_len_args(char **args)
 {
 	int	i;
 
@@ -62,23 +66,28 @@ int	calc_len(char **args)
 
 int	ft_exit(char **args, t_minishell *shell)
 {
-	if(calc_len(args) > 2)
+	if(calc_len_args(args) > 2)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		return (1);
 	}
-	if(calc_len(args) == 2)
+	if(calc_len_args(args) == 2)
 	{
 		if(!is_all_num(args[1]))
 		{
 			ft_putstr_fd("minishell: exit: ", 2);
 			ft_putstr_fd(args[1], 2);
 			ft_putstr_fd(": numeric argument required\n", 2);
+			custom_save_history(shell);
+			free_all(shell);
 			exit(2);
 		}
+		custom_save_history(shell);
+		free_all(shell);
 		exit(ft_atoi(args[1]));
 	}
 	ft_putstr_fd("exit\n", 1);
+	custom_save_history(shell);
 	free_all(shell);
 	exit(0);
 	return (0);

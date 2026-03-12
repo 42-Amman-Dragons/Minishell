@@ -6,13 +6,13 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/05 13:32:35 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/12 17:24:04 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*safe_join(char *str1, char *str2)
+char	*safe_join(char *str1, char *str2)
 {
 	char	*result;
 
@@ -36,7 +36,6 @@ void	free_splitted(char **splitted)
 	free(splitted);
 }
 
-
 static char	*get_path(char **env)
 {
 	char	*path;
@@ -52,8 +51,9 @@ static char	*get_path(char **env)
 		}
 		i++;
 	}
-	path = ft_strtrim(path, "PATH=");
-	return (path);
+	if (!path)
+		return (NULL);
+	return (ft_strdup(path + 5));
 }
 
 char	*absoulute_path(char *cmd, char **env)
@@ -63,8 +63,11 @@ char	*absoulute_path(char *cmd, char **env)
 	char	*sub;
 	int		i;
 
-	path =  get_path(env);
+	path = get_path(env);
+	if (!path)
+		return (NULL);
 	paths = ft_split(path, ':');
+	free(path);
 	i = 0;
 	while (paths[i])
 	{
@@ -83,16 +86,21 @@ char	*absoulute_path(char *cmd, char **env)
 	return (NULL);
 }
 
-void execve_cmd(t_tree *node, t_minishell *shell)
+void	execve_cmd(t_tree *node, t_minishell *shell)
 {
-	char *cmd_name;
-	handle_redirections(node, shell);
+	char	*cmd_name;
+
+	if (handle_redirections(node, shell) == -1)
+		free_and_exit(node, shell, 1);
+
 	if (!node->data.cmd.args)
-	{
 		free_and_exit(node, shell, 0);
-	}
 	cmd_name = ft_strdup(node->data.cmd.args[0]);
-	node->data.cmd.args[0] = absoulute_path(node->data.cmd.args[0], shell->env);
+	if (!ft_strchr(node->data.cmd.args[0], '/'))
+	{
+		free(node->data.cmd.args[0]);
+		node->data.cmd.args[0] = absoulute_path(cmd_name, shell->env);
+	}
 	if (!node->data.cmd.args[0])
 	{
 		ft_putstr_fd(cmd_name, 2);
@@ -100,39 +108,68 @@ void execve_cmd(t_tree *node, t_minishell *shell)
 		free(cmd_name);
 		free_and_exit(node, shell, 127);
 	}
-	if (execve(node->data.cmd.args[0], node->data.cmd.args, shell->env) == -1)
-	{
-		perror("EXECVE ERROR: ");
-		free(cmd_name);
-		free_and_exit(node, shell, 1);
-	}
+	execve(node->data.cmd.args[0], node->data.cmd.args, shell->env);
+	ft_putstr_fd(cmd_name, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putstr_fd(strerror(errno), 2);
+	ft_putstr_fd("\n", 2);
 	free(cmd_name);
-	free_and_exit(node, shell, 0);
+	if (errno == ENOENT)
+		free_and_exit(node, shell, 127);
+	free_and_exit(node, shell, 126);
 }
 
 int	exec_cmd(t_tree *node, t_minishell *shell)
 {
 	int	id;
 	int	status;
-	int idx;
+	int	idx;
+	int	temp_stdin;
+	int	temp_stdout;
 
 	idx = -1;
-	if(node->data.cmd.args)
+	if (node->data.cmd.args)
 	{
 		idx = is_builtin(node->data.cmd.args[0]);
-		if ( idx >= 0)
-			return (call_builtin(idx, node->data.cmd.args, shell));
+		if (idx >= 0)
+		{
+			temp_stdin = dup(STDIN_FILENO);
+			temp_stdout = dup(STDOUT_FILENO);
+			if (handle_redirections(node, shell) == -1)
+			{
+				dup2(temp_stdin, STDIN_FILENO);
+				dup2(temp_stdout, STDOUT_FILENO);
+				close(temp_stdin);
+				close(temp_stdout);
+				shell->exit_status = 1;
+				return (1);
+			}
+			shell->exit_status = call_builtin(idx, node->data.cmd.args, shell);
+			dup2(temp_stdin, STDIN_FILENO);
+			dup2(temp_stdout, STDOUT_FILENO);
+			close(temp_stdin);
+			close(temp_stdout);
+			return (shell->exit_status);
+		}
 	}
+	set_signals_exec();
 	id = fork();
 	if (id == -1)
 	{
 		perror("minishell: fork");
+		set_signals_prompt();
 		return (errno);
 	}
 	if (id == 0)
+	{
+		set_signals_child();
 		execve_cmd(node, shell);
+	}
 	waitpid(id, &status, 0);
-	if (WIFEXITED(status))
+	set_signals_prompt();
+	if (WIFSIGNALED(status))
+		shell->exit_status = 128 + WTERMSIG(status);
+	else if (WIFEXITED(status))
 		shell->exit_status = WEXITSTATUS(status);
 	return (shell->exit_status);
 }

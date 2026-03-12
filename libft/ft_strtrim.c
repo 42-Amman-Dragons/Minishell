@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 10:50:35 by hal-lawa          #+#    #+#             */
-/*   Updated: 2025/08/26 15:40:37 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/08 09:33:55 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	contains(char const *set, char c)
+int	contains(char const *set, char c)
 {
 	int	i;
 

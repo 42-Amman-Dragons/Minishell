@@ -37,6 +37,8 @@ t_tokenType	identify_token(char *s)
 		return (AND);
 	if (ft_strncmp("||", s, 2) == 0)
 		return (OR);
+	if (s[0] == '&')
+		return (BACKGROUND);
 	if (ft_strncmp(">", s, 1) == 0 || ft_strncmp("<", s, 1) == 0)
 		return (REDIRECT);
 	if (ft_strncmp("|", s, 1) == 0)
