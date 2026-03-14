@@ -3,65 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 02:53:20 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/12 17:09:41 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/14 08:24:03 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-void	print_arr(char **arr)
-{
-	int	i;
 
-	if (!arr)
-		return ;
-	i = 0;
-	printf("[");
-	while (arr[i])
-	{
-		printf("%s", arr[i]);
-		if (arr[i + 1])
-			printf(", ");
-		i++;
-	}
-	printf("]");
-}
-
-char **add_to_end(char **args, char *path)
+char	**add_to_end(char **args, char *path)
 {
-	int args_size;
-	char **new_arg;
-	int new_arg_i;
+	int		args_size;
+	char	**new_arg;
+	int		new_arg_i;
 
 	args_size = 0;
-	while(args[args_size])
+	while (args[args_size])
 		args_size++;
 	new_arg = malloc((args_size + 2) * sizeof(char *));
+	if (!new_arg)
+		return (NULL);
 	new_arg_i = 0;
-	while(new_arg_i < args_size)
+	while (new_arg_i < args_size)
 	{
 		new_arg[new_arg_i] = args[new_arg_i];
 		new_arg_i++;
 	}
 	new_arg[new_arg_i] = ft_strdup(path);
+	if (!new_arg[new_arg_i])
+	{
+		free(new_arg);
+		return (NULL);
+	}
 	new_arg[new_arg_i + 1] = NULL;
 	return (new_arg);
 }
 
 static int	cd_get_path(char ***args, t_minishell *shell)
 {
-	char *home_path;
-	
+	char	*home_path;
+
 	home_path = NULL;
 	if (!(*args)[1])
 	{
 		home_path = get_env_value("HOME", shell->env);
 		*args = add_to_end(*args, home_path);
-		if (!(*args)[1])
+		if (!*args || !(*args)[1])
 		{
 			ft_putstr_fd("cd: HOME not set\n", 2);
 			return (1);

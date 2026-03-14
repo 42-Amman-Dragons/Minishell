@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 22:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/08 16:56:24 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:26:01 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int	redirect_heredoc(t_redir_data *rd)
 	return (0);
 }
 
-int		handle_redirections(t_tree *node, t_minishell *shell)
+int	handle_redirections(t_tree *node, t_minishell *shell)
 {
 	t_list			*redir;
 	t_redir_data	*rd;

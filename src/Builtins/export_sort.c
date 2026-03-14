@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 22:30:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/03 22:30:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/13 00:26:38 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static void	sort_idx(int *idx, char **env, int count)
 		j = i;
 		while (++j < count)
 		{
-			if (ft_strncmp(env[idx[i]], env[idx[j]],
-					ft_strlen(env[idx[i]]) + 1) > 0)
+			if (ft_strncmp(env[idx[i]], env[idx[j]], ft_strlen(env[idx[i]])
+					+ 1) > 0)
 			{
 				tmp = idx[i];
 				idx[i] = idx[j];

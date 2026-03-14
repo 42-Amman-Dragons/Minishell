@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   execute_oper.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:27:58 by haya              #+#    #+#             */
-/*   Updated: 2026/03/05 12:41:38 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:25:16 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	exec_and_or(t_tree *node, t_minishell *shell)
-{	
-	int left_exit_code;
-	int right_exit_code;
+{
+	int	left_exit_code;
+	int	right_exit_code;
 
 	left_exit_code = exec_tree(node->data.oper.left, shell);
 	shell->exit_status = left_exit_code;

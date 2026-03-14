@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 00:52:15 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/08 17:28:11 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:26:24 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@ static int	is_n_flag(char *arg)
 	}
 	return (1);
 }
-// @TODO: 
-// haya@haya:~$ echo here             ->         end 
-// the case should return nothing while its returns - in our code.
-// the echo does not redirect.
+
 int	ft_echo(char **args)
 {
 	int	i;

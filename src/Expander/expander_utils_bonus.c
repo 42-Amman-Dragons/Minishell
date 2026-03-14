@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 12:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/12 17:13:57 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:24:07 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ void	strip_empty_args(t_tree *node, int count)
 	}
 }
 
-void add_splitted(char **new_args, int *j, char *expanded)
+void	add_splitted(char **new_args, int *j, char *expanded)
 {
-	int i;
-	char **splitted;
-	
+	int		i;
+	char	**splitted;
+
 	i = 0;
 	splitted = ft_split(expanded, ' ');
-	while(splitted[i])
+	while (splitted[i])
 	{
 		new_args[*j] = splitted[i];
 		(*j)++;
@@ -60,22 +60,22 @@ void add_splitted(char **new_args, int *j, char *expanded)
 	free(splitted);
 }
 
-char **generate_expanded_list(char **args, int i, char *expanded)
+char	**generate_expanded_list(char **args, int i, char *expanded)
 {
-	int j;
-	int k;
-	int args_len;
-	int expanded_len;
-	char **new_args;
+	int		j;
+	int		k;
+	int		args_len;
+	int		expanded_len;
+	char	**new_args;
 
 	args_len = calc_len_args(args);
-	expanded_len = cal_len(expanded, ' '); 
+	expanded_len = cal_len(expanded, ' ');
 	new_args = ft_calloc(args_len + expanded_len + 1, sizeof(char *));
 	j = 0;
 	k = 0;
-	while(k < args_len)
+	while (k < args_len)
 	{
-		if(k == i)
+		if (k == i)
 		{
 			add_splitted(new_args, &j, expanded);
 			free(args[k]);
@@ -88,10 +88,10 @@ char **generate_expanded_list(char **args, int i, char *expanded)
 		k++;
 	}
 	free(args);
-	return(new_args);
+	return (new_args);
 }
 
- char **add_to_args(char **args, int i, char *expanded, int is_wc)
+char	**add_to_args(char **args, int i, char *expanded, int is_wc)
 {
 	if (is_wc && expanded && contains(expanded, ' ') == 1)
 		args = generate_expanded_list(args, i, expanded);
@@ -107,7 +107,7 @@ char	**expand_one_arg(char **args, int i, t_minishell *shell)
 {
 	char	*expanded;
 	int		quoted;
-	int		is_wc; // this means 
+	int		is_wc;
 
 	quoted = word_has_quotes(args[i]);
 	is_wc = (!quoted && contains(args[i], '*'));

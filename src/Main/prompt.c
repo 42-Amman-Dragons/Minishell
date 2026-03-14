@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 14:58:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/12 17:28:23 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:23:07 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,16 @@ char	*get_prompt(t_minishell *shell)
 	char	buff[PATH_MAX];
 	char	*prompt;
 
-
-	if(!get_env_value("USER", shell->env))
+	if (!get_env_value("USER", shell->env))
 		set_env_value("USER", "user", shell);
 	shell->username = get_env_value("USER", shell->env);
-	if(!get_env_value("HOSTNAME", shell->env))
+	if (!get_env_value("HOSTNAME", shell->env))
 		set_env_value("HOSTNAME", "42Dragons", shell);
 	shell->servername = get_env_value("HOSTNAME", shell->env);
 	ft_bzero(buff, PATH_MAX);
 	if (getcwd(buff, PATH_MAX) == NULL)
 		return (NULL);
-	consider_home_dir(buff,shell->env);
+	consider_home_dir(buff, shell->env);
 	prompt = NULL;
 	change_color(&prompt, DRAGON_GREEN);
 	prepare_prompt_beggining(&prompt, shell);
@@ -37,7 +36,7 @@ char	*get_prompt(t_minishell *shell)
 	return (prompt);
 }
 
-void update_prompt_path(t_minishell *shell)
+void	update_prompt_path(t_minishell *shell)
 {
 	char	*new_prompt;
 

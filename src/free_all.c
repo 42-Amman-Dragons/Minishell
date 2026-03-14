@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   free_all.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:18 by haya              #+#    #+#             */
-/*   Updated: 2026/03/12 11:54:29 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:16:46 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void free_env(char **env)
+void	free_env(char **env)
 {
-	int i;
+	int	i;
 
 	if (!env)
-		return;
+		return ;
 	i = 0;
 	while (env[i])
 	{
@@ -27,10 +27,10 @@ void free_env(char **env)
 	free(env);
 }
 
-void free_all(t_minishell *shell)
+void	free_all(t_minishell *shell)
 {
 	if (!shell)
-		return;
+		return ;
 	tcsetattr(STDIN_FILENO, TCSANOW, &(shell->original_termos));
 	rl_clear_history();
 	if (shell->history)
@@ -38,7 +38,7 @@ void free_all(t_minishell *shell)
 	shell->history = NULL;
 	if (shell->prompt)
 		free(shell->prompt);
-	if(shell->env)
+	if (shell->env)
 	{
 		free_env(shell->env);
 		shell->env = NULL;

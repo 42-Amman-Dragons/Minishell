@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/12 17:24:04 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:24:43 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ void	execve_cmd(t_tree *node, t_minishell *shell)
 
 	if (handle_redirections(node, shell) == -1)
 		free_and_exit(node, shell, 1);
-
 	if (!node->data.cmd.args)
 		free_and_exit(node, shell, 0);
 	cmd_name = ft_strdup(node->data.cmd.args[0]);
@@ -135,6 +134,15 @@ int	exec_cmd(t_tree *node, t_minishell *shell)
 		{
 			temp_stdin = dup(STDIN_FILENO);
 			temp_stdout = dup(STDOUT_FILENO);
+			if (temp_stdin == -1 || temp_stdout == -1)
+			{
+				if (temp_stdin != -1)
+					close(temp_stdin);
+				if (temp_stdout != -1)
+					close(temp_stdout);
+				shell->exit_status = 1;
+				return (1);
+			}
 			if (handle_redirections(node, shell) == -1)
 			{
 				dup2(temp_stdin, STDIN_FILENO);

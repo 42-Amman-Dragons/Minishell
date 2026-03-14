@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/12 17:25:43 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/14 08:24:24 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,8 +165,6 @@ void				del_env_value(char *name, t_minishell *shell);
 int					add_env(char *entry, t_minishell *shell);
 char				*mk_env_entry(char *name, char *value);
 void				free_all(t_minishell *shell);
-void				print_tree(t_tree *head);
-void				print_arr(char **arr);
 int					calc_len_args(char **args);
 void				update_prompt_path(t_minishell *shell);
 /*Parser*/

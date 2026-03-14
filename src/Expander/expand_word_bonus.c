@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_word_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/12 17:26:20 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:23:24 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,9 @@ static void	handle_normal(char *word, t_expand *ctx)
 		ctx->state = EXP_DQUOTE;
 		ctx->i++;
 	}
-	else if (word[ctx->i] == '$' && word[ctx->i + 1]
-		&& word[ctx->i + 1] != ' ')
-		ctx->result = append_str(ctx->result,
-				expand_dollar(word, ctx));
-	else if(contains(word, '*') == 1)
+	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != ' ')
+		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
+	else if (contains(word, '*') == 1)
 	{
 		ctx->result = append_astersk(ctx->result, word);
 		ctx->i += ft_strlen(word);
@@ -55,10 +53,8 @@ static void	handle_dquote(char *word, t_expand *ctx)
 		ctx->state = EXP_NORMAL;
 		ctx->i++;
 	}
-	else if (word[ctx->i] == '$' && word[ctx->i + 1]
-		&& word[ctx->i + 1] != '"')
-		ctx->result = append_str(ctx->result,
-				expand_dollar(word, ctx));
+	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != '"')
+		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
 	else
 		ctx->result = append_char(ctx->result, word[ctx->i++]);
 }

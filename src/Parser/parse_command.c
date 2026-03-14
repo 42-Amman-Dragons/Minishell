@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/01 09:28:30 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:20:44 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ static t_redir_data	*build_redir(t_list **cur, t_token *rtok, int *err)
 	if (!redir)
 		return (*err = 1, NULL);
 	redir->mode = rtok->data.redir.mode;
-	redir->filename = ft_strdup(
-			((t_token *)(*cur)->content)->data.word.value);
+	redir->filename = ft_strdup(((t_token *)(*cur)->content)->data.word.value);
 	if (!redir->filename)
 	{
 		free(redir);
@@ -29,8 +28,7 @@ static t_redir_data	*build_redir(t_list **cur, t_token *rtok, int *err)
 	}
 	redir->heredoc_expand = 0;
 	redir->heredoc_fd = -1;
-	if (redir->mode == DIR_IN_HEREDOC
-		&& !ft_strchr(redir->filename, '\'')
+	if (redir->mode == DIR_IN_HEREDOC && !ft_strchr(redir->filename, '\'')
 		&& !ft_strchr(redir->filename, '"'))
 		redir->heredoc_expand = 1;
 	return (redir);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/08 17:55:37 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:23:37 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 					shell->exit_status);
 			if (expanded)
 			{
-				if(expanded[0] == '\0') // @TODO: redirection errors.
+				if (expanded[0] == '\0') // @TODO: redirection errors.
 				{
 					redirs = redirs->next;
-					continue;
+					continue ;
 				}
 				free(rd->filename);
 				rd->filename = expanded;
@@ -53,8 +53,8 @@ static void	expand_node(t_tree *node, t_minishell *shell)
 	while (i < count)
 	{
 		node->data.cmd.args = expand_one_arg(node->data.cmd.args, i, shell);
-		if(!node->data.cmd.args)
-			return;
+		if (!node->data.cmd.args)
+			return ;
 		i++;
 	}
 	while (node->data.cmd.args[count])

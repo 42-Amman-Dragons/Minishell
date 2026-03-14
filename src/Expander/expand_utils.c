@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/08 09:52:24 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:23:19 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ char	*append_str(char *result, char *s)
 		return (NULL);
 	return (joined);
 }
-
 
 static char	*extract_var_name(char *str, int *i)
 {

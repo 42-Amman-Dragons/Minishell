@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:14:26 by haya              #+#    #+#             */
-/*   Updated: 2026/03/05 12:32:30 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/13 00:25:31 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ int	exec_pipe(t_tree *node, t_minishell *shell)
 	if (pipe(fd) == -1)
 	{
 		perror("PIPE ERROR: ");
+		close(temp_stdin);
+		close(temp_stdout);
 		return (1);
 	}
 	set_signals_exec();

@@ -6,13 +6,11 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/03 04:36:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/13 00:26:45 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 char	*mk_env_entry(char *name, char *value)
 {

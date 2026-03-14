@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/25 01:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/13 00:21:00 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ static void	free_words_list(t_list *words)
 	}
 }
 
-static int	collect_tokens(t_list **cur, t_list **words,
-		t_list **redirs, int *err)
+static int	collect_tokens(t_list **cur, t_list **words, t_list **redirs,
+		int *err)
 {
 	while (cur_type(cur) == WORD || cur_type(cur) == REDIRECT)
 	{
