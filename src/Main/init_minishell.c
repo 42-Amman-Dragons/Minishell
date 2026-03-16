@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   init_minishell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:30:32 by haya              #+#    #+#             */
-/*   Updated: 2026/03/13 00:21:10 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/16 12:25:18 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int init_prompt(t_minishell *shell)
+{
+	shell->prompt = get_prompt(shell);
+	if (!shell->prompt)
+		return (-1);
+	return (0);
+}
 
 t_minishell	*init_minishell(void)
 {
@@ -36,3 +44,4 @@ t_minishell	*init_minishell(void)
 	tcsetattr(STDIN_FILENO, TCSANOW, &(shell->new_termos));
 	return (shell);
 }
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:42:48 by haya              #+#    #+#             */
-/*   Updated: 2026/03/13 00:25:36 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/16 10:59:21 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,28 @@ void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
 	free_tree(node);
 	free_all(shell);
 	exit(exit_code);
+}
+
+char	*safe_join(char *str1, char *str2)
+{
+	char	*result;
+
+	result = ft_strjoin(str1, str2);
+	free(str1);
+	return (result);
+}
+
+void	free_splitted(char **splitted)
+{
+	int	i;
+
+	if (!splitted)
+		return ;
+	i = 0;
+	while (splitted[i])
+	{
+		free(splitted[i]);
+		i++;
+	}
+	free(splitted);
 }

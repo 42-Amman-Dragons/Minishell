@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/14 08:24:24 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/16 12:25:39 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,7 +253,7 @@ int					handle_redirections(t_tree *node, t_minishell *shell);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
-
+void				cmd_not_found(char *cmd_name, t_tree *node, t_minishell *shell);
 
 // Main
 t_minishell			*init_minishell(void);
@@ -266,5 +266,6 @@ void				consider_home_dir(char *buff, char **env);
 void				change_color(char **prompt, char *color);
 void				prepare_prompt_beggining(char **prompt,t_minishell *shell);
 void				prepare_prompt_path(char **prompt, char *buff);
+int					init_prompt(t_minishell *shell);
 
 #endif

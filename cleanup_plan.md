@@ -31,23 +31,23 @@ Each function below must be split into smaller helpers (max 25 lines each).
 
 | File | Function | Lines | Action |
 |------|----------|-------|--------|
-| `Execution/execute_cmd.c` | `exec_cmd()` | 62 | Split into 3 helpers (resolve path, fork/exec, handle builtin) |
-| `Execution/handle_redirections.c` | `handle_redirections()` | 33 | Extract loop body into a `dispatch_redir()` helper |
-| `Execution/execute_pipe.c` | `exec_pipe()` | 32 | Extract pipe setup and wait logic |
-| `Execution/execute_cmd.c` | `execve_cmd()` | 30 | Move error messaging to helper |
-| `Execution/execute_cmd.c` | `absoulute_path()` | 28 | Extract path-search loop |
-| `Expander/heredoc.c` | `setup_heredoc_fd()` | 31 | Split fork logic from fd setup |
-| `Expander/heredoc.c` | `strip_quotes()` | 27 | Simplify or extract char-copy loop |
-| `Expander/expand_astersk.c` | `append_astersk()` | 30 | Extract directory-read loop |
-| `Expander/expander_utils_bonus.c` | `generate_expanded_list()` | 29 | Extract array copy logic |
-| `Main/main.c` | `runshell()` | 30 | Extract readline + parse loop body |
-| `Main/main.c` | `main()` | 29 | Move init steps to helper |
-| `history.c` | `load_history()` | 32 | Extract file-read loop |
-| `Builtins/builtin_dispatch.c` | `ft_exit()` | 27 | Extract validation logic |
-| `Builtins/export.c` | `export_one()` | 27 | Extract identifier parsing |
-| `Builtins/cd.c` | `add_to_end()` | 26 | Extract array realloc logic |
-| `Parser/parse_command.c` | `parse_subshell()` | 26 | Extract redir-parsing tail |
-| `Parser/parser.c` | `parse_logic_expr()` | 26 | Extract operator-handling loop |
+| `Execution/execute_cmd.c` | `exec_cmd()` | 62 | Split into 3 helpers (resolve path, fork/exec, handle builtin) |  <Done>
+| `Execution/handle_redirections.c` | `handle_redirections()` | 33 | Extract loop body into a `dispatch_redir()` helper | <Done>
+| `Execution/execute_pipe.c` | `exec_pipe()` | 32 | Extract pipe setup and wait logic | <Done>
+| `Execution/execute_cmd.c` | `execve_cmd()` | 30 | Move error messaging to helper |  <Done>
+| `Execution/execute_cmd.c` | `absoulute_path()` | 28 | Extract path-search loop |  <Done>
+| `Expander/heredoc.c` | `setup_heredoc_fd()` | 31 | Split fork logic from fd setup | <Done>
+| `Expander/heredoc.c` | `strip_quotes()` | 27 | Simplify or extract char-copy loop | <already clean>
+| `Expander/expand_astersk.c` | `append_astersk()` | 30 | Extract directory-read loop | <Done>
+| `Expander/expander_utils_bonus.c` | `generate_expanded_list()` | 29 | Extract array copy logic |  <Done>
+| `Main/main.c` | `runshell()` | 30 | Extract readline + parse loop body |  <Done>
+| `Main/main.c` | `main()` | 29 | Move init steps to helper | <Done>
+| `history.c` | `load_history()` | 32 | Extract file-read loop | <Done>
+| `Builtins/builtin_dispatch.c` | `ft_exit()` | 27 | Extract validation logic | <already clean>
+| `Builtins/export.c` | `export_one()` | 27 | Extract identifier parsing | <already clean>
+| `Builtins/cd.c` | `add_to_end()` | 26 | Extract array realloc logic | <already clean>
+| `Parser/parse_command.c` | `parse_subshell()` | 26 | Extract redir-parsing tail | <already clean>
+| `Parser/parser.c` | `parse_logic_expr()` | 26 | Extract operator-handling loop | <already clean>
 
 ---
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/03/13 18:19:25 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/16 12:32:09 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,69 +39,82 @@ void welcome()
 	printf("\n");
 }
 
+static int process_line(t_minishell *shell)
+{
+	shell->line = readline(shell->prompt);
+	handle_signal_status(shell);
+	if (!shell->line)
+	{
+		printf("exit\n");
+		return (1);
+	}
+	if (ft_strlen(shell->line) == 0)
+	{
+		free(shell->line);
+		shell->line = NULL;
+		return (0);
+	}
+	if (add_to_history(shell->line, &(shell->history)) == -1)
+	{
+		free_all(shell);
+		return (-1);
+	}
+	parse_and_execute(shell);
+	free(shell->line);
+	shell->line = NULL;
+	return (0);
+}
+
 int runshell(t_minishell *shell)
 {
+	int status;
+
 	while (1)
 	{
 		free(shell->prompt);
 		shell->prompt = get_prompt(shell);
-		shell->line = readline(shell->prompt);
-		handle_signal_status(shell);
-		if (!shell->line)
-		{
-			printf("exit\n");
+		status = process_line(shell);
+		if (status == 1)
 			break;
-		}
-		if (ft_strlen(shell->line) == 0)
-		{
-			free(shell->line);
-			shell->line = NULL;
-			continue;
-		}
-		if (add_to_history(shell->line, &(shell->history)) == -1)
-		{
-			free_all(shell);
-			shell = NULL;
+		if (status == -1)
 			return (-1);
-		}
-		parse_and_execute(shell);
-		free(shell->line);
-		shell->line = NULL;
 	}
 	return (0);
 }
 
-int init_prompt(t_minishell *shell)
-{
-	shell->prompt = get_prompt(shell);
-	if (!shell->prompt)
-		return (-1);
-	return (0);
-}
-
-int main(int argc, char **argv, char *env[])
+t_minishell *init_shell(char **env)
 {
 	t_minishell *shell;
-	(void)argv;
-	if (argc != 1)
-		return (1);
+	
 	shell = init_minishell();
 	if (!shell)
-		return (1);
+		return (NULL);
 	if (init_mutable_env(env, shell) != 0)
 	{
 		free_all(shell);
 		shell = NULL;
-		return (1);
 	}
+	// here is tty ? 
 	set_signals_prompt();
 	if (init_prompt(shell) != 0)
 	{
 		free_all(shell);
 		shell = NULL;
-		return (1);
 	}
 	welcome();
+	return (shell);
+}
+
+int main(int argc, char **argv, char *env[])
+{
+	t_minishell *shell;
+	
+	(void)argv;
+	if (argc != 1)
+		return (1);
+	shell = init_shell(env);
+	if(!shell)
+		return (1);
 	if (runshell(shell) == -1)
 		return (1);
 	custom_save_history(shell);

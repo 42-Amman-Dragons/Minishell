@@ -28,8 +28,8 @@ MAIN_DIR = Main
 MAIN_SRC = main.c init_minishell.c parse_and_execute.c prompt.c prompt_utils.c
 
 EXEC_DIR = Execution
-EXEC_SRC = execution.c execute_cmd.c execute_oper.c execute_pipe.c \
-	execute_subshell.c execution_utils.c handle_redirections.c
+EXEC_SRC = execution.c execute_cmd.c exeute_cmd_utils.c execute_oper.c execute_pipe.c \
+	execute_subshell.c execution_utils.c handle_redirections.c 
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \

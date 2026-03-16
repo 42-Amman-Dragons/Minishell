@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 22:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/13 00:26:01 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/16 11:05:18 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,28 @@ static int	redirect_heredoc(t_redir_data *rd)
 	return (0);
 }
 
+int redirect(t_redir_data *rd, t_tree *node, t_minishell *shell)
+{
+	if (rd->mode == DIR_IN_FILE)
+	{
+		if (redirect_input(rd, node, shell) == -1)
+			return (-1);
+	}
+	else if (rd->mode == DIR_OUT_TRUNC)
+	{
+		if (redirect_output(rd, node, shell) == -1)
+			return (-1);
+	}
+	else if (rd->mode == DIR_IN_HEREDOC)
+		redirect_heredoc(rd);
+	else if (rd->mode == DIR_OUT_APPEND)
+	{
+		if (redirect_append(rd, node, shell) == -1)
+			return (-1);
+	}
+	return(0);
+}
+
 int	handle_redirections(t_tree *node, t_minishell *shell)
 {
 	t_list			*redir;
@@ -86,23 +108,8 @@ int	handle_redirections(t_tree *node, t_minishell *shell)
 	while (redir)
 	{
 		rd = (t_redir_data *)redir->content;
-		if (rd->mode == DIR_IN_FILE)
-		{
-			if (redirect_input(rd, node, shell) == -1)
-				return (-1);
-		}
-		else if (rd->mode == DIR_OUT_TRUNC)
-		{
-			if (redirect_output(rd, node, shell) == -1)
-				return (-1);
-		}
-		else if (rd->mode == DIR_IN_HEREDOC)
-			redirect_heredoc(rd);
-		else if (rd->mode == DIR_OUT_APPEND)
-		{
-			if (redirect_append(rd, node, shell) == -1)
-				return (-1);
-		}
+		if(redirect(rd, node, shell) == -1)
+			return (-1);
 		redir = redir->next;
 	}
 	return (0);

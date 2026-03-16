@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 12:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/13 00:24:07 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/16 12:22:43 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,11 @@ void	add_splitted(char **new_args, int *j, char *expanded)
 	free(splitted);
 }
 
+static void	copy_arg(char **new_args, char **args, int *j, int k)
+{
+	new_args[*j] = args[k];
+	(*j)++;
+}
 char	**generate_expanded_list(char **args, int i, char *expanded)
 {
 	int		j;
@@ -81,15 +86,43 @@ char	**generate_expanded_list(char **args, int i, char *expanded)
 			free(args[k]);
 		}
 		else
-		{
-			new_args[j] = args[k];
-			j++;
-		}
+			copy_arg(new_args, args, &j, k);
 		k++;
 	}
 	free(args);
 	return (new_args);
 }
+
+// char	**generate_expanded_list(char **args, int i, char *expanded)
+// {
+// 	int		j;
+// 	int		k;
+// 	int		args_len;
+// 	int		expanded_len;
+// 	char	**new_args;
+
+// 	args_len = calc_len_args(args);
+// 	expanded_len = cal_len(expanded, ' ');
+// 	new_args = ft_calloc(args_len + expanded_len + 1, sizeof(char *));
+// 	j = 0;
+// 	k = 0;
+// 	while (k < args_len)
+// 	{
+// 		if (k == i)
+// 		{
+// 			add_splitted(new_args, &j, expanded);
+// 			free(args[k]);
+// 		}
+// 		else
+// 		{
+// 			new_args[j] = args[k];
+// 			j++;
+// 		}
+// 		k++;
+// 	}
+// 	free(args);
+// 	return (new_args);
+// }
 
 char	**add_to_args(char **args, int i, char *expanded, int is_wc)
 {

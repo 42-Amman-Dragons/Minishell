@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 09:12:58 by haya              #+#    #+#             */
-/*   Updated: 2026/03/13 18:36:42 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/14 17:12:52 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void	rebuild_prompt_sigint(void)
 void	handle_sigint(int sig)
 {
 	g_SIGNUM = sig;
-	write(1, "\n", 1);
+	write(1, "^C\n", 3);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rebuild_prompt_sigint();
@@ -97,7 +97,11 @@ void	set_signals_prompt(void)
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
 }
-
+// ctrl + c ^C is not printing when running sleep 200.
+// adding 	
+// sa.sa_handler = handle_sigint;
+// sigaction(SIGINT, &sa, NULL);
+// will help.
 void	set_signals_exec(void)
 {
 	struct sigaction	sa;

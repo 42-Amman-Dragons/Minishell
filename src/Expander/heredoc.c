@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 15:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/13 00:24:39 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/16 11:55:44 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,24 +64,9 @@ static void	heredoc_child(int fd, char *limiter, t_redir_data *rd,
 	exit(0);
 }
 
-static int	setup_heredoc_fd(t_redir_data *rd, t_minishell *shell, int idx)
+int heredoc_parent(int fd, int pid, t_redir_data *rd, char	*tmp)
 {
-	int		fd;
-	pid_t	pid;
 	int		status;
-	char	*num;
-	char	*tmp;
-
-	num = ft_itoa(idx);
-	tmp = ft_strjoin("/tmp/.minishell_heredoc_", num);
-	free(num);
-	fd = open(tmp, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd < 0)
-		return (free(tmp), -1);
-	set_signals_exec();
-	pid = fork();
-	if (pid == 0)
-		heredoc_child(fd, rd->filename, rd, shell);
 	close(fd);
 	waitpid(pid, &status, 0);
 	set_signals_prompt();
@@ -95,6 +80,26 @@ static int	setup_heredoc_fd(t_redir_data *rd, t_minishell *shell, int idx)
 	unlink(tmp);
 	free(tmp);
 	return (0);
+}
+
+static int	setup_heredoc_fd(t_redir_data *rd, t_minishell *shell, int idx)
+{
+	int		fd;
+	pid_t	pid;
+	char	*num;
+	char	*tmp;
+
+	num = ft_itoa(idx);
+	tmp = ft_strjoin("/tmp/.minishell_heredoc_", num);
+	free(num);
+	fd = open(tmp, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd < 0)
+		return (free(tmp), -1);
+	set_signals_exec();
+	pid = fork();
+	if (pid == 0)
+		heredoc_child(fd, rd->filename, rd, shell);
+	return (heredoc_parent(fd, pid, rd, tmp));
 }
 
 static char	*strip_quotes(char *str)
