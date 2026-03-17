@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exeute_cmd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 10:32:15 by haya              #+#    #+#             */
-/*   Updated: 2026/03/16 11:02:31 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/17 05:28:05 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,14 @@ static char	*get_path(char **env)
 	return (ft_strdup(path + 5));
 }
 
-static char *asssemple_path(char *one_path, char *cmd)
+static char	*asssemple_path(char *one_path, char *cmd)
 {
-    char	*sub;
-    
-    sub = ft_strjoin(one_path, "/");
-	sub = safe_join(sub, cmd);
-    return (sub);
-}
+	char	*sub;
 
+	sub = ft_strjoin(one_path, "/");
+	sub = safe_join(sub, cmd);
+	return (sub);
+}
 
 char	*absoulute_path(char *cmd, char **env)
 {
@@ -71,7 +70,7 @@ char	*absoulute_path(char *cmd, char **env)
 	return (NULL);
 }
 
-void cmd_not_found(char *cmd_name, t_tree *node, t_minishell *shell)
+void	cmd_not_found(char *cmd_name, t_tree *node, t_minishell *shell)
 {
 	ft_putstr_fd(cmd_name, 2);
 	ft_putstr_fd(": command not found\n", 2);

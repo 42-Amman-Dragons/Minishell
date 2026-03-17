@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 15:00:25 by haya              #+#    #+#             */
-/*   Updated: 2026/03/13 00:22:50 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/17 05:28:55 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	consider_home_dir(char *buff, char **env)
 	size_t	buff_size;
 
 	home_path = get_env_value("HOME", env);
+	if (!home_path)
+		return ;
 	home_location = ft_strnstr(buff, home_path, ft_strlen(buff));
 	buff_size = ft_strlen(buff);
 	if (home_location)

@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/13 00:20:02 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/17 05:29:20 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	free_redir(void *ptr)
 	if (!ptr)
 		return ;
 	redir = (t_redir_data *)ptr;
+	if (redir->heredoc_fd >= 0)
+		close(redir->heredoc_fd);
 	free(redir->filename);
 	free(redir);
 }

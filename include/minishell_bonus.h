@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/16 12:25:39 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/17 05:31:36 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "fcntl.h"
 # include "libft.h"
+# include <dirent.h>
 # include <errno.h>
 # include <linux/limits.h>
 # include <readline/history.h>
@@ -23,10 +24,9 @@
 # include <stdlib.h>
 # include <sys/ioctl.h>
 # include <sys/stat.h>
+# include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
-#include <dirent.h>
-#include <sys/types.h>
 
 # define DRAGON_GREEN "\001\033[1;32m\002"
 # define DRAGON_CYAN "\001\033[0;36m\002"
@@ -177,7 +177,8 @@ t_tree				*parse_simple_cmd(t_list **cur, int *err);
 int					parse_redir(t_list **cur, t_list **redirs, int *err);
 t_tokenType			cur_type(t_list **cur);
 t_token				*advance(t_list **cur);
-t_tree				*create_oper_node(t_node_type type, t_tree *l, t_tree *r);
+t_tree				*create_oper_node(t_node_type type, t_tree *l, t_tree *r,
+						int *err);
 t_tree				*create_cmd_node(char **args, t_list *redirs);
 t_tree				*create_subshell_node(t_tree *child, t_list *redirs);
 void				free_tree(t_tree *tree);
@@ -212,7 +213,7 @@ int					init_heredocs(t_tree *tree, t_minishell *shell);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
 char				**expand_one_arg(char **args, int i, t_minishell *shell);
-char				*append_astersk(char *result,char *pattern);
+char				*append_astersk(char *result, char *pattern);
 
 /*Tokenizer*/
 t_tokenType			identify_token(char *s);
@@ -244,16 +245,17 @@ int					ft_exit(char **args, t_minishell *shell);
 int					call_builtin(int idx, char **args, t_minishell *shell);
 
 // Execution
-int 				exec_tree(t_tree *node, t_minishell *shell);
-int 				exec_cmd(t_tree *node, t_minishell *shell);
+int					exec_tree(t_tree *node, t_minishell *shell);
+int					exec_cmd(t_tree *node, t_minishell *shell);
 int					exec_pipe(t_tree *node, t_minishell *shell);
-int 				exec_and_or(t_tree *node, t_minishell *shell);
+int					exec_and_or(t_tree *node, t_minishell *shell);
 void				secure_close(int fd, t_tree *node, t_minishell *shell);
 int					handle_redirections(t_tree *node, t_minishell *shell);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
-void				cmd_not_found(char *cmd_name, t_tree *node, t_minishell *shell);
+void				cmd_not_found(char *cmd_name, t_tree *node,
+						t_minishell *shell);
 
 // Main
 t_minishell			*init_minishell(void);
@@ -264,7 +266,7 @@ char				*absoulute_path(char *cmd, char **env);
 char				*safe_join(char *str1, char *str2);
 void				consider_home_dir(char *buff, char **env);
 void				change_color(char **prompt, char *color);
-void				prepare_prompt_beggining(char **prompt,t_minishell *shell);
+void				prepare_prompt_beggining(char **prompt, t_minishell *shell);
 void				prepare_prompt_path(char **prompt, char *buff);
 int					init_prompt(t_minishell *shell);
 

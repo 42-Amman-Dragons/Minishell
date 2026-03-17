@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 09:12:58 by haya              #+#    #+#             */
-/*   Updated: 2026/03/14 17:12:52 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/17 05:30:13 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	set_signals_prompt(void)
 	sigaction(SIGQUIT, &sa, NULL);
 }
 // ctrl + c ^C is not printing when running sleep 200.
-// adding 	
+// adding
 // sa.sa_handler = handle_sigint;
 // sigaction(SIGINT, &sa, NULL);
 // will help.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/04 22:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/16 11:05:18 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/17 05:28:07 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,11 @@ static int	redirect_heredoc(t_redir_data *rd)
 {
 	dup2(rd->heredoc_fd, STDIN_FILENO);
 	close(rd->heredoc_fd);
+	rd->heredoc_fd = -1;
 	return (0);
 }
 
-int redirect(t_redir_data *rd, t_tree *node, t_minishell *shell)
+int	redirect(t_redir_data *rd, t_tree *node, t_minishell *shell)
 {
 	if (rd->mode == DIR_IN_FILE)
 	{
@@ -92,7 +93,7 @@ int redirect(t_redir_data *rd, t_tree *node, t_minishell *shell)
 		if (redirect_append(rd, node, shell) == -1)
 			return (-1);
 	}
-	return(0);
+	return (0);
 }
 
 int	handle_redirections(t_tree *node, t_minishell *shell)
@@ -108,7 +109,7 @@ int	handle_redirections(t_tree *node, t_minishell *shell)
 	while (redir)
 	{
 		rd = (t_redir_data *)redir->content;
-		if(redirect(rd, node, shell) == -1)
+		if (redirect(rd, node, shell) == -1)
 			return (-1);
 		redir = redir->next;
 	}

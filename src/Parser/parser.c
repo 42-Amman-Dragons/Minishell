@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/02/25 01:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/17 05:33:04 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ t_tree	*parse_pipe_seq(t_list **cur, int *err)
 			free_tree(left);
 			return (NULL);
 		}
-		left = create_oper_node(NODE_PIPE, left, right);
+		left = create_oper_node(NODE_PIPE, left, right, err);
+		if (*err)
+			return (NULL);
 	}
 	return (left);
 }
@@ -57,7 +59,9 @@ t_tree	*parse_logic_expr(t_list **cur, int *err)
 			free_tree(left);
 			return (NULL);
 		}
-		left = create_oper_node(type, left, right);
+		left = create_oper_node(type, left, right, err);
+		if (*err)
+			return (NULL);
 	}
 	return (left);
 }

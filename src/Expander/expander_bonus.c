@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/13 00:23:37 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/17 05:58:11 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 					shell->exit_status);
 			if (expanded)
 			{
-				if (expanded[0] == '\0') // @TODO: redirection errors.
+				// @TODO: redirection errors.
+				// This bug needs fixing, it should be similar to the mandatory
+				// The error message for "" is different from $NONEXISTENT_VAR, the first should be "ambiguous redirect" and the second should be "No such file or directory" 
+				if (expanded[0] == '\0') 
 				{
 					redirs = redirs->next;
 					continue ;

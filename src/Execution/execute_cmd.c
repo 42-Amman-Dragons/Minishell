@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/16 10:59:35 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/17 03:42:53 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	execve_cmd(t_tree *node, t_minishell *shell)
 {
@@ -46,7 +45,7 @@ void	execve_cmd(t_tree *node, t_minishell *shell)
 	// free_and_exit(node, shell, 126);
 }
 
-int temp_dup_error(int temp_stdin, int temp_stdout, t_minishell *shell)
+int	temp_dup_error(int temp_stdin, int temp_stdout, t_minishell *shell)
 {
 	if (temp_stdin != -1)
 		close(temp_stdin);
@@ -57,7 +56,7 @@ int temp_dup_error(int temp_stdin, int temp_stdout, t_minishell *shell)
 	return (1);
 }
 
-int redirection_failure(int temp_stdin, int temp_stdout, t_minishell *shell)
+int	redirection_failure(int temp_stdin, int temp_stdout, t_minishell *shell)
 {
 	dup2(temp_stdin, STDIN_FILENO);
 	dup2(temp_stdout, STDOUT_FILENO);
@@ -67,12 +66,11 @@ int redirection_failure(int temp_stdin, int temp_stdout, t_minishell *shell)
 	return (1);
 }
 
-int run_cmd(t_minishell *shell, t_tree *node)
+int	run_cmd(t_minishell *shell, t_tree *node)
 {
 	int	id;
 	int	status;
 
-	
 	set_signals_exec();
 	id = fork();
 	if (id == -1)
@@ -86,6 +84,7 @@ int run_cmd(t_minishell *shell, t_tree *node)
 		set_signals_child();
 		execve_cmd(node, shell);
 	}
+	close_heredoc_fds(node);
 	waitpid(id, &status, 0);
 	set_signals_prompt();
 	if (WIFSIGNALED(status))
@@ -94,7 +93,6 @@ int run_cmd(t_minishell *shell, t_tree *node)
 		shell->exit_status = WEXITSTATUS(status);
 	return (shell->exit_status);
 }
-
 
 int	exec_cmd(t_tree *node, t_minishell *shell)
 {

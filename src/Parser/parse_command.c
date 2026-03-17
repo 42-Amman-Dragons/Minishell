@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/13 00:20:44 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/17 05:29:24 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static t_redir_data	*build_redir(t_list **cur, t_token *rtok, int *err)
 	redir->heredoc_expand = 0;
 	redir->heredoc_fd = -1;
 	if (redir->mode == DIR_IN_HEREDOC && !ft_strchr(redir->filename, '\'')
-		&& !ft_strchr(redir->filename, '"'))
+			&& !ft_strchr(redir->filename, '"'))
 		redir->heredoc_expand = 1;
 	return (redir);
 }

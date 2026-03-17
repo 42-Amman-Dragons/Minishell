@@ -3,14 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:42:48 by haya              #+#    #+#             */
-/*   Updated: 2026/03/16 10:59:21 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/17 05:28:01 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	close_heredoc_fds(t_tree *node)
+{
+	t_list			*redir;
+	t_redir_data	*rd;
+
+	if (node->type == NODE_CMD)
+		redir = node->data.cmd.redirections;
+	else if (node->type == NODE_SUBSHELL)
+		redir = node->data.subshell.redirections;
+	else
+		return ;
+	while (redir)
+	{
+		rd = (t_redir_data *)redir->content;
+		if (rd->heredoc_fd >= 0)
+		{
+			close(rd->heredoc_fd);
+			rd->heredoc_fd = -1;
+		}
+		redir = redir->next;
+	}
+}
 
 void	secure_close(int fd, t_tree *node, t_minishell *shell)
 {

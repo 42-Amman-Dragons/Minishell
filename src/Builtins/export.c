@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 04:19:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/03 22:30:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/17 04:02:18 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static int	export_one(char *arg, t_minishell *shell)
 	char	*eq;
 	char	*name;
 	int		ret;
+	char	*dup;
 
 	eq = ft_strchr(arg, '=');
 	if (!eq)
@@ -48,7 +49,14 @@ static int	export_one(char *arg, t_minishell *shell)
 		if (!valid_identifier(arg))
 			return (export_invalid(arg));
 		if (!get_env_value(arg, shell->env))
-			add_env(ft_strdup(arg), shell);
+		{
+			dup = ft_strdup(arg);
+			if (!dup || add_env(dup, shell) != 0)
+			{
+				free(dup);
+				return (1);
+			}
+		}
 		return (0);
 	}
 	name = ft_substr(arg, 0, eq - arg);

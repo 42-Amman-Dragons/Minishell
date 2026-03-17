@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 12:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/16 12:22:43 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/17 05:28:21 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ static void	copy_arg(char **new_args, char **args, int *j, int k)
 	new_args[*j] = args[k];
 	(*j)++;
 }
+
 char	**generate_expanded_list(char **args, int i, char *expanded)
 {
 	int		j;
@@ -76,6 +77,8 @@ char	**generate_expanded_list(char **args, int i, char *expanded)
 	args_len = calc_len_args(args);
 	expanded_len = cal_len(expanded, ' ');
 	new_args = ft_calloc(args_len + expanded_len + 1, sizeof(char *));
+	if (!new_args)
+		return (NULL);
 	j = 0;
 	k = 0;
 	while (k < args_len)

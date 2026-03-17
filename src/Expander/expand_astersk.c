@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_astersk.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 09:53:10 by haya              #+#    #+#             */
-/*   Updated: 2026/03/16 12:09:03 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/17 05:28:10 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	is_matching(char *pattern, char *file_name)
 	return (0);
 }
 
-void add_to_result(int *i, char **result, char *file_name)
+void	add_to_result(int *i, char **result, char *file_name)
 {
 	if (*i != 0)
 		*result = append_str(*result, ft_strdup(" "));
