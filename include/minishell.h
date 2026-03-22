@@ -264,5 +264,5 @@ void				consider_home_dir(char *buff, char **env);
 void				change_color(char **prompt, char *color);
 void				prepare_prompt_beggining(char **prompt, t_minishell *shell);
 void				prepare_prompt_path(char **prompt, char *buff);
-int					init_prompt(t_minishell *shell);
+void				init_prompt(t_minishell *shell);
 #endif

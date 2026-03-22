@@ -73,6 +73,8 @@ int	runshell(t_minishell *shell)
 		{
 			free(shell->prompt);
 			shell->prompt = get_prompt(shell);
+			if (!shell->prompt)
+				shell->prompt = ft_strdup("minishell$ ");
 			status = process_line_interactive(shell);
 		}
 		else

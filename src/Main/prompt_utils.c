@@ -53,8 +53,7 @@ void	consider_home_dir(char *buff, char **env)
 		buff[0] = '~';
 		if (ft_strlen(home_path) == buff_size)
 		{
-			buff[1] = '/';
-			buff[2] = '\0';
+			buff[1] = '\0';
 			return ;
 		}
 		ft_memmove(buff + 1, buff + ft_strlen(home_path), buff_size

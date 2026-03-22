@@ -12,13 +12,10 @@
 
 #include "minishell.h"
 
-int	init_prompt(t_minishell *shell)
+void	init_prompt(t_minishell *shell)
 {
 	print_welcome_message();
 	shell->prompt = get_prompt(shell);
-	if (!shell->prompt)
-		return (-1);
-	return (0);
 }
 
 int	init_terminal(t_minishell *shell)
@@ -54,7 +51,6 @@ int	init_interactive_shell(t_minishell *shell)
 	set_signals_prompt();
 	if (load_history(shell) != 0)
 		return (-1);
-	if (init_prompt(shell) != 0)
-		return (-1);
+	init_prompt(shell);
 	return (0);
 }

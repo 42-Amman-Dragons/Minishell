@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 14:58:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/22 22:23:56 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/22 23:22:06 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ char	*get_prompt(t_minishell *shell)
 	char	buff[PATH_MAX];
 	char	*prompt;
 
+	prompt = ft_strdup("");
+	if (!prompt)
+		return (NULL);
 	resolve_user_host(shell);
 	ft_bzero(buff, PATH_MAX);
 	if (getcwd(buff, PATH_MAX) == NULL)
@@ -37,7 +40,6 @@ char	*get_prompt(t_minishell *shell)
 			ft_strlcpy(buff, ".", PATH_MAX);
 	}
 	consider_home_dir(buff, shell->env);
-	prompt = NULL;
 	change_color(&prompt, DRAGON_GREEN);
 	prepare_prompt_beggining(&prompt, shell);
 	change_color(&prompt, DRAGON_CYAN);
@@ -51,6 +53,8 @@ void	update_prompt_path(t_minishell *shell)
 	char	*new_prompt;
 
 	new_prompt = get_prompt(shell);
+	if (!new_prompt)
+		new_prompt = ft_strdup("minishell$ ");
 	free(shell->prompt);
 	shell->prompt = new_prompt;
 }

@@ -16,6 +16,8 @@ char	*safe_join(char *str1, char *str2)
 {
 	char	*result;
 
+	if (!str1)
+		return (NULL);
 	result = ft_strjoin(str1, str2);
 	free(str1);
 	return (result);
