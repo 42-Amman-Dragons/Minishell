@@ -50,15 +50,6 @@ void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
 	exit(cleanup_shell(shell, exit_code));
 }
 
-char	*safe_join(char *str1, char *str2)
-{
-	char	*result;
-
-	result = ft_strjoin(str1, str2);
-	free(str1);
-	return (result);
-}
-
 void	free_splitted(char **splitted)
 {
 	int	i;

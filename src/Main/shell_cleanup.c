@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:18 by haya              #+#    #+#             */
-/*   Updated: 2026/03/19 06:37:08 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/22 20:04:56 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,6 @@ void	free_env(char **env)
 		env[i++] = NULL;
 	}
 	free(env);
-}
-
-void	malloc_fail(t_minishell *shell)
-{
-	ft_putstr_fd("minishell: malloc failed\n", 2);
-	shell->exit_status = ENOMEM;
 }
 
 int	cleanup_shell(t_minishell *shell, int exit_code)

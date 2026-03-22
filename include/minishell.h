@@ -155,7 +155,6 @@ void				del_env_value(char *name, t_minishell *shell);
 int					add_env(char *entry, t_minishell *shell);
 char				*mk_env_entry(char *name, char *value);
 int					cleanup_shell(t_minishell *shell, int exit_code);
-void				malloc_fail(t_minishell *shell);
 int					calc_len_args(char **args);
 void				update_prompt_path(t_minishell *shell);
 

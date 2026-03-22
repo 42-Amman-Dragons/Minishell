@@ -83,5 +83,5 @@ void	prepare_prompt_beggining(char **prompt, t_minishell *shell)
 void	prepare_prompt_path(char **prompt, char *buff)
 {
 	*prompt = safe_join(*prompt, buff);
-	*prompt = safe_join(*prompt, "$ \0");
+	*prompt = safe_join(*prompt, "$ ");
 }
