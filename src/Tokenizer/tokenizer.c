@@ -20,19 +20,15 @@ static int	add_token(t_list **head, char *line, int *i)
 
 	token = create_token(&line[*i], i);
 	if (!token)
-	{
-		ft_lstclear(head, free_token);
-		return (0);
-	}
+		return (-1);
 	new_node = ft_lstnew(token);
 	if (!new_node)
 	{
 		free_token(token);
-		ft_lstclear(head, free_token);
-		return (0);
+		return (-1);
 	}
 	ft_lstadd_back(head, new_node);
-	return (1);
+	return (0);
 }
 
 t_list	*tokenizer(char *line)
@@ -49,8 +45,11 @@ t_list	*tokenizer(char *line)
 		skip_whitespaces(line, &i);
 		if (!line[i])
 			break ;
-		if (!add_token(&head, line, &i))
+		if (add_token(&head, line, &i) == -1)
+		{
+			ft_lstclear(&head, free_token);
 			return (NULL);
+		}
 	}
 	return (head);
 }

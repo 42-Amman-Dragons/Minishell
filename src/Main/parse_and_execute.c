@@ -19,7 +19,10 @@ static t_tree	*build_tree(t_minishell *shell)
 
 	tokens = tokenizer(shell->line);
 	if (!tokens)
+	{
+		malloc_fail(shell);
 		return (NULL);
+	}
 	tree = build_ast(tokens);
 	ft_lstclear(&tokens, free_token);
 	if (!tree)

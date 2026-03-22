@@ -155,6 +155,7 @@ void				del_env_value(char *name, t_minishell *shell);
 int					add_env(char *entry, t_minishell *shell);
 char				*mk_env_entry(char *name, char *value);
 int					cleanup_shell(t_minishell *shell, int exit_code);
+void				malloc_fail(t_minishell *shell);
 int					calc_len_args(char **args);
 void				update_prompt_path(t_minishell *shell);
 
@@ -211,8 +212,8 @@ t_tokenType			identify_token(char *s);
 t_list				*tokenizer(char *line);
 void				free_token(void *ptr);
 t_token				*create_token(char *str, int *i);
-t_token				*create_pipe_token(char *str, int *i);
-t_token				*create_background_token(char *str, int *i);
+t_token				*create_pipe_token(int *i);
+t_token				*create_background_token(int *i);
 t_token				*create_redirect_token(char *str, int *i);
 t_token				*create_and_or_token(char *str, int *i);
 t_token				*create_paren_token(char *str, int *i);

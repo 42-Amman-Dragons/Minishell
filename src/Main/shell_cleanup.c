@@ -27,6 +27,12 @@ void	free_env(char **env)
 	free(env);
 }
 
+void	malloc_fail(t_minishell *shell)
+{
+	ft_putstr_fd("minishell: malloc failed\n", 2);
+	shell->exit_status = ENOMEM;
+}
+
 int	cleanup_shell(t_minishell *shell, int exit_code)
 {
 	if (!shell)

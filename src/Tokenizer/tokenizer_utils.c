@@ -6,23 +6,18 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 00:31:51 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:29:45 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/22 18:12:20 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*This function checks if the character is a white space variant*/
 int	is_whitespace(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
 		|| c == '\r');
 }
 
-/*
-This function skips i number of white spaces
-(changes the value inside the i address)
-*/
 void	skip_whitespaces(char *ptr, int *i)
 {
 	while (ptr[*i] && is_whitespace(ptr[*i]))

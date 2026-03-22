@@ -46,5 +46,6 @@ t_token	*create_redirect_token(char *str, int *i)
 		return (NULL);
 	token->type = REDIRECT;
 	token->data.redir.mode = identify_redirection_mode(str, i);
+	token->data.redir.filename = NULL;
 	return (token);
 }

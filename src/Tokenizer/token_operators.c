@@ -13,11 +13,10 @@
 #include "libft.h"
 #include "minishell.h"
 
-t_token	*create_pipe_token(char *str, int *i)
+t_token	*create_pipe_token(int *i)
 {
 	t_token	*token;
 
-	(void)str;
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
@@ -26,11 +25,10 @@ t_token	*create_pipe_token(char *str, int *i)
 	return (token);
 }
 
-t_token	*create_background_token(char *str, int *i)
+t_token	*create_background_token(int *i)
 {
 	t_token	*token;
 
-	(void)str;
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
