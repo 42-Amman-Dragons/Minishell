@@ -10,7 +10,7 @@ OBJ_DIR = obj
 SRC =
 
 SIGNALS_DIR = Signals
-SIGNALS_SRC = signals.c signals_prompt.c
+SIGNALS_SRC = signals.c
 
 TOK_DIR = Tokenizer
 TOK_SRC = tokenizer.c tokenizer_utils.c tokenizer_factory.c \

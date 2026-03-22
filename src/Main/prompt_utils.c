@@ -69,11 +69,7 @@ void	change_color(char **prompt, char *color)
 
 void	prepare_prompt_beggining(char **prompt, t_minishell *shell)
 {
-	if (shell->exit_status == 0)
-		*prompt = safe_join(*prompt, SUCESS_EMOJI);
-	else
-		*prompt = safe_join(*prompt, ERROR_EMOJI);
-	*prompt = safe_join(*prompt, " ");
+	*prompt = safe_join(*prompt, PROMPT_EMOJI " ");
 	*prompt = safe_join(*prompt, shell->username);
 	*prompt = safe_join(*prompt, "@");
 	*prompt = safe_join(*prompt, shell->servername);

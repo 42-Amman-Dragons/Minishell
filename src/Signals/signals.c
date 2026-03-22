@@ -21,7 +21,6 @@ void	handle_sigint(int sig)
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
-	rebuild_prompt_sigint();
 	rl_redisplay();
 }
 

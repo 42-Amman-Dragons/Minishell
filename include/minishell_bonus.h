@@ -30,8 +30,7 @@
 
 # define DRAGON_GREEN "\001\033[1;32m\002"
 # define DRAGON_CYAN "\001\033[0;36m\002"
-# define SUCESS_EMOJI "🐉"
-# define ERROR_EMOJI "🔥"
+# define PROMPT_EMOJI "🐉"
 # define RESET "\001\033[0m\002"
 
 typedef enum e_tokenType

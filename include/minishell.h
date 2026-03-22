@@ -31,8 +31,7 @@
 
 # define DRAGON_GREEN "\001\033[1;32m\002"
 # define DRAGON_CYAN "\001\033[0;36m\002"
-# define SUCESS_EMOJI "🐉"
-# define ERROR_EMOJI "🔥"
+# define PROMPT_EMOJI "🐉"
 # define RESET "\001\033[0m\002"
 
 typedef enum e_tokenType
@@ -146,7 +145,6 @@ void				set_signals_prompt(void);
 void				set_signals_exec(void);
 void				set_signals_child(void);
 void				set_signals_heredoc(void);
-void				rebuild_prompt_sigint(void);
 int					init_mutable_env(char **env, t_minishell *shell);
 void				free_env(char **env);
 char				*get_env_value(char *name, char **env);
