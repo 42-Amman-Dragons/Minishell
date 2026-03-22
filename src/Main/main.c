@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/03/17 05:55:14 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/22 16:55:03 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,36 +15,13 @@
 
 int			g_SIGNUM = 0;
 
-static void	handle_signal_status(t_minishell *shell)
-{
-	if (g_SIGNUM != 0)
-	{
-		shell->exit_status = 128 + g_SIGNUM;
-		g_SIGNUM = 0;
-	}
-}
-
-void	welcome(void)
-{
-	printf("\033[38;5;222m ================================================================================\033[0m\n");
-	printf("\033[1;32m   ____  ____      _    ____  ___  _   _ ____ \033[0;36m/\\\033[1;32m____  _   _ _____ _     _\033[0m \n");
-	printf("\033[1;32m  |  _ \\|  _ \\    / \\  / ___|/ _ \\| \\ | / ___|\033[0;36m/ \\\033[1;32m / ___|| | | | ____| |   |\033[0m \n");
-	printf("\033[1;32m  | | | | |_) |  / _ \\| |  _| | | |  \\| \\___ \033[0;36m/  \\\033[1;32m ___ \\| |_| |  _| | |   |\033[0m \n");
-	printf("\033[1;32m  | |_| |  _ <  / ___ \\ |_| | |_| | |\\  |___)\033[0;36m\\  /\033[1;32m_) |  _  | |___| |___| |___\033[0m \n");
-	printf("\033[1;32m  |____/|_| \\_\\/_/   \\_\\____|\\___/|_| \\_|____/\033[0;36m\\/\033[1;32m____/|_| |_|_____|_____|_____|\033[0m \n");
-	printf("\033[0;36m                                               \\/\033[0m \n");
-	printf("  Done by: Mohannad and Haya 🐉✨\n");
-	printf("\033[38;5;222m ================================================================================\033[0m\n");
-	printf("\n");
-}
-
-static int	process_line(t_minishell *shell)
+static int	process_line_interactive(t_minishell *shell)
 {
 	shell->line = readline(shell->prompt);
 	handle_signal_status(shell);
 	if (!shell->line)
 	{
-		printf("exit\n");
+		ft_putstr_fd("exit\n", 2);
 		return (1);
 	}
 	if (ft_strlen(shell->line) == 0)
@@ -55,8 +32,30 @@ static int	process_line(t_minishell *shell)
 	}
 	if (add_to_history(shell->line, &(shell->history)) == -1)
 	{
-		free_all(shell);
+		cleanup_shell(shell, 1);
 		return (-1);
+	}
+	parse_and_execute(shell);
+	free(shell->line);
+	shell->line = NULL;
+	return (0);
+}
+
+static int	process_line_non_interactive(t_minishell *shell)
+{
+	size_t	len;
+
+	shell->line = get_next_line(STDIN_FILENO);
+	if (!shell->line)
+		return (1);
+	len = ft_strlen(shell->line);
+	if (len > 0 && shell->line[len - 1] == '\n')
+		shell->line[len - 1] = '\0';
+	if (ft_strlen(shell->line) == 0)
+	{
+		free(shell->line);
+		shell->line = NULL;
+		return (0);
 	}
 	parse_and_execute(shell);
 	free(shell->line);
@@ -70,38 +69,20 @@ int	runshell(t_minishell *shell)
 
 	while (1)
 	{
-		free(shell->prompt);
-		shell->prompt = get_prompt(shell);
-		status = process_line(shell);
+		if (shell->is_interactive)
+		{
+			free(shell->prompt);
+			shell->prompt = get_prompt(shell);
+			status = process_line_interactive(shell);
+		}
+		else
+			status = process_line_non_interactive(shell);
 		if (status == 1)
 			break ;
 		if (status == -1)
 			return (-1);
 	}
 	return (0);
-}
-
-t_minishell	*init_shell(char **env)
-{
-	t_minishell	*shell;
-
-	shell = init_minishell();
-	if (!shell)
-		return (NULL);
-	if (init_mutable_env(env, shell) != 0)
-	{
-		free_all(shell);
-		shell = NULL;
-	}
-	// here is tty ?
-	set_signals_prompt();
-	if (init_prompt(shell) != 0)
-	{
-		free_all(shell);
-		shell = NULL;
-	}
-	welcome();
-	return (shell);
 }
 
 int	main(int argc, char **argv, char *env[])
@@ -111,13 +92,16 @@ int	main(int argc, char **argv, char *env[])
 	(void)argv;
 	if (argc != 1)
 		return (1);
-	shell = init_shell(env);
+	shell = init_shell();
 	if (!shell)
 		return (1);
+	if (init_mutable_env(env, shell) != 0)
+		return (cleanup_shell(shell, 1));
+	if (shell->is_interactive && init_interactive_shell(shell) != 0)
+		return (cleanup_shell(shell, 1));
 	if (runshell(shell) == -1)
 		return (1);
-	custom_save_history(shell);
-	free_all(shell);
-	shell = NULL;
-	return (0);
+	if (shell->is_interactive)
+		custom_save_history(shell);
+	return (cleanup_shell(shell, 0));
 }

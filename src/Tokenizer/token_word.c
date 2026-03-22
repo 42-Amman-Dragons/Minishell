@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   word_token_utils.c                                 :+:      :+:    :+:   */
+/*   token_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -50,4 +50,21 @@ char	*extract_word(char *str, int *i)
 	word = ft_substr(str, 0, len);
 	(*i) += len;
 	return (word);
+}
+
+t_token	*create_word_token(char *str, int *i)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = WORD;
+	token->data.word.value = extract_word(str, i);
+	if (!token->data.word.value)
+	{
+		free(token);
+		return (NULL);
+	}
+	return (token);
 }

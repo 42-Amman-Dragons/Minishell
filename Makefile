@@ -7,11 +7,14 @@ LDFLAGS = -lreadline -lhistory
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRC = history.c signals.c free_all.c 
+SRC =
+
+SIGNALS_DIR = Signals
+SIGNALS_SRC = signals.c signals_prompt.c
 
 TOK_DIR = Tokenizer
 TOK_SRC = tokenizer.c tokenizer_utils.c tokenizer_factory.c \
-	word_token_utils.c redirection_token_utils.c
+	token_word.c token_redirect.c token_operators.c
 
 PARSER_DIR = Parser
 PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_free.c
@@ -22,16 +25,17 @@ EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c e
 
 BUILTIN_DIR = Builtins
 BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c export.c export_sort.c \
-	unset.c mutable_env.c env_crud.c
+	unset.c mutable_env.c env_crud.c exit.c
 
 MAIN_DIR = Main
-MAIN_SRC = main.c init_minishell.c parse_and_execute.c prompt.c prompt_utils.c
+MAIN_SRC = main.c initializers.c history.c shell_cleanup.c parse_and_execute.c prompt.c prompt_utils.c
 
 EXEC_DIR = Execution
 EXEC_SRC = execution.c execute_cmd.c exeute_cmd_utils.c execute_oper.c execute_pipe.c \
 	execute_subshell.c execution_utils.c handle_redirections.c 
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(SIGNALS_DIR)/, $(SIGNALS_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o)) \
@@ -40,6 +44,7 @@ OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXEC_DIR)/, $(EXEC_SRC:.c=.o))
 
 BONUS_OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(SIGNALS_DIR)/, $(SIGNALS_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC_BONUS:.c=.o)) \
@@ -81,6 +86,10 @@ $(LIBFT): $(LIBFT_OBJ)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(SIGNALS_DIR)/%.o: $(SRC_DIR)/$(SIGNALS_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(SIGNALS_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/$(TOK_DIR)/%.o: $(SRC_DIR)/$(TOK_DIR)/%.c

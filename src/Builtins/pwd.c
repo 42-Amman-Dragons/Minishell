@@ -23,7 +23,7 @@ int	ft_pwd(t_minishell *shell)
 		if (!pwd)
 			return (1);
 		ft_putstr_fd(pwd, 1);
-		write(1, "\n", 1);
+		ft_putchar_fd('\n', 1);
 		free(pwd);
 		return (0);
 	}

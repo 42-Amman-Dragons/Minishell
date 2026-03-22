@@ -63,18 +63,6 @@ typedef struct s_redir_data
 	int				heredoc_fd;
 }					t_redir_data;
 
-typedef struct s_pipe_data
-{
-}					t_pipe_data;
-
-typedef struct s_and_data
-{
-}					t_and_data;
-
-typedef struct s_or_data
-{
-}					t_or_data;
-
 typedef struct s_word_data
 {
 	char			*value;
@@ -83,10 +71,7 @@ typedef struct s_word_data
 typedef union u_token_data
 {
 	t_word_data		word;
-	t_pipe_data		pipe;
 	t_redir_data	redir;
-	t_and_data		and;
-	t_or_data or ;
 }					t_token_data;
 
 /*Polymorphic token*/
@@ -164,7 +149,7 @@ int					set_env_value(char *name, char *value, t_minishell *shell);
 void				del_env_value(char *name, t_minishell *shell);
 int					add_env(char *entry, t_minishell *shell);
 char				*mk_env_entry(char *name, char *value);
-void				free_all(t_minishell *shell);
+int					cleanup_shell(t_minishell *shell, int exit_code);
 int					calc_len_args(char **args);
 void				update_prompt_path(t_minishell *shell);
 /*Parser*/
@@ -219,7 +204,7 @@ char				*append_astersk(char *result, char *pattern);
 t_tokenType			identify_token(char *s);
 t_list				*tokenizer(char *line);
 void				free_token(void *ptr);
-t_token				*creat_token(char *str, int *i);
+t_token				*create_token(char *str, int *i);
 t_token				*create_pipe_token(char *str, int *i);
 t_token				*create_background_token(char *str, int *i);
 t_token				*create_redirect_token(char *str, int *i);
@@ -258,7 +243,7 @@ void				cmd_not_found(char *cmd_name, t_tree *node,
 						t_minishell *shell);
 
 // Main
-t_minishell			*init_minishell(void);
+t_minishell			*init_shell(void);
 void				parse_and_execute(t_minishell *shell);
 void				free_splitted(char **splitted);
 char				*get_prompt(t_minishell *shell);

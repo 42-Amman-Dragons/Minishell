@@ -6,11 +6,36 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 15:00:25 by haya              #+#    #+#             */
-/*   Updated: 2026/03/17 05:28:55 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/17 21:59:43 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	print_welcome_message(void)
+{
+	printf("\033[38;5;222m ===============================");
+	printf("=================================================\033[0m\n");
+	printf("\033[1;32m   ____  ____      _    ____  ___  _   _ ____ \033");
+	printf("[0;36m /\\\033[1;32m____  _   _ _____ _     _		\033[0m \n");
+	printf("\033[1;32m  |  _ \\|  _ \\    / \\  / ___|/ _ \\| \\ | / ___|\033");
+	printf("[0;36m/ \033[1;32m/ ___|| | | | ____| |   | |		\033[0m \n");
+	printf("\033[1;32m  | | | | |_) |  / _ \\| |  _| | | |  \\| \\___ \033");
+	printf("[0;36m/  \033[1;32m\\___ \\| |_| |  _| | |   | |		");
+	printf("\033[0m \n");
+	printf("\033[1;32m  | |_| |  _ <  / ___ \\ |_| | |_| | |\\  |___)\033");
+	printf("[0;36m\\   \033[1;32m_\033[0;36m/\033[1;32m_) ");
+	printf("|  _  | |___| |___| |___	\033[0m \n");
+	printf("\033[1;32m  |____/|_| \\_\\/_/   ");
+	printf("\\_\\____|\\___/|_| \\_|____/\033");
+	printf("[0;36m\\ \033[1;32m|____/|_| |_|_____|_____|_____| \033[0m \n");
+	printf("                                               ");
+	printf("\033[0;36m\\/\033[0m \n");
+	printf("  Done by: Mohannad and Haya 🐉✨\n");
+	printf("\033[38;5;222m ===============================");
+	printf("=================================================\033[0m\n");
+	printf("\n");
+}
 
 void	consider_home_dir(char *buff, char **env)
 {
@@ -55,7 +80,6 @@ void	prepare_prompt_beggining(char **prompt, t_minishell *shell)
 	*prompt = safe_join(*prompt, shell->servername);
 	*prompt = safe_join(*prompt, ":");
 }
-
 void	prepare_prompt_path(char **prompt, char *buff)
 {
 	*prompt = safe_join(*prompt, buff);

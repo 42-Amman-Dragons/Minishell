@@ -46,7 +46,7 @@ int	ft_echo(char **args)
 	{
 		ft_putstr_fd(args[i], 1);
 		if (args[i + 1])
-			write(1, " ", 1);
+			ft_putchar_fd(' ', 1);
 		i++;
 	}
 	if (!n_flag)

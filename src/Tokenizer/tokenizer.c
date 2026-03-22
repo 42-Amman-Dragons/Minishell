@@ -13,43 +13,12 @@
 #include "libft.h"
 #include "minishell.h"
 
-void	free_token(void *ptr)
-{
-	t_token	*token;
-
-	if (!ptr)
-		return ;
-	token = (t_token *)ptr;
-	if (token->type == WORD)
-		free(token->data.word.value);
-	free(token);
-}
-
-t_token	*creat_token(char *str, int *i)
-{
-	t_tokenType	type;
-
-	type = identify_token(str);
-	if (type == PIPE)
-		return (create_pipe_token(str, i));
-	else if (type == BACKGROUND)
-		return (create_background_token(str, i));
-	else if (type == REDIRECT)
-		return (create_redirect_token(str, i));
-	else if (type == AND || type == OR)
-		return (create_and_or_token(str, i));
-	else if (type == OPEN_PAREN || type == CLOSE_PAREN)
-		return (create_paren_token(str, i));
-	else
-		return (create_word_token(str, i));
-}
-
 static int	add_token(t_list **head, char *line, int *i)
 {
 	t_token	*token;
 	t_list	*new_node;
 
-	token = creat_token(&line[*i], i);
+	token = create_token(&line[*i], i);
 	if (!token)
 	{
 		ft_lstclear(head, free_token);

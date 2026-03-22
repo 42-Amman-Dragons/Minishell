@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:31:42 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/17 22:00:16 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,18 +64,6 @@ typedef struct s_redir_data
 	int				heredoc_fd;
 }					t_redir_data;
 
-typedef struct s_pipe_data
-{
-}					t_pipe_data;
-
-typedef struct s_and_data
-{
-}					t_and_data;
-
-typedef struct s_or_data
-{
-}					t_or_data;
-
 typedef struct s_word_data
 {
 	char			*value;
@@ -84,10 +72,7 @@ typedef struct s_word_data
 typedef union u_token_data
 {
 	t_word_data		word;
-	t_pipe_data		pipe;
 	t_redir_data	redir;
-	t_and_data		and;
-	t_or_data or ;
 }					t_token_data;
 
 /*Polymorphic token*/
@@ -153,13 +138,15 @@ typedef struct s_tree
 }					t_tree;
 
 int					add_to_history(char *line, t_list **history);
-int					load_history(t_list **history);
+int					load_history(t_minishell *shell);
 void				custom_save_history(t_minishell *shell);
 void				handle_sigint(int sig);
+void				handle_signal_status(t_minishell *shell);
 void				set_signals_prompt(void);
 void				set_signals_exec(void);
 void				set_signals_child(void);
 void				set_signals_heredoc(void);
+void				rebuild_prompt_sigint(void);
 int					init_mutable_env(char **env, t_minishell *shell);
 void				free_env(char **env);
 char				*get_env_value(char *name, char **env);
@@ -167,7 +154,7 @@ int					set_env_value(char *name, char *value, t_minishell *shell);
 void				del_env_value(char *name, t_minishell *shell);
 int					add_env(char *entry, t_minishell *shell);
 char				*mk_env_entry(char *name, char *value);
-void				free_all(t_minishell *shell);
+int					cleanup_shell(t_minishell *shell, int exit_code);
 int					calc_len_args(char **args);
 void				update_prompt_path(t_minishell *shell);
 
@@ -223,7 +210,7 @@ char				*append_astersk(char *result, char *pattern);
 t_tokenType			identify_token(char *s);
 t_list				*tokenizer(char *line);
 void				free_token(void *ptr);
-t_token				*creat_token(char *str, int *i);
+t_token				*create_token(char *str, int *i);
 t_token				*create_pipe_token(char *str, int *i);
 t_token				*create_background_token(char *str, int *i);
 t_token				*create_redirect_token(char *str, int *i);
@@ -263,12 +250,16 @@ void				cmd_not_found(char *cmd_name, t_tree *node,
 						t_minishell *shell);
 
 // Main
-t_minishell			*init_minishell(void);
+t_minishell			*init_shell(void);
+int					init_terminal(t_minishell *shell);
+int					init_interactive_shell(t_minishell *shell);
 void				parse_and_execute(t_minishell *shell);
 void				free_splitted(char **splitted);
 char				*get_prompt(t_minishell *shell);
 char				*absoulute_path(char *cmd, char **env);
 char				*safe_join(char *str1, char *str2);
+void				print_welcome_message(void);
+
 void				consider_home_dir(char *buff, char **env);
 void				change_color(char **prompt, char *color);
 void				prepare_prompt_beggining(char **prompt, t_minishell *shell);

@@ -6,11 +6,21 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/17 03:42:53 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/21 02:47:03 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// Returns 1 if path is a directory, 0 otherwise
+static int	is_command_a_directory(const char *path)
+{
+	struct stat	st;
+
+	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+		return (1);
+	return (0);
+}
 
 void	execve_cmd(t_tree *node, t_minishell *shell)
 {
@@ -28,21 +38,28 @@ void	execve_cmd(t_tree *node, t_minishell *shell)
 	}
 	if (!node->data.cmd.args[0])
 		cmd_not_found(cmd_name, node, shell);
-	if (execve(node->data.cmd.args[0], node->data.cmd.args, shell->env) == -1)
+	// Check before execve: on Linux execve() returns EACCES for directories,
+	// not EISDIR. Detect it early and print the correct error message.
+	if (is_command_a_directory(node->data.cmd.args[0]))
 	{
-		perror("execve error");
+		ft_putstr_fd(cmd_name, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
 		free(cmd_name);
 		free_and_exit(node, shell, 126);
 	}
-	//  @mabuquare : what does the following code do ? the execve should repalce the current process.
-	// ft_putstr_fd(cmd_name, 2);
-	// ft_putstr_fd(": ", 2);
-	// ft_putstr_fd(strerror(errno), 2);
-	// ft_putstr_fd("\n", 2);
-	// free(cmd_name);
-	// if (errno == ENOENT)
-	// 	free_and_exit(node, shell, 127);
-	// free_and_exit(node, shell, 126);
+	if (execve(node->data.cmd.args[0], node->data.cmd.args, shell->env) == -1)
+	{
+		// ENOENT = file/path not found -> 127 (command not found)
+		// EACCES = no execute permission -> 126
+		ft_putstr_fd(cmd_name, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("\n", 2);
+		free(cmd_name);
+		if (errno == ENOENT)
+			free_and_exit(node, shell, 127);
+		free_and_exit(node, shell, 126);
+	}
 }
 
 int	temp_dup_error(int temp_stdin, int temp_stdout, t_minishell *shell)

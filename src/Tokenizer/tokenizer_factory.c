@@ -5,7 +5,7 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/27 20:00:00 by mabuqare          #+#    #+#             */
+/*   Created: 2026/02/16 00:14:20 by mabuqare          #+#    #+#             */
 /*   Updated: 2026/03/17 05:29:43 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -13,87 +13,33 @@
 #include "libft.h"
 #include "minishell.h"
 
-t_token	*create_pipe_token(char *str, int *i)
+void	free_token(void *ptr)
 {
 	t_token	*token;
 
-	(void)str;
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = PIPE;
-	(*i)++;
-	return (token);
+	if (!ptr)
+		return ;
+	token = (t_token *)ptr;
+	if (token->type == WORD)
+		free(token->data.word.value);
+	free(token);
 }
 
-t_token	*create_background_token(char *str, int *i)
+t_token	*create_token(char *str, int *i)
 {
-	t_token	*token;
+	t_tokenType	type;
 
-	(void)str;
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = BACKGROUND;
-	(*i)++;
-	return (token);
-}
-
-t_token	*create_redirect_token(char *str, int *i)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = REDIRECT;
-	token->data.redir.mode = identify_redirection_mode(str, i);
-	return (token);
-}
-
-t_token	*create_and_or_token(char *str, int *i)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	if (ft_strncmp("&&", str, 2) == 0)
-		token->type = AND;
-	else if (ft_strncmp("||", str, 2) == 0)
-		token->type = OR;
-	(*i) += 2;
-	return (token);
-}
-
-t_token	*create_paren_token(char *str, int *i)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	if (*str == '(')
-		token->type = OPEN_PAREN;
+	type = identify_token(str);
+	if (type == PIPE)
+		return (create_pipe_token(str, i));
+	else if (type == BACKGROUND)
+		return (create_background_token(str, i));
+	else if (type == REDIRECT)
+		return (create_redirect_token(str, i));
+	else if (type == AND || type == OR)
+		return (create_and_or_token(str, i));
+	else if (type == OPEN_PAREN || type == CLOSE_PAREN)
+		return (create_paren_token(str, i));
 	else
-		token->type = CLOSE_PAREN;
-	(*i)++;
-	return (token);
-}
-
-t_token	*create_word_token(char *str, int *i)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = WORD;
-	token->data.word.value = extract_word(str, i);
-	if (!token->data.word.value)
-	{
-		free(token);
-		return (NULL);
-	}
-	return (token);
+		return (create_word_token(str, i));
 }

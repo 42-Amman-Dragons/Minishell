@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redirection_token_utils.c                          :+:      :+:    :+:   */
+/*   token_redirect.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -35,4 +35,16 @@ t_dir_mode	identify_redirection_mode(char *str, int *i)
 		return (DIR_OUT_TRUNC);
 	}
 	return (DIR_IN_FILE);
+}
+
+t_token	*create_redirect_token(char *str, int *i)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->type = REDIRECT;
+	token->data.redir.mode = identify_redirection_mode(str, i);
+	return (token);
 }

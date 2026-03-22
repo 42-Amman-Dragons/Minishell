@@ -24,15 +24,15 @@ static void	push_heredoc_line(int fd, char *line, t_redir_data *rd,
 		expanded = expand_word(line, shell->env, shell->exit_status);
 		if (expanded)
 		{
-			write(fd, expanded, ft_strlen(expanded));
-			write(fd, "\n", 1);
+			ft_putstr_fd(expanded, fd);
+			ft_putchar_fd('\n', fd);
 			free(expanded);
 		}
 	}
 	else
 	{
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+		ft_putstr_fd(line, fd);
+		ft_putchar_fd('\n', fd);
 	}
 }
 
@@ -74,7 +74,7 @@ int	heredoc_parent(int fd, int pid, t_redir_data *rd, char *tmp)
 	if (WIFSIGNALED(status))
 	{
 		g_SIGNUM = WTERMSIG(status);
-		write(1, "\n", 1);
+		ft_putchar_fd('\n', 1);
 		return (unlink(tmp), free(tmp), -1);
 	}
 	rd->heredoc_fd = open(tmp, O_RDONLY);

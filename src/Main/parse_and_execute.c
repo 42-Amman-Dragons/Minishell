@@ -37,12 +37,6 @@ static t_tree	*build_tree(t_minishell *shell)
 	return (tree);
 }
 
-static void	exec_external(t_tree *tree, t_minishell *shell)
-{
-	exec_tree(tree, shell);
-	rl_on_new_line();
-}
-
 void	parse_and_execute(t_minishell *shell)
 {
 	t_tree	*tree;
@@ -50,6 +44,7 @@ void	parse_and_execute(t_minishell *shell)
 	tree = build_tree(shell);
 	if (!tree)
 		return ;
-	exec_external(tree, shell);
+	exec_tree(tree, shell);
+	rl_on_new_line();
 	free_tree(tree);
 }

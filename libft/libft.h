@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 10:40:19 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/03/08 10:11:47 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/19 06:47:53 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define LIBFT_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1024
+#  define BUFFER_SIZE 1
 # endif
 
 # include <stdarg.h>

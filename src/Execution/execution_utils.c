@@ -47,8 +47,7 @@ void	secure_close(int fd, t_tree *node, t_minishell *shell)
 void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
 {
 	free_tree(node);
-	free_all(shell);
-	exit(exit_code);
+	exit(cleanup_shell(shell, exit_code));
 }
 
 char	*safe_join(char *str1, char *str2)
