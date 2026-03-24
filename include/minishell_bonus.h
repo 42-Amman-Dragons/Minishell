@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:31:36 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/24 08:41:09 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,9 @@ t_tokenType			cur_type(t_list **cur);
 t_token				*advance(t_list **cur);
 t_tree				*create_oper_node(t_node_type type, t_tree *l, t_tree *r,
 						int *err);
-t_tree				*create_cmd_node(char **args, t_list *redirs);
-t_tree				*create_subshell_node(t_tree *child, t_list *redirs);
+t_tree				*create_cmd_node(char **args, t_list *redirs, int *err);
+t_tree				*create_subshell_node(t_tree *child, t_list *redirs,
+						int *err);
 void				free_tree(t_tree *tree);
 void				free_args(char **args);
 void				free_redir(void *ptr);
@@ -234,7 +235,7 @@ int					exec_cmd(t_tree *node, t_minishell *shell);
 int					exec_pipe(t_tree *node, t_minishell *shell);
 int					exec_and_or(t_tree *node, t_minishell *shell);
 void				secure_close(int fd, t_tree *node, t_minishell *shell);
-int					handle_redirections(t_tree *node, t_minishell *shell);
+int					handle_redirections(t_tree *node);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);

@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   swap_both.c                                        :+:      :+:    :+:   */
+/*   signal_status.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/14 13:56:56 by hal-lawa          #+#    #+#             */
-/*   Updated: 2025/10/14 14:03:31 by hal-lawa         ###   ########.fr       */
+/*   Created: 2026/03/24 00:00:00 by mabuqare          #+#    #+#             */
+/*   Updated: 2026/03/24 00:00:00 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "minishell.h"
+#include <signal.h>
 
-void swap_both(s_node **stacka, s_node **stackb)
+extern int	g_signum;
+
+void	handle_signal_status(t_minishell *shell)
 {
-	swap_two(stacka);
-	swap_two(stackb);
+	if (g_signum != 0)
+	{
+		shell->exit_status = 128 + g_signum;
+		g_signum = 0;
+	}
 }

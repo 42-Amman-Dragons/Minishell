@@ -24,6 +24,7 @@ static char	*get_path(char **env)
 		if (ft_strnstr(env[i], "PATH=", 5))
 		{
 			path = env[i];
+			break ;
 		}
 		i++;
 	}
@@ -41,18 +42,11 @@ static char	*asssemple_path(char *one_path, char *cmd)
 	return (sub);
 }
 
-char	*absoulute_path(char *cmd, char **env)
+static char	*search_in_paths(char **paths, char *cmd)
 {
-	char	*path;
-	char	**paths;
 	char	*sub;
 	int		i;
 
-	path = get_path(env);
-	if (!path)
-		return (NULL);
-	paths = ft_split(path, ':');
-	free(path);
 	i = 0;
 	while (paths[i])
 	{
@@ -68,6 +62,21 @@ char	*absoulute_path(char *cmd, char **env)
 	}
 	free_splitted(paths);
 	return (NULL);
+}
+
+char	*absoulute_path(char *cmd, char **env)
+{
+	char	*path;
+	char	**paths;
+
+	path = get_path(env);
+	if (!path)
+		return (NULL);
+	paths = ft_split(path, ':');
+	free(path);
+	if (!paths)
+		return (NULL);
+	return (search_in_paths(paths, cmd));
 }
 
 void	cmd_not_found(char *cmd_name, t_tree *node, t_minishell *shell)

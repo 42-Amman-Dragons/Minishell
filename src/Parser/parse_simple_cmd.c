@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:29:29 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/23 16:23:00 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,26 @@ static int	add_word(t_list **words, t_list **cur, int *err)
 
 	word = ft_strdup(((t_token *)(*cur)->content)->data.word.value);
 	if (!word)
-		return (*err = 1, 1);
+	{
+		*err = 1;
+		return (1);
+	}
 	node = ft_lstnew(word);
 	if (!node)
 	{
 		free(word);
-		return (*err = 1, 1);
+		*err = 1;
+		return (1);
 	}
 	ft_lstadd_back(words, node);
 	advance(cur);
 	return (0);
 }
 
+/* frees only the t_list nodes, NOT the char* content.
+** used after list_to_args() succeeds: strings are transferred
+** into args[] by pointer, so ft_lstclear(&words, free) would
+** double-free them when free_args(args) is called later. */
 static void	free_words_list(t_list *words)
 {
 	t_list	*tmp;
@@ -92,7 +100,7 @@ t_tree	*parse_simple_cmd(t_list **cur, int *err)
 
 	words = NULL;
 	redirs = NULL;
-	if (collect_tokens(cur, &words, &redirs, err))
+	if (collect_tokens(cur, &words, &redirs, err) != 0)
 		return (NULL);
 	if (!words && !redirs)
 	{
@@ -100,6 +108,13 @@ t_tree	*parse_simple_cmd(t_list **cur, int *err)
 		return (NULL);
 	}
 	args = list_to_args(words);
+	if (!args && words)
+	{
+		ft_lstclear(&words, free);
+		ft_lstclear(&redirs, free_redir);
+		*err = 1;
+		return (NULL);
+	}
 	free_words_list(words);
-	return (create_cmd_node(args, redirs));
+	return (create_cmd_node(args, redirs, err));
 }

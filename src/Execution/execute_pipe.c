@@ -27,12 +27,7 @@ static int	wait_all(pid_t pid)
 	{
 		id = waitpid(-1, &status, 0);
 		if (id == pid)
-		{
-			if (WIFSIGNALED(status))
-				err = 128 + WTERMSIG(status);
-			else if (WIFEXITED(status))
-				err = WEXITSTATUS(status);
-		}
+			err = child_exit_status(status);
 		if (id <= 0)
 			break ;
 	}
@@ -47,8 +42,8 @@ static pid_t	handle_left_pipe(int *fd, int *temp_std, t_tree *node,
 	left_id = fork();
 	if (left_id == -1)
 	{
-		perror("PIPE ERROR: ");
-		free_and_exit(node, shell, 1);
+		perror("minishell: fork");
+		return (-1);
 	}
 	else if (left_id == 0)
 	{
@@ -76,8 +71,8 @@ static pid_t	handle_right_pipe(int *fd, int *temp_std, t_tree *node,
 	right_id = fork();
 	if (right_id == -1)
 	{
-		perror("PIPE ERROR: ");
-		free_and_exit(node, shell, 1);
+		perror("minishell: fork");
+		return (-1);
 	}
 	else if (right_id == 0)
 	{
@@ -118,14 +113,21 @@ void	safe_close(int *fd, char *msg)
 	(*fd) = -1;
 }
 
-void	restore_close_redir(int *fd, int *temp_stdin, int *temp_stdout)
+int	restore_close_redir(int *fd, int *temp_stdin, int *temp_stdout)
 {
 	safe_close(&fd[0], "close error");
 	safe_close(&fd[1], "close error");
-	dup2(*temp_stdin, STDIN_FILENO);
-	dup2(*temp_stdout, STDOUT_FILENO);
+	if (dup2(*temp_stdin, STDIN_FILENO) == -1
+		|| dup2(*temp_stdout, STDOUT_FILENO) == -1)
+	{
+		perror("minishell: dup2");
+		safe_close(temp_stdin, "close error");
+		safe_close(temp_stdout, "close error");
+		return (-1);
+	}
 	safe_close(temp_stdin, "close error");
 	safe_close(temp_stdout, "close error");
+	return (0);
 }
 int	exec_pipe(t_tree *node, t_minishell *shell)
 {
@@ -146,9 +148,24 @@ int	exec_pipe(t_tree *node, t_minishell *shell)
 		return (1);
 	}
 	set_signals_exec();
-	handle_left_pipe(fd, temp_std, node, shell);
+	if (handle_left_pipe(fd, temp_std, node, shell) == -1)
+	{
+		if (restore_close_redir(fd, &temp_std[0], &temp_std[1]) == -1)
+			free_and_exit(node, shell, 1);
+		set_signals_prompt();
+		return (1);
+	}
 	right_id = handle_right_pipe(fd, temp_std, node, shell);
-	restore_close_redir(fd, &temp_std[0], &temp_std[1]);
+	if (right_id == -1)
+	{
+		waitpid(-1, NULL, 0);
+		if (restore_close_redir(fd, &temp_std[0], &temp_std[1]) == -1)
+			free_and_exit(node, shell, 1);
+		set_signals_prompt();
+		return (1);
+	}
+	if (restore_close_redir(fd, &temp_std[0], &temp_std[1]) == -1)
+		free_and_exit(node, shell, 1);
 	exit_code = wait_all(right_id);
 	set_signals_prompt();
 	shell->exit_status = exit_code;

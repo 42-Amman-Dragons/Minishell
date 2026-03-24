@@ -12,27 +12,14 @@
 
 #include "minishell.h"
 
-static int	wait_exit_code(pid_t pid)
-{
-	int	status;
-
-	status = 0;
-	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (0);
-}
-
 int	exec_subshell(t_tree *node, t_minishell *shell)
 {
 	pid_t	pid;
-	int		exit_code;
+	int		status;
 
 	set_signals_exec();
 	pid = fork();
-	exit_code = 0;
+	status = 0;
 	if (pid == -1)
 	{
 		perror("Fork Error");
@@ -42,13 +29,13 @@ int	exec_subshell(t_tree *node, t_minishell *shell)
 	if (pid == 0)
 	{
 		set_signals_child();
-		if (handle_redirections(node, shell) == -1)
+		if (handle_redirections(node) == -1)
 			free_and_exit(node, shell, 1);
 		exec_tree(node->data.subshell.child, shell);
 		free_and_exit(node, shell, shell->exit_status);
 	}
-	exit_code = wait_exit_code(pid);
-	shell->exit_status = exit_code;
+	waitpid(pid, &status, 0);
+	shell->exit_status = child_exit_status(status);
 	set_signals_prompt();
-	return (exit_code);
+	return (shell->exit_status);
 }

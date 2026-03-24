@@ -45,8 +45,7 @@ t_tree	*parse_logic_expr(t_list **cur, int *err)
 	left = parse_pipe_seq(cur, err);
 	if (*err)
 		return (NULL);
-	while (cur_type(cur) == AND || cur_type(cur) == OR
-		|| cur_type(cur) == BACKGROUND)
+	while (cur_type(cur) == AND || cur_type(cur) == OR)
 	{
 		if (cur_type(cur) == AND)
 			type = NODE_AND;
@@ -66,25 +65,23 @@ t_tree	*parse_logic_expr(t_list **cur, int *err)
 	return (left);
 }
 
-t_tree	*build_ast(t_list *tokens)
+t_tree	*build_ast(t_list *tokens, int *err)
 {
 	t_list	*cur;
 	t_tree	*tree;
-	int		err;
 
 	if (!tokens)
 		return (NULL);
-	err = 0;
 	cur = tokens;
-	tree = parse_logic_expr(&cur, &err);
-	if (err)
+	tree = parse_logic_expr(&cur, err);
+	if (*err)
 	{
 		free_tree(tree);
 		return (NULL);
 	}
 	if (cur)
 	{
-		syntax_error(cur, &err);
+		syntax_error(cur, err);
 		free_tree(tree);
 		return (NULL);
 	}

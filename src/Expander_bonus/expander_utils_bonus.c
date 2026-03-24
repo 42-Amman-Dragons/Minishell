@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 12:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:28:21 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/23 21:20:46 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	add_splitted(char **new_args, int *j, char *expanded)
 
 	i = 0;
 	splitted = ft_split(expanded, ' ');
+	if (!splitted)
+		return ;
 	while (splitted[i])
 	{
 		new_args[*j] = splitted[i];
@@ -78,7 +80,11 @@ char	**generate_expanded_list(char **args, int i, char *expanded)
 	expanded_len = cal_len(expanded, ' ');
 	new_args = ft_calloc(args_len + expanded_len + 1, sizeof(char *));
 	if (!new_args)
+	{
+		free_args(args);
+		free(expanded);
 		return (NULL);
+	}
 	j = 0;
 	k = 0;
 	while (k < args_len)
@@ -92,40 +98,10 @@ char	**generate_expanded_list(char **args, int i, char *expanded)
 			copy_arg(new_args, args, &j, k);
 		k++;
 	}
+	free(expanded);
 	free(args);
 	return (new_args);
 }
-
-// char	**generate_expanded_list(char **args, int i, char *expanded)
-// {
-// 	int		j;
-// 	int		k;
-// 	int		args_len;
-// 	int		expanded_len;
-// 	char	**new_args;
-
-// 	args_len = calc_len_args(args);
-// 	expanded_len = cal_len(expanded, ' ');
-// 	new_args = ft_calloc(args_len + expanded_len + 1, sizeof(char *));
-// 	j = 0;
-// 	k = 0;
-// 	while (k < args_len)
-// 	{
-// 		if (k == i)
-// 		{
-// 			add_splitted(new_args, &j, expanded);
-// 			free(args[k]);
-// 		}
-// 		else
-// 		{
-// 			new_args[j] = args[k];
-// 			j++;
-// 		}
-// 		k++;
-// 	}
-// 	free(args);
-// 	return (new_args);
-// }
 
 char	**add_to_args(char **args, int i, char *expanded, int is_wc)
 {

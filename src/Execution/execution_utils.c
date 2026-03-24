@@ -44,6 +44,15 @@ void	secure_close(int fd, t_tree *node, t_minishell *shell)
 	}
 }
 
+int	child_exit_status(int status)
+{
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (0);
+}
+
 void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
 {
 	free_tree(node);

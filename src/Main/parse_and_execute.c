@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/17 05:28:51 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/23 22:07:19 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,17 @@ static t_tree	*build_tree(t_minishell *shell)
 {
 	t_list	*tokens;
 	t_tree	*tree;
+	int		err;
 
 	tokens = tokenizer(shell->line);
 	if (!tokens)
 		return (NULL);
-	tree = build_ast(tokens);
+	err = 0;
+	tree = build_ast(tokens, &err);
 	ft_lstclear(&tokens, free_token);
 	if (!tree)
 	{
-		shell->exit_status = 2;
+		shell->exit_status = err;
 		return (NULL);
 	}
 	if (init_heredocs(tree, shell) == -1)

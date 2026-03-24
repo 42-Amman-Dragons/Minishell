@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:29:20 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/23 16:42:30 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ const char	*token_to_str(t_token *tok)
 
 void	syntax_error(t_list *cur, int *err)
 {
-	*err = 1;
+	*err = 2;
 	ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 	if (!cur)
 		ft_putstr_fd("newline", 2);

@@ -48,7 +48,7 @@ t_tree	*create_oper_node(t_node_type type, t_tree *l, t_tree *r, int *err)
 	return (node);
 }
 
-t_tree	*create_cmd_node(char **args, t_list *redirs)
+t_tree	*create_cmd_node(char **args, t_list *redirs, int *err)
 {
 	t_tree	*node;
 
@@ -57,6 +57,7 @@ t_tree	*create_cmd_node(char **args, t_list *redirs)
 	{
 		free_args(args);
 		ft_lstclear(&redirs, free_redir);
+		*err = 1;
 		return (NULL);
 	}
 	node->type = NODE_CMD;
@@ -65,7 +66,7 @@ t_tree	*create_cmd_node(char **args, t_list *redirs)
 	return (node);
 }
 
-t_tree	*create_subshell_node(t_tree *child, t_list *redirs)
+t_tree	*create_subshell_node(t_tree *child, t_list *redirs, int *err)
 {
 	t_tree	*node;
 
@@ -74,6 +75,7 @@ t_tree	*create_subshell_node(t_tree *child, t_list *redirs)
 	{
 		free_tree(child);
 		ft_lstclear(&redirs, free_redir);
+		*err = 1;
 		return (NULL);
 	}
 	node->type = NODE_SUBSHELL;

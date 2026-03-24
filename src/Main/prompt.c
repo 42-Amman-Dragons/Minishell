@@ -55,6 +55,8 @@ void	update_prompt_path(t_minishell *shell)
 	new_prompt = get_prompt(shell);
 	if (!new_prompt)
 		new_prompt = ft_strdup("minishell$ ");
+	if (!new_prompt)
+		return ;
 	free(shell->prompt);
 	shell->prompt = new_prompt;
 }

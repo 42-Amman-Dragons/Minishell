@@ -89,6 +89,8 @@ int	print_sorted_env(t_minishell *shell)
 	int	i;
 
 	count = env_count(shell->env);
+	if (count == 0)
+		return (0);
 	idx = get_sorted_idx(shell->env, count);
 	if (!idx)
 		return (1);

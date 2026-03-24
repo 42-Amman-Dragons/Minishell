@@ -6,14 +6,14 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/03/22 22:32:01 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/24 08:53:13 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <signal.h>
 
-int			g_SIGNUM = 0;
+int			g_signum = 0;
 
 static int	process_line_interactive(t_minishell *shell)
 {
@@ -75,8 +75,9 @@ int	runshell(t_minishell *shell)
 			shell->prompt = get_prompt(shell);
 			if (!shell->prompt)
 				shell->prompt = ft_strdup("minishell$ ");
-			status = process_line_interactive(shell);
 		}
+		if (shell->is_interactive)
+			status = process_line_interactive(shell);
 		else
 			status = process_line_non_interactive(shell);
 		if (status == 1)
@@ -105,5 +106,5 @@ int	main(int argc, char **argv, char *env[])
 		return (1);
 	if (shell->is_interactive)
 		custom_save_history(shell);
-	return (cleanup_shell(shell, 0));
+	return (cleanup_shell(shell, shell->exit_status));
 }

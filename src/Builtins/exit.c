@@ -42,6 +42,14 @@ int	calc_len_args(char **args)
 
 int	ft_exit(char **args, t_minishell *shell)
 {
+	if (calc_len_args(args) >= 2 && !is_all_num(args[1]))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		custom_save_history(shell);
+		exit(cleanup_shell(shell, 2));
+	}
 	if (calc_len_args(args) > 2)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
@@ -49,14 +57,6 @@ int	ft_exit(char **args, t_minishell *shell)
 	}
 	if (calc_len_args(args) == 2)
 	{
-		if (!is_all_num(args[1]))
-		{
-			ft_putstr_fd("minishell: exit: ", 2);
-			ft_putstr_fd(args[1], 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
-			custom_save_history(shell);
-			exit(cleanup_shell(shell, 2));
-		}
 		custom_save_history(shell);
 		exit(cleanup_shell(shell, ft_atoi(args[1])));
 	}

@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:28:16 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/23 17:43:54 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static void	handle_normal(char *word, t_expand *ctx)
 {
+	char	*pattern;
+
 	if (word[ctx->i] == '\'')
 	{
 		ctx->state = EXP_SQUOTE;
@@ -26,10 +28,19 @@ static void	handle_normal(char *word, t_expand *ctx)
 	}
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != ' ')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
-	else if (contains(word, '*') == 1)
+	else if (word[ctx->i] == '*')
 	{
-		ctx->result = append_astersk(ctx->result, word);
-		ctx->i += ft_strlen(word);
+		if (ctx->result)
+			pattern = ft_strjoin(ctx->result, word + ctx->i);
+		else
+			pattern = ft_strdup(word + ctx->i);
+		free(ctx->result);
+		ctx->result = append_astersk(NULL, pattern);
+		if (!ctx->result)
+			ctx->result = pattern;
+		else
+			free(pattern);
+		ctx->i = ft_strlen(word);
 	}
 	else
 		ctx->result = append_char(ctx->result, word[ctx->i++]);
@@ -76,6 +87,29 @@ char	*expand_word(char *word, char **env, int exit_status)
 			handle_squote(word, &ctx);
 		else if (ctx.state == EXP_DQUOTE)
 			handle_dquote(word, &ctx);
+	}
+	if (!ctx.result)
+		return (ft_strdup(""));
+	return (ctx.result);
+}
+
+char	*expand_word_heredoc(char *word, char **env, int exit_status)
+{
+	t_expand	ctx;
+
+	ctx.result = NULL;
+	ctx.env = env;
+	ctx.i = 0;
+	ctx.exit_status = exit_status;
+	ctx.state = EXP_NORMAL;
+	while (word[ctx.i])
+	{
+		if (word[ctx.i] == '$' && word[ctx.i + 1]
+			&& word[ctx.i + 1] != ' ')
+			ctx.result = append_str(ctx.result,
+					expand_dollar(word, &ctx));
+		else
+			ctx.result = append_char(ctx.result, word[ctx.i++]);
 	}
 	if (!ctx.result)
 		return (ft_strdup(""));

@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 22:00:16 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/24 08:41:13 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ int					calc_len_args(char **args);
 void				update_prompt_path(t_minishell *shell);
 
 /*Parser*/
-t_tree				*build_ast(t_list *tokens);
+t_tree				*build_ast(t_list *tokens, int *err);
 t_tree				*parse_logic_expr(t_list **cur, int *err);
 t_tree				*parse_pipe_seq(t_list **cur, int *err);
 t_tree				*parse_cmd_or_sub(t_list **cur, int *err);
@@ -168,8 +168,9 @@ t_tokenType			cur_type(t_list **cur);
 t_token				*advance(t_list **cur);
 t_tree				*create_oper_node(t_node_type type, t_tree *l, t_tree *r,
 						int *err);
-t_tree				*create_cmd_node(char **args, t_list *redirs);
-t_tree				*create_subshell_node(t_tree *child, t_list *redirs);
+t_tree				*create_cmd_node(char **args, t_list *redirs, int *err);
+t_tree				*create_subshell_node(t_tree *child, t_list *redirs,
+						int *err);
 void				free_tree(t_tree *tree);
 void				free_args(char **args);
 void				free_redir(void *ptr);
@@ -199,6 +200,13 @@ char				*expand_dollar(char *word, t_expand *ctx);
 char				*append_char(char *result, char c);
 char				*append_str(char *result, char *s);
 int					init_heredocs(t_tree *tree, t_minishell *shell);
+int					setup_heredoc_fd(t_redir_data *rd, t_minishell *shell,
+						int idx, t_list *redirs_head);
+int					read_heredoc_nointeractive(t_redir_data *rd,
+						t_minishell *shell, char *tmp);
+void				push_heredoc_line(int fd, char *line, t_redir_data *rd,
+						t_minishell *shell);
+void				print_eof_warning(char *limiter);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
 void				expand_one_arg(char **args, int i, t_minishell *shell);
@@ -239,8 +247,9 @@ int					exec_cmd(t_tree *node, t_minishell *shell);
 int					exec_pipe(t_tree *node, t_minishell *shell);
 int					exec_and_or(t_tree *node, t_minishell *shell);
 void				close_heredoc_fds(t_tree *node);
+int					child_exit_status(int status);
 void				secure_close(int fd, t_tree *node, t_minishell *shell);
-int					handle_redirections(t_tree *node, t_minishell *shell);
+int					handle_redirections(t_tree *node);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);

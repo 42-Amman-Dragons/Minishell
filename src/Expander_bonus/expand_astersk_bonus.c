@@ -14,13 +14,24 @@
 
 int	is_matching(char *pattern, char *file_name)
 {
+	if (*pattern == '*')
+	{
+		while (*pattern == '*')
+			pattern++;
+		if (!*pattern)
+			return (1);
+		while (*file_name)
+		{
+			if (is_matching(pattern, file_name))
+				return (1);
+			file_name++;
+		}
+		return (0);
+	}
 	if (!*pattern && !*file_name)
 		return (1);
 	if (!*pattern || !*file_name)
 		return (0);
-	if (*pattern == '*')
-		return (is_matching(pattern + 1, file_name) || is_matching(pattern,
-				file_name + 1) || is_matching(pattern + 1, file_name + 1));
 	if (*pattern == *file_name)
 		return (is_matching(pattern + 1, file_name + 1));
 	return (0);
@@ -41,10 +52,12 @@ char	*append_astersk(char *result, char *pattern)
 	struct dirent	*current_file;
 	int				i;
 
-	getcwd(buff, 1204);
+	free(result);
+	result = NULL;
+	if (!getcwd(buff, 1204))
+		return (NULL);
 	current_dir = opendir(buff);
 	i = 0;
-	result = NULL;
 	if (!current_dir)
 		return (NULL);
 	while (1)

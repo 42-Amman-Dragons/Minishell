@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:28:15 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/24 08:44:16 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ static void	handle_normal(char *word, t_expand *ctx)
 		ctx->state = EXP_DQUOTE;
 		ctx->i++;
 	}
+	else if (word[ctx->i] == '$' && (word[ctx->i + 1] == '"' || 
+		word[ctx->i+ 1] == '\''))
+		ctx->i++;
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != ' ')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
 	else
@@ -71,6 +74,27 @@ char	*expand_word(char *word, char **env, int exit_status)
 			handle_squote(word, &ctx);
 		else if (ctx.state == EXP_DQUOTE)
 			handle_dquote(word, &ctx);
+	}
+	if (!ctx.result)
+		return (ft_strdup(""));
+	return (ctx.result);
+}
+
+char	*expand_word_heredoc(char *word, char **env, int exit_status)
+{
+	t_expand	ctx;
+
+	ctx.result = NULL;
+	ctx.env = env;
+	ctx.i = 0;
+	ctx.exit_status = exit_status;
+	ctx.state = EXP_NORMAL;
+	while (word[ctx.i])
+	{
+		if (word[ctx.i] == '$' && word[ctx.i + 1] && word[ctx.i + 1] != ' ')
+			ctx.result = append_str(ctx.result, expand_dollar(word, &ctx));
+		else
+			ctx.result = append_char(ctx.result, word[ctx.i++]);
 	}
 	if (!ctx.result)
 		return (ft_strdup(""));

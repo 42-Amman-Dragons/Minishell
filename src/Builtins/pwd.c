@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 02:57:13 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 03:41:59 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/24 08:52:45 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,6 @@ int	ft_pwd(t_minishell *shell)
 		return (0);
 	}
 	ft_putstr_fd(pwd, 1);
-	write(1, "\n", 1);
+	ft_putchar_fd('\n', 1);
 	return (0);
 }
