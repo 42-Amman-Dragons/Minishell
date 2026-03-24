@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_simple_cmd.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 16:23:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/24 17:53:52 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ t_tree	*parse_simple_cmd(t_list **cur, int *err)
 		return (NULL);
 	if (!words && !redirs)
 	{
-		syntax_error(*cur, err);
+		syntax_error(*cur, err); 
 		return (NULL);
 	}
 	args = list_to_args(words);

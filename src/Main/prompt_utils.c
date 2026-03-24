@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/12 15:00:25 by haya              #+#    #+#             */
-/*   Updated: 2026/03/17 21:59:43 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/24 13:20:41 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	prepare_prompt_beggining(char **prompt, t_minishell *shell)
 	*prompt = safe_join(*prompt, shell->servername);
 	*prompt = safe_join(*prompt, ":");
 }
+
 void	prepare_prompt_path(char **prompt, char *buff)
 {
 	*prompt = safe_join(*prompt, buff);

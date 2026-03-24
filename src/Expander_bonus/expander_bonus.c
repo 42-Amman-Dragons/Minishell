@@ -3,14 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   expander_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 17:28:04 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/24 13:21:57 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
+
+// @TODO: redirection errors.
+// This bug needs fixing, it should be similar to the mandatory
+// The error message for "" is different from $NONEXISTENT_VAR, the first 
+// should be "ambiguous redirect" and the second should be 
+// "No such file or directory" 
 
 static void	expand_redirs(t_list *redirs, t_minishell *shell)
 {
@@ -26,9 +32,6 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 					shell->exit_status);
 			if (expanded)
 			{
-				// @TODO: redirection errors.
-				// This bug needs fixing, it should be similar to the mandatory
-				// The error message for "" is different from $NONEXISTENT_VAR, the first should be "ambiguous redirect" and the second should be "No such file or directory" 
 				if (expanded[0] == '\0')
 				{
 					free(expanded);

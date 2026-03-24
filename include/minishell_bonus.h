@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 08:41:09 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/24 13:31:27 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,13 +134,13 @@ typedef struct s_tree
 }					t_tree;
 
 int					add_to_history(char *line, t_list **history);
-int					load_history(t_list **history);
+// int					load_history(t_list **history);
 void				custom_save_history(t_minishell *shell);
 void				handle_sigint(int sig);
 void				set_signals_prompt(void);
 void				set_signals_exec(void);
 void				set_signals_child(void);
-void				set_signals_heredoc(void);
+// void				set_signals_heredoc(void);
 int					init_mutable_env(char **env, t_minishell *shell);
 void				free_env(char **env);
 char				*get_env_value(char *name, char **env);
@@ -152,7 +152,7 @@ int					cleanup_shell(t_minishell *shell, int exit_code);
 int					calc_len_args(char **args);
 void				update_prompt_path(t_minishell *shell);
 /*Parser*/
-t_tree				*build_ast(t_list *tokens);
+// t_tree				*build_ast(t_list *tokens);
 t_tree				*parse_logic_expr(t_list **cur, int *err);
 t_tree				*parse_pipe_seq(t_list **cur, int *err);
 t_tree				*parse_cmd_or_sub(t_list **cur, int *err);
@@ -241,6 +241,8 @@ void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
 void				cmd_not_found(char *cmd_name, t_tree *node,
 						t_minishell *shell);
+char				**generate_expanded_list(char **args, int i,
+						char *expanded);
 
 // Main
 t_minishell			*init_shell(void);

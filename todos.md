@@ -1,0 +1,12 @@
+- [] leaks and open fds when calling the `ps aux | grep Z`
+- [] handle the ~
+- [] cat << ls > out | cat << ls open file descriptors.
+- [] ls <<1 | cat -e | cat -e | cat -e > o1 | cat <<1 | wc -l > o2 | cat <o2 >old2| pwd | cat -e >o2 -> the cat o2 copied the prompt with the text (X_X)
+- [] cat << 1 > , this should open the heredoc then raise a syntax error, but in our case the heredoc isnt open ==> store syntax error and handle it after heredoc 
+- [x] $non_exist $SHELL -> the code crashes. 
+- [] export test="           "; echo $test Hello . the echo should ignore the spaces in this case., note if "$test" is called the spacess is printed.
+- [] echo $0$1230$0 , this is not handeled.
+- [] export test="ls    -la”; $test
+- [] single qu
+- [] add the is directory error
+- [] cd /dev/vboxusb ==> permission denied

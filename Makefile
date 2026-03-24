@@ -23,7 +23,7 @@ EXPAND_DIR = Expander
 EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c
 EXPAND_BONUS_DIR = Expander_bonus
 EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c \
-	expand_utils_bonus.c expand_astersk_bonus.c
+	expand_utils_bonus.c expand_astersk_bonus.c generate_expanded_list.c
 
 HEREDOC_DIR = Heredoc
 HEREDOC_SRC = heredoc.c heredoc_io.c heredoc_nonint.c
