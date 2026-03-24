@@ -35,14 +35,6 @@ void	close_heredoc_fds(t_tree *node)
 	}
 }
 
-void	secure_close(int fd, t_tree *node, t_minishell *shell)
-{
-	if (close(fd) == -1)
-	{
-		perror("Close file error");
-		free_and_exit(node, shell, 1);
-	}
-}
 
 void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
 {

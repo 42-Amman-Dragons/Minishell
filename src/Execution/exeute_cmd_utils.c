@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 10:32:15 by haya              #+#    #+#             */
-/*   Updated: 2026/03/17 05:28:05 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/24 03:46:22 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,22 @@ static char	*get_path(char **env)
 		if (ft_strnstr(env[i], "PATH=", 5))
 		{
 			path = env[i];
+			break ;
 		}
 		i++;
 	}
 	if (!path)
-		return (NULL);
+		return (ft_strdup("/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"));
 	return (ft_strdup(path + 5));
+}
+
+int	is_command_a_directory(const char *path)
+{
+	struct stat	st;
+
+	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+		return (1);
+	return (0);
 }
 
 static char	*asssemple_path(char *one_path, char *cmd)
@@ -53,11 +63,13 @@ char	*absoulute_path(char *cmd, char **env)
 		return (NULL);
 	paths = ft_split(path, ':');
 	free(path);
+	if (!paths)
+		return (NULL);
 	i = 0;
 	while (paths[i])
 	{
 		sub = asssemple_path(paths[i], cmd);
-		if (access(sub, F_OK) == 0)
+		if (access(sub, F_OK) == 0 && !is_command_a_directory(sub))
 		{
 			errno = 0;
 			free_splitted(paths);
@@ -68,12 +80,4 @@ char	*absoulute_path(char *cmd, char **env)
 	}
 	free_splitted(paths);
 	return (NULL);
-}
-
-void	cmd_not_found(char *cmd_name, t_tree *node, t_minishell *shell)
-{
-	ft_putstr_fd(cmd_name, 2);
-	ft_putstr_fd(": command not found\n", 2);
-	free(cmd_name);
-	free_and_exit(node, shell, 127);
 }

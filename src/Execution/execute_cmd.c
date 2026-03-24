@@ -12,14 +12,27 @@
 
 #include "minishell.h"
 
-// Returns 1 if path is a directory, 0 otherwise
-static int	is_command_a_directory(const char *path)
+static void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 {
-	struct stat	st;
+	int	exit_code;
 
-	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
-		return (1);
-	return (0);
+	ft_putstr_fd(cmd_name, 2);
+	ft_putstr_fd(": ", 2);
+	if (!node->data.cmd.args[0])
+		ft_putstr_fd("command not found\n", 2);
+	else if (is_command_a_directory(node->data.cmd.args[0]))
+		ft_putstr_fd("Is a directory\n", 2);
+	else
+	{
+		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("\n", 2);
+	}
+	if (!node->data.cmd.args[0] || errno == ENOENT)
+		exit_code = 127;
+	else
+		exit_code = 126;
+	free(cmd_name);
+	free_and_exit(node, shell, exit_code);
 }
 
 void	execve_cmd(t_tree *node, t_minishell *shell)
@@ -31,35 +44,16 @@ void	execve_cmd(t_tree *node, t_minishell *shell)
 	if (!node->data.cmd.args)
 		free_and_exit(node, shell, 0);
 	cmd_name = ft_strdup(node->data.cmd.args[0]);
+	if (!cmd_name)
+		free_and_exit(node, shell, 1);
 	if (!ft_strchr(node->data.cmd.args[0], '/'))
 	{
 		free(node->data.cmd.args[0]);
 		node->data.cmd.args[0] = absoulute_path(cmd_name, shell->env);
 	}
-	if (!node->data.cmd.args[0])
-		cmd_not_found(cmd_name, node, shell);
-	// Check before execve: on Linux execve() returns EACCES for directories,
-	// not EISDIR. Detect it early and print the correct error message.
-	if (is_command_a_directory(node->data.cmd.args[0]))
-	{
-		ft_putstr_fd(cmd_name, 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-		free(cmd_name);
-		free_and_exit(node, shell, 126);
-	}
-	if (execve(node->data.cmd.args[0], node->data.cmd.args, shell->env) == -1)
-	{
-		// ENOENT = file/path not found -> 127 (command not found)
-		// EACCES = no execute permission -> 126
-		ft_putstr_fd(cmd_name, 2);
-		ft_putstr_fd(": ", 2);
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
-		free(cmd_name);
-		if (errno == ENOENT)
-			free_and_exit(node, shell, 127);
-		free_and_exit(node, shell, 126);
-	}
+	if (!node->data.cmd.args[0]
+		|| execve(node->data.cmd.args[0], node->data.cmd.args, shell->env) == -1)
+		handle_cmd_error(cmd_name, node, shell);
 }
 
 int	temp_dup_error(int temp_stdin, int temp_stdout, t_minishell *shell)
@@ -68,7 +62,7 @@ int	temp_dup_error(int temp_stdin, int temp_stdout, t_minishell *shell)
 		close(temp_stdin);
 	if (temp_stdout != -1)
 		close(temp_stdout);
-	ft_putstr_fd("minishell: dup error\n", 2); // I have added this
+	ft_putstr_fd("minishell: dup error\n", 2);
 	shell->exit_status = 1;
 	return (1);
 }
@@ -104,10 +98,7 @@ int	run_cmd(t_minishell *shell, t_tree *node)
 	close_heredoc_fds(node);
 	waitpid(id, &status, 0);
 	set_signals_prompt();
-	if (WIFSIGNALED(status))
-		shell->exit_status = 128 + WTERMSIG(status);
-	else if (WIFEXITED(status))
-		shell->exit_status = WEXITSTATUS(status);
+	handle_child_exit_status(status, shell);
 	return (shell->exit_status);
 }
 

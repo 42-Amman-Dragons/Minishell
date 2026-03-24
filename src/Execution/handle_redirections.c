@@ -12,12 +12,10 @@
 
 #include "minishell.h"
 
-static int	redirect_input(t_redir_data *rd, t_tree *node, t_minishell *shell)
+static int	redirect_input(t_redir_data *rd)
 {
 	int	fd;
 
-	(void)node;
-	(void)shell;
 	fd = open(rd->filename, O_RDONLY);
 	if (fd == -1)
 	{
@@ -30,12 +28,10 @@ static int	redirect_input(t_redir_data *rd, t_tree *node, t_minishell *shell)
 	return (0);
 }
 
-static int	redirect_output(t_redir_data *rd, t_tree *node, t_minishell *shell)
+static int	redirect_output(t_redir_data *rd)
 {
 	int	fd;
 
-	(void)node;
-	(void)shell;
 	fd = open(rd->filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
@@ -48,12 +44,10 @@ static int	redirect_output(t_redir_data *rd, t_tree *node, t_minishell *shell)
 	return (0);
 }
 
-static int	redirect_append(t_redir_data *rd, t_tree *node, t_minishell *shell)
+static int	redirect_append(t_redir_data *rd)
 {
 	int	fd;
 
-	(void)node;
-	(void)shell;
 	fd = open(rd->filename, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
@@ -74,23 +68,26 @@ static int	redirect_heredoc(t_redir_data *rd)
 	return (0);
 }
 
-int	redirect(t_redir_data *rd, t_tree *node, t_minishell *shell)
+static int	redirect(t_redir_data *rd)
 {
 	if (rd->mode == DIR_IN_FILE)
 	{
-		if (redirect_input(rd, node, shell) == -1)
+		if (redirect_input(rd) == -1)
 			return (-1);
 	}
 	else if (rd->mode == DIR_OUT_TRUNC)
 	{
-		if (redirect_output(rd, node, shell) == -1)
+		if (redirect_output(rd) == -1)
 			return (-1);
 	}
 	else if (rd->mode == DIR_IN_HEREDOC)
-		redirect_heredoc(rd);
+	{
+		if (redirect_heredoc(rd) == -1)
+			return (-1);
+	}
 	else if (rd->mode == DIR_OUT_APPEND)
 	{
-		if (redirect_append(rd, node, shell) == -1)
+		if (redirect_append(rd) == -1)
 			return (-1);
 	}
 	return (0);
@@ -109,7 +106,7 @@ int	handle_redirections(t_tree *node, t_minishell *shell)
 	while (redir)
 	{
 		rd = (t_redir_data *)redir->content;
-		if (redirect(rd, node, shell) == -1)
+		if (redirect(rd) == -1)
 			return (-1);
 		redir = redir->next;
 	}
