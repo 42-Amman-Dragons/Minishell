@@ -36,21 +36,13 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 
 static void	expand_node(t_tree *node, t_minishell *shell)
 {
-	int	i;
-	int	count;
+	char	**new_args;
 
-	i = 0;
-	count = 0;
 	if (!node->data.cmd.args)
 		return (expand_redirs(node->data.cmd.redirections, shell));
-	while (node->data.cmd.args[count])
-		count++;
-	while (i < count)
-	{
-		expand_one_arg(node->data.cmd.args, i, shell);
-		i++;
-	}
-	strip_empty_args(node, count);
+	new_args = build_expanded_args(node->data.cmd.args, shell);
+	free_args(node->data.cmd.args);
+	node->data.cmd.args = new_args;
 	expand_redirs(node->data.cmd.redirections, shell);
 }
 

@@ -20,7 +20,7 @@ PARSER_DIR = Parser
 PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_free.c
 
 EXPAND_DIR = Expander
-EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c
+EXPAND_SRC = expander.c expander_utils.c expander_split.c expand_word.c expand_utils.c
 EXPAND_BONUS_DIR = Expander_bonus
 EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c \
 	expand_utils_bonus.c expand_astersk_bonus.c

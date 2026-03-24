@@ -208,8 +208,8 @@ void				push_heredoc_line(int fd, char *line, t_redir_data *rd,
 						t_minishell *shell);
 void				print_eof_warning(char *limiter);
 int					word_has_quotes(char *word);
-void				strip_empty_args(t_tree *node, int count);
-void				expand_one_arg(char **args, int i, t_minishell *shell);
+t_list				*split_to_list(char *s);
+char				**build_expanded_args(char **args, t_minishell *shell);
 char				*append_astersk(char *result, char *pattern);
 
 /*Tokenizer*/
