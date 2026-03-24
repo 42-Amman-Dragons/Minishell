@@ -10,7 +10,7 @@ OBJ_DIR = obj
 SRC =
 
 SIGNALS_DIR = Signals
-SIGNALS_SRC = signals.c
+SIGNALS_SRC = signals.c signal_status.c
 
 TOK_DIR = Tokenizer
 TOK_SRC = tokenizer.c tokenizer_utils.c tokenizer_factory.c \
@@ -20,8 +20,12 @@ PARSER_DIR = Parser
 PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_free.c
 
 EXPAND_DIR = Expander
-EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c heredoc.c
-EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c expand_utils.c heredoc.c expand_astersk.c
+EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c
+EXPAND_BONUS_DIR = Expander_bonus
+EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c expand_utils_bonus.c expand_astersk_bonus.c
+
+HEREDOC_DIR = Heredoc
+HEREDOC_SRC = heredoc.c heredoc_io.c heredoc_nonint.c
 
 BUILTIN_DIR = Builtins
 BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c export.c export_sort.c \
@@ -31,8 +35,8 @@ MAIN_DIR = Main
 MAIN_SRC = main.c initializers.c history.c shell_cleanup.c parse_and_execute.c prompt.c prompt_utils.c
 
 EXEC_DIR = Execution
-EXEC_SRC = execution.c execute_cmd.c exeute_cmd_utils.c execute_oper.c execute_pipe.c \
-	execute_subshell.c execution_utils.c handle_redirections.c
+EXEC_SRC = execution.c execute_cmd.c execute_cmd_utils.c execute_oper.c execute_pipe.c \
+	execute_pipe_utils.c execute_subshell.c execution_utils.c handle_redirections.c
 
 UTILS_DIR = utils
 UTILS_SRC = string_utils.c
@@ -42,6 +46,7 @@ OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(HEREDOC_DIR)/, $(HEREDOC_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXEC_DIR)/, $(EXEC_SRC:.c=.o)) \
@@ -51,7 +56,8 @@ BONUS_OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(SIGNALS_DIR)/, $(SIGNALS_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
-	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC_BONUS:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXPAND_BONUS_DIR)/, $(EXPAND_SRC_BONUS:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(HEREDOC_DIR)/, $(HEREDOC_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXEC_DIR)/, $(EXEC_SRC:.c=.o)) \
@@ -107,6 +113,14 @@ $(OBJ_DIR)/$(PARSER_DIR)/%.o: $(SRC_DIR)/$(PARSER_DIR)/%.c
 
 $(OBJ_DIR)/$(EXPAND_DIR)/%.o: $(SRC_DIR)/$(EXPAND_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/$(EXPAND_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(EXPAND_BONUS_DIR)/%.o: $(SRC_DIR)/$(EXPAND_BONUS_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(EXPAND_BONUS_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(HEREDOC_DIR)/%.o: $(SRC_DIR)/$(HEREDOC_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(HEREDOC_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/$(BUILTIN_DIR)/%.o: $(SRC_DIR)/$(BUILTIN_DIR)/%.c

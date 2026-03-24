@@ -42,7 +42,7 @@ int	exec_subshell(t_tree *node, t_minishell *shell)
 	if (pid == 0)
 	{
 		set_signals_child();
-		if (handle_redirections(node, shell) == -1)
+		if (handle_redirections(node) == -1)
 			free_and_exit(node, shell, 1);
 		exec_tree(node->data.subshell.child, shell);
 		free_and_exit(node, shell, shell->exit_status);

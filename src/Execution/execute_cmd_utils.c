@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exeute_cmd_utils.c                                 :+:      :+:    :+:   */
+/*   execute_cmd_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -29,7 +29,8 @@ static char	*get_path(char **env)
 		i++;
 	}
 	if (!path)
-		return (ft_strdup("/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin"));
+		return (ft_strdup("/usr/local/bin:/usr/local/sbin:"
+				"/usr/bin:/usr/sbin:/bin:/sbin"));
 	return (ft_strdup(path + 5));
 }
 
@@ -42,7 +43,7 @@ int	is_command_a_directory(const char *path)
 	return (0);
 }
 
-static char	*asssemple_path(char *one_path, char *cmd)
+static char	*assemble_path(char *one_path, char *cmd)
 {
 	char	*sub;
 
@@ -51,24 +52,15 @@ static char	*asssemple_path(char *one_path, char *cmd)
 	return (sub);
 }
 
-char	*absoulute_path(char *cmd, char **env)
+static char	*search_in_paths(char **paths, char *cmd)
 {
-	char	*path;
-	char	**paths;
 	char	*sub;
 	int		i;
 
-	path = get_path(env);
-	if (!path)
-		return (NULL);
-	paths = ft_split(path, ':');
-	free(path);
-	if (!paths)
-		return (NULL);
 	i = 0;
 	while (paths[i])
 	{
-		sub = asssemple_path(paths[i], cmd);
+		sub = assemble_path(paths[i], cmd);
 		if (access(sub, F_OK) == 0 && !is_command_a_directory(sub))
 		{
 			errno = 0;
@@ -80,4 +72,19 @@ char	*absoulute_path(char *cmd, char **env)
 	}
 	free_splitted(paths);
 	return (NULL);
+}
+
+char	*absolute_path(char *cmd, char **env)
+{
+	char	*path;
+	char	**paths;
+
+	path = get_path(env);
+	if (!path)
+		return (NULL);
+	paths = ft_split(path, ':');
+	free(path);
+	if (!paths)
+		return (NULL);
+	return (search_in_paths(paths, cmd));
 }

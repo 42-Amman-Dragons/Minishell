@@ -152,7 +152,7 @@ int					cleanup_shell(t_minishell *shell, int exit_code);
 int					calc_len_args(char **args);
 void				update_prompt_path(t_minishell *shell);
 /*Parser*/
-t_tree				*build_ast(t_list *tokens);
+t_tree				*build_ast(t_list *tokens, int *err);
 t_tree				*parse_logic_expr(t_list **cur, int *err);
 t_tree				*parse_pipe_seq(t_list **cur, int *err);
 t_tree				*parse_cmd_or_sub(t_list **cur, int *err);
@@ -163,8 +163,8 @@ t_tokenType			cur_type(t_list **cur);
 t_token				*advance(t_list **cur);
 t_tree				*create_oper_node(t_node_type type, t_tree *l, t_tree *r,
 						int *err);
-t_tree				*create_cmd_node(char **args, t_list *redirs);
-t_tree				*create_subshell_node(t_tree *child, t_list *redirs);
+t_tree				*create_cmd_node(char **args, t_list *redirs, int *err);
+t_tree				*create_subshell_node(t_tree *child, t_list *redirs, int *err);
 void				free_tree(t_tree *tree);
 void				free_args(char **args);
 void				free_redir(void *ptr);
@@ -233,8 +233,7 @@ int					exec_tree(t_tree *node, t_minishell *shell);
 int					exec_cmd(t_tree *node, t_minishell *shell);
 int					exec_pipe(t_tree *node, t_minishell *shell);
 int					exec_and_or(t_tree *node, t_minishell *shell);
-void				secure_close(int fd, t_tree *node, t_minishell *shell);
-int					handle_redirections(t_tree *node, t_minishell *shell);
+int					handle_redirections(t_tree *node);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
@@ -246,7 +245,7 @@ t_minishell			*init_shell(void);
 void				parse_and_execute(t_minishell *shell);
 void				free_splitted(char **splitted);
 char				*get_prompt(t_minishell *shell);
-char				*absoulute_path(char *cmd, char **env);
+char				*absolute_path(char *cmd, char **env);
 char				*safe_join(char *str1, char *str2);
 void				consider_home_dir(char *buff, char **env);
 void				change_color(char **prompt, char *color);

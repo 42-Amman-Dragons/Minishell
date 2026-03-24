@@ -23,7 +23,12 @@ static int	redirect_input(t_redir_data *rd)
 		perror(rd->filename);
 		return (-1);
 	}
-	dup2(fd, STDIN_FILENO);
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		perror("minishell: dup2");
+		close(fd);
+		return (-1);
+	}
 	close(fd);
 	return (0);
 }
@@ -39,7 +44,12 @@ static int	redirect_output(t_redir_data *rd)
 		perror(rd->filename);
 		return (-1);
 	}
-	dup2(fd, STDOUT_FILENO);
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		perror("minishell: dup2");
+		close(fd);
+		return (-1);
+	}
 	close(fd);
 	return (0);
 }
@@ -55,14 +65,25 @@ static int	redirect_append(t_redir_data *rd)
 		perror(rd->filename);
 		return (-1);
 	}
-	dup2(fd, STDOUT_FILENO);
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		perror("minishell: dup2");
+		close(fd);
+		return (-1);
+	}
 	close(fd);
 	return (0);
 }
 
 static int	redirect_heredoc(t_redir_data *rd)
 {
-	dup2(rd->heredoc_fd, STDIN_FILENO);
+	if (dup2(rd->heredoc_fd, STDIN_FILENO) == -1)
+	{
+		perror("minishell: dup2");
+		close(rd->heredoc_fd);
+		rd->heredoc_fd = -1;
+		return (-1);
+	}
 	close(rd->heredoc_fd);
 	rd->heredoc_fd = -1;
 	return (0);
@@ -93,7 +114,7 @@ static int	redirect(t_redir_data *rd)
 	return (0);
 }
 
-int	handle_redirections(t_tree *node, t_minishell *shell)
+int	handle_redirections(t_tree *node)
 {
 	t_list			*redir;
 	t_redir_data	*rd;

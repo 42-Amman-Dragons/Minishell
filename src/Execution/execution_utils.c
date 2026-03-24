@@ -35,6 +35,20 @@ void	close_heredoc_fds(t_tree *node)
 	}
 }
 
+int	restore_stdio(int saved_stdin, int saved_stdout)
+{
+	if (dup2(saved_stdin, STDIN_FILENO) == -1
+		|| dup2(saved_stdout, STDOUT_FILENO) == -1)
+	{
+		perror("minishell: dup2");
+		close(saved_stdin);
+		close(saved_stdout);
+		return (-1);
+	}
+	close(saved_stdin);
+	close(saved_stdout);
+	return (0);
+}
 
 void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
 {

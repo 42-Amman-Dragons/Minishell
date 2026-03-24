@@ -247,10 +247,15 @@ int					exec_cmd(t_tree *node, t_minishell *shell);
 int					exec_pipe(t_tree *node, t_minishell *shell);
 int					exec_and_or(t_tree *node, t_minishell *shell);
 void				close_heredoc_fds(t_tree *node);
-int					handle_redirections(t_tree *node, t_minishell *shell);
+int					handle_redirections(t_tree *node);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
-						int exit_code);
+					int exit_code);
+int					restore_stdio(int saved_stdin, int saved_stdout);
+int					temp_redir(int *temp_stdin, int *temp_stdout);
+int					restore_close_redir(int *fd, int *temp_stdin,
+					int *temp_stdout);
+int					init_pipe(int *fd, int *temp_std);
 
 // Main
 t_minishell			*init_shell(void);
@@ -259,7 +264,7 @@ int					init_interactive_shell(t_minishell *shell);
 void				parse_and_execute(t_minishell *shell);
 void				free_splitted(char **splitted);
 char				*get_prompt(t_minishell *shell);
-char				*absoulute_path(char *cmd, char **env);
+char				*absolute_path(char *cmd, char **env);
 int					is_command_a_directory(const char *path);
 char				*safe_join(char *str1, char *str2);
 void				print_welcome_message(void);

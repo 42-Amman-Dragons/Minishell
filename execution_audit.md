@@ -270,5 +270,5 @@ with the rest of the codebase.
 | 7 | ~~MEDIUM~~ **FIXED (via #4)** | execute_pipe.c | 149 | Inconsistency | `handle_left_pipe` pid_t return silently discarded |
 | 8 | ~~LOW~~ **FIXED** | handle_redirections.c | 15-67 | Dead code | `node`/`shell` params passed but never used |
 | 9 | ~~LOW~~ **FIXED** | execute_pipe.c + execution_utils.c | — | Redundancy | Two close wrappers with incompatible APIs — `secure_close` removed, replaced with plain `close()` |
-| 10 | LOW | Multiple | — | Naming | Typos: `exeute`, `asssemple`, `absoulute` |
-| 11 | LOW | execute_pipe.c | 129-130 | Style | Missing blank line before `exec_pipe` |
+| 10 | ~~LOW~~ **FIXED** | Multiple | — | Naming | Typos: `exeute`, `asssemple`, `absoulute` |
+| 11 | ~~LOW~~ **FIXED** | execute_pipe.c | 129-130 | Style | Missing blank line before `exec_pipe` |
