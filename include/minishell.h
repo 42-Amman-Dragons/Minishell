@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 08:41:13 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/25 14:18:15 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
+
 
 # define DRAGON_GREEN "\001\033[1;32m\002"
 # define DRAGON_CYAN "\001\033[0;36m\002"
@@ -87,6 +88,7 @@ typedef struct s_minishell
 	char			*prompt;
 	char			**env;
 	t_list			*history;
+	t_list			*openfiles;
 	struct termios	new_termos;
 	struct termios	original_termos;
 	int				is_interactive;
@@ -272,4 +274,7 @@ void				change_color(char **prompt, char *color);
 void				prepare_prompt_beggining(char **prompt, t_minishell *shell);
 void				prepare_prompt_path(char **prompt, char *buff);
 void				init_prompt(t_minishell *shell);
+
+void				close_open_files(t_minishell *shell);
+void				add_to_openfiles(t_minishell *shell, int fd);
 #endif

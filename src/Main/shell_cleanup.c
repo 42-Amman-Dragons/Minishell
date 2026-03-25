@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_cleanup.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:18 by haya              #+#    #+#             */
-/*   Updated: 2026/03/22 20:04:56 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/25 13:34:02 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	cleanup_shell(t_minishell *shell, int exit_code)
 	rl_clear_history();
 	if (shell->history)
 		ft_lstclear(&(shell->history), free);
+	if (shell->openfiles)
+		close_open_files(shell);
 	shell->history = NULL;
 	if (shell->prompt)
 		free(shell->prompt);

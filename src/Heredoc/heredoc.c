@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 15:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 22:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/25 13:02:38 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
+void add_to_openfiles(t_minishell *shell, int fd)
+{
+	int *fd_ptr = malloc(sizeof(int));
+	if(!fd_ptr)
+		free_and_exit(NULL, shell, 1);
+	*fd_ptr = fd;
+	ft_lstadd_back(&shell->openfiles, ft_lstnew(fd_ptr));
+}
 
 static char	*strip_quotes(char *str)
 {
@@ -90,6 +100,7 @@ static int	process_redir_list(t_list *redirs, t_minishell *shell, int *idx)
 			rd->filename = stripped;
 			if (setup_heredoc_fd(rd, shell, (*idx)++, head) == -1)
 				return (-1);
+			add_to_openfiles(shell, rd->heredoc_fd);
 		}
 		redirs = redirs->next;
 	}

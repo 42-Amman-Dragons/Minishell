@@ -1,12 +1,16 @@
-- [] leaks and open fds when calling the `ps aux | grep Z`
+- [x] leaks and open fds when calling the `ps aux | grep Z`
 - [] handle the ~
-- [] cat << ls > out | cat << ls open file descriptors.
-- [] ls <<1 | cat -e | cat -e | cat -e > o1 | cat <<1 | wc -l > o2 | cat <o2 >old2| pwd | cat -e >o2 -> the cat o2 copied the prompt with the text (X_X)
+- [x] cat << ls > out | cat << ls open file descriptors.
+- [x] ls <<1 | cat -e | cat -e | cat -e > o1 | cat <<1 | wc -l > o2 | cat <o2 >old2| pwd | cat -e >o2 -> the cat o2 copied the prompt with the text (X_X)
 - [] cat << 1 > , this should open the heredoc then raise a syntax error, but in our case the heredoc isnt open ==> store syntax error and handle it after heredoc 
 - [x] $non_exist $SHELL -> the code crashes. 
 - [] export test="           "; echo $test Hello . the echo should ignore the spaces in this case., note if "$test" is called the spacess is printed.
 - [] echo $0$1230$0 , this is not handeled.
 - [] export test="ls    -la”; $test
 - [] single qu
-- [] add the is directory error
+- [x] add the is directory error
 - [] cd /dev/vboxusb ==> permission denied
+- [] the error code for sleep 1000 | ls | sleep 1000; CTRL+\ should be 131 but in our case its 1 and the output should be Quit (core dumped)
+- [x] Open file descriptor in the && and ||
+- [] check the heredoc logic, chatGPT assumes the fds should remain open until the execution but in valigrind everything is working as expected. [chat link](https://chatgpt.com/share/69c3be9a-cb98-8325-a71e-007f3b8ab8ed)
+- [] the dot command (I dont really think it is required).

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:30:32 by haya              #+#    #+#             */
-/*   Updated: 2026/03/24 08:53:49 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/25 13:04:08 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ t_minishell	*init_shell(void)
 	if (!shell)
 		return (NULL);
 	shell->is_interactive = isatty(STDIN_FILENO);
+	shell->openfiles = NULL;
 	return (shell);
 }
 

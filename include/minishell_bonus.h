@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 13:31:27 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/25 12:16:36 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,4 +257,7 @@ void				prepare_prompt_beggining(char **prompt, t_minishell *shell);
 void				prepare_prompt_path(char **prompt, char *buff);
 int					init_prompt(t_minishell *shell);
 
+
+// Testing 
+void add_to_openfiles(t_minishell *shell, t_tree *node, int fd);
 #endif

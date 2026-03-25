@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:42:48 by haya              #+#    #+#             */
-/*   Updated: 2026/03/17 05:28:01 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/25 12:34:34 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	close_heredoc_fds(t_tree *node)
 
 void	secure_close(int fd, t_tree *node, t_minishell *shell)
 {
+	if(fd == -1)
+		return;
 	if (close(fd) == -1)
 	{
 		perror("Close file error");
@@ -55,7 +57,8 @@ int	child_exit_status(int status)
 
 void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
 {
-	free_tree(node);
+	if(node)
+		free_tree(node);
 	exit(cleanup_shell(shell, exit_code));
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:14:26 by haya              #+#    #+#             */
-/*   Updated: 2026/03/17 15:32:36 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/25 13:06:43 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ static pid_t	handle_left_pipe(int *fd, int *temp_std, t_tree *node,
 			perror("DUP ERROR: ");
 			free_and_exit(node, shell, 1);
 		}
-		exec_tree(node->data.oper.left, shell);
 		secure_close(fd[1], node, shell);
+		exec_tree(node->data.oper.left, shell);
 		free_and_exit(node, shell, shell->exit_status);
 	}
 	return (left_id);
@@ -83,10 +83,11 @@ static pid_t	handle_right_pipe(int *fd, int *temp_std, t_tree *node,
 		if (dup2(fd[0], STDIN_FILENO) == -1)
 		{
 			perror("DUP ERROR: ");
+			secure_close(fd[0], node, shell);
 			free_and_exit(node, shell, 1);
 		}
-		exec_tree(node->data.oper.right, shell);
 		secure_close(fd[0], node, shell);
+		exec_tree(node->data.oper.right, shell);
 		free_and_exit(node, shell, shell->exit_status);
 	}
 	return (right_id);

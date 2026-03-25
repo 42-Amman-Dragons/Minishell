@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_io.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 22:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 22:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/25 13:40:38 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,18 @@
 
 extern int	g_signum;
 
-static void	close_inherited_heredoc_fds(t_list *redirs_head)
-{
-	t_redir_data	*r;
+// static void	close_inherited_heredoc_fds(t_list *redirs_head)
+// {
+// 	t_redir_data	*r;
 
-	while (redirs_head)
-	{
-		r = (t_redir_data *)redirs_head->content;
-		if (r->heredoc_fd >= 0)
-			close(r->heredoc_fd);
-		redirs_head = redirs_head->next;
-	}
-}
+// 	while (redirs_head)
+// 	{
+// 		r = (t_redir_data *)redirs_head->content;
+// 		if (r->heredoc_fd >= 0)
+// 			close(r->heredoc_fd);
+// 		redirs_head = redirs_head->next;
+// 	}
+// }
 
 static void	heredoc_child(int fd, char *limiter, t_redir_data *rd,
 		t_minishell *shell)
@@ -60,7 +60,7 @@ static void	heredoc_child(int fd, char *limiter, t_redir_data *rd,
 static int	heredoc_parent(int fd, int pid, t_redir_data *rd, char *tmp)
 {
 	int	status;
-
+	
 	close(fd);
 	waitpid(pid, &status, 0);
 	set_signals_prompt();
@@ -79,6 +79,8 @@ static int	heredoc_parent(int fd, int pid, t_redir_data *rd, char *tmp)
 		return (-1);
 	return (0);
 }
+
+void printllist(t_list *lst) { while(lst) { printf("%i->", *((int *)lst->content)); lst = lst->next; } printf("NULL\n"); }
 
 static int	fork_heredoc(char *tmp, t_redir_data *rd,
 		t_minishell *shell, t_list *redirs_head)
@@ -103,7 +105,9 @@ static int	fork_heredoc(char *tmp, t_redir_data *rd,
 	}
 	if (pid == 0)
 	{
-		close_inherited_heredoc_fds(redirs_head);
+		// close_inherited_heredoc_fds(redirs_head);
+		close_open_files(shell);
+		redirs_head = NULL;
 		heredoc_child(fd, rd->filename, rd, shell);
 	}
 	return (heredoc_parent(fd, pid, rd, tmp));
