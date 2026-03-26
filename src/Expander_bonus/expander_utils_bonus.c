@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 12:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/26 11:57:33 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/26 12:38:56 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	**expand_one_arg(char **args, int i, t_minishell *shell)
 	int		is_wc;
 
 	quoted = word_has_quotes(args[i]);
-	is_wc = (!quoted && contains(args[i], '*'));
+	is_wc = (!quoted && contains(args[i], '*')) || (!quoted && contains(args[i], '$'));
 	expanded = expand_word(args[i], shell->env, shell->exit_status);
 	if (!expanded)
 		return (args);

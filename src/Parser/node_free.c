@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node_free.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 16:42:30 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/26 13:07:16 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	free_redir(void *ptr)
 	free(redir->filename);
 	free(redir);
 }
+
 
 void	free_args(char **args)
 {

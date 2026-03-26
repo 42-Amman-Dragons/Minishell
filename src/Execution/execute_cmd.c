@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/25 15:46:09 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/26 13:34:27 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,24 +109,24 @@ int	exec_cmd(t_tree *node, t_minishell *shell)
 	int	idx;
 	int	temp_stdin;
 	int	temp_stdout;
-	struct stat path_stat;
+	// struct stat path_stat;
 
 	idx = -1;
-	ft_memset(&path_stat, 0, sizeof(path_stat));
+	// ft_memset(&path_stat, 0, sizeof(path_stat));
 	if (node->data.cmd.args)
 	{
-		if(contains(node->data.cmd.args[0], '/'))
-		{
-			stat(node->data.cmd.args[0], &path_stat);
-			if(S_ISDIR(path_stat.st_mode) != 0)
-			{
-				ft_putstr_fd("minishell: ",2);
-				ft_putstr_fd(node->data.cmd.args[0], 2);
-				ft_putstr_fd(": Is a directory\n", 2);
-				shell->exit_status = 126;
-				return (shell->exit_status);
-			}
-		}
+		// if(node->data.cmd.args[0] && contains(node->data.cmd.args[0], '/'))
+		// {
+		// 	stat(node->data.cmd.args[0], &path_stat);
+		// 	if(S_ISDIR(path_stat.st_mode) != 0)
+		// 	{
+		// 		ft_putstr_fd("minishell: ",2);
+		// 		ft_putstr_fd(node->data.cmd.args[0], 2);
+		// 		ft_putstr_fd(": Is a directory\n", 2);
+		// 		shell->exit_status = 126;
+		// 		return (shell->exit_status);
+		// 	}
+		// }
 		idx = is_builtin(node->data.cmd.args[0]);
 		if (idx >= 0)
 		{

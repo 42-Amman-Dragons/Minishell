@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/25 12:16:36 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/26 12:32:41 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
+# include <limits.h>
 
 # define DRAGON_GREEN "\001\033[1;32m\002"
 # define DRAGON_CYAN "\001\033[0;36m\002"
@@ -86,10 +87,13 @@ typedef struct s_minishell
 	char			*prompt;
 	char			**env;
 	t_list			*history;
+	t_list			*openfiles;
 	struct termios	new_termos;
 	struct termios	original_termos;
 	int				is_interactive;
 	int				exit_status;
+	char			*username;
+	char			*servername;
 }					t_minishell;
 
 /*AST Node Types*/

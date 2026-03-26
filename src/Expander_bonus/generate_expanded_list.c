@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generate_expanded_list.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 13:28:15 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/03/24 13:28:36 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/26 13:02:41 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ char	**generate_expanded_list(char **args, int i, char *expanded)
 		{
 			add_splitted(new_args, &j, expanded);
 			free(args[k]);
+			args[k] = NULL;
 		}
 		else
 			copy_arg(new_args, args, &j, k);

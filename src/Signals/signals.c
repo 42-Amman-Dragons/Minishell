@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 09:12:58 by haya              #+#    #+#             */
-/*   Updated: 2026/03/24 18:42:06 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/26 13:25:52 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,15 @@ static void	setup_sig(int signum, void (*handler)(int), int flags)
 	sigaction(signum, &sa, NULL);
 }
 
+void	handle_quit(int sig)
+{
+	g_signum = sig;
+	write(1, "^\\Quit (core dumped)\n", 21);
+	// rl_on_new_line();
+	// rl_replace_line("", 0);
+	// rl_redisplay();
+}
+
 void	set_signals_prompt(void)
 {
 	setup_sig(SIGINT, handle_sigint, SA_RESTART);
@@ -43,7 +52,7 @@ void	set_signals_prompt(void)
 void	set_signals_exec(void)
 {
 	setup_sig(SIGINT, SIG_IGN, 0);
-	setup_sig(SIGQUIT, SIG_IGN, 0);
+	setup_sig(SIGQUIT, handle_quit, 0);
 }
 
 void	set_signals_child(void)
