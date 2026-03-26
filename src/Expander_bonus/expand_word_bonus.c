@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_word_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 13:35:07 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/26 11:54:58 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ static void	handle_normal(char *word, t_expand *ctx)
 		ctx->state = EXP_DQUOTE;
 		ctx->i++;
 	}
+	// else if (word[ctx->i] == '$' && ft_isdigit(word[ctx->i + 1]))
+	// {
+	// 	if(word[ctx->i+1] == '0')
+	// 		ctx->result = append_str(ctx->result, ft_strdup("minishell"));
+	// 	ctx->i = ctx->i + 2;
+	// }
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != ' ')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
 	else if (word[ctx->i] == '*')
