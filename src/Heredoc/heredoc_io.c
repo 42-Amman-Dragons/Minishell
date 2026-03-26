@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_io.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 22:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/25 13:40:38 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/26 09:34:12 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ static int	fork_heredoc(char *tmp, t_redir_data *rd,
 	{
 		// close_inherited_heredoc_fds(redirs_head);
 		close_open_files(shell);
-		redirs_head = NULL;
+		redirs_head = redirs_head;
 		heredoc_child(fd, rd->filename, rd, shell);
 	}
 	return (heredoc_parent(fd, pid, rd, tmp));
