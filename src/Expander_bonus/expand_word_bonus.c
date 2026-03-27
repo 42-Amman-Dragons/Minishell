@@ -14,8 +14,6 @@
 
 static void	handle_normal(char *word, t_expand *ctx)
 {
-	char	*pattern;
-
 	if (word[ctx->i] == '\'')
 	{
 		ctx->state = EXP_SQUOTE;
@@ -37,20 +35,6 @@ static void	handle_normal(char *word, t_expand *ctx)
 		ctx->i++;
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != ' ')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
-	else if (word[ctx->i] == '*')
-	{
-		if (ctx->result)
-			pattern = ft_strjoin(ctx->result, word + ctx->i);
-		else
-			pattern = ft_strdup(word + ctx->i);
-		free(ctx->result);
-		ctx->result = append_astersk(NULL, pattern);
-		if (!ctx->result)
-			ctx->result = pattern;
-		else
-			free(pattern);
-		ctx->i = ft_strlen(word);
-	}
 	else
 		ctx->result = append_char(ctx->result, word[ctx->i++]);
 }

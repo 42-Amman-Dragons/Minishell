@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/26 12:34:16 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/27 23:44:48 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,9 @@ int	check_boundries(const char *nptr)
 	return (0);
 }
 
-
 int	ft_exit(char **args, t_minishell *shell)
 {
-	if (calc_len_args(args) >= 2 
-	&& 
-	(!is_all_num(args[1])))
+	if (calc_len_args(args) >= 2 && (!is_all_num(args[1])))
 	{
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(args[1], 2);

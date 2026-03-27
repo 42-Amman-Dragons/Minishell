@@ -56,6 +56,17 @@ static void	normalize_ifs(char *s)
 
 char	**add_to_args(char **args, int i, char *expanded, int is_wc)
 {
+	char	*globbed;
+
+	if (is_wc && expanded && ft_strchr(expanded, '*'))
+	{
+		globbed = append_astersk(NULL, expanded);
+		if (globbed)
+		{
+			free(expanded);
+			expanded = globbed;
+		}
+	}
 	if (is_wc && expanded)
 	{
 		normalize_ifs(expanded);
@@ -134,6 +145,26 @@ static int	unquoted_dollar_has_space(char *word, char **env, int exit_status)
 	return (0);
 }
 
+static int	word_has_unquoted_asterisk(char *word)
+{
+	int	sq;
+	int	dq;
+
+	sq = 0;
+	dq = 0;
+	while (*word)
+	{
+		if (*word == '\'' && !dq)
+			sq = !sq;
+		else if (*word == '"' && !sq)
+			dq = !dq;
+		else if (*word == '*' && !sq && !dq)
+			return (1);
+		word++;
+	}
+	return (0);
+}
+
 char	**expand_one_arg(char **args, int i, t_minishell *shell)
 {
 	char	*expanded;
@@ -141,7 +172,8 @@ char	**expand_one_arg(char **args, int i, t_minishell *shell)
 	int		is_wc;
 
 	quoted = word_has_quotes(args[i]);
-	is_wc = unquoted_dollar_has_space(args[i], shell->env, shell->exit_status);
+	is_wc = unquoted_dollar_has_space(args[i], shell->env, shell->exit_status)
+		|| word_has_unquoted_asterisk(args[i]);
 	expanded = expand_word(args[i], shell->env, shell->exit_status);
 	if (!expanded)
 		return (args);
