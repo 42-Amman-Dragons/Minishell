@@ -13,13 +13,22 @@
 #include "minishell.h"
 
 
-void add_to_openfiles(t_minishell *shell, int fd)
+void	track_fd(t_minishell *shell, int *heredoc_fd_ptr)
 {
-	int *fd_ptr = malloc(sizeof(int));
-	if(!fd_ptr)
+	int		**ref;
+	t_list	*node;
+
+	ref = malloc(sizeof(int *));
+	if (!ref)
 		free_and_exit(NULL, shell, 1);
-	*fd_ptr = fd;
-	ft_lstadd_back(&shell->openfiles, ft_lstnew(fd_ptr));
+	*ref = heredoc_fd_ptr;
+	node = ft_lstnew(ref);
+	if (!node)
+	{
+		free(ref);
+		free_and_exit(NULL, shell, 1);
+	}
+	ft_lstadd_back(&shell->openfiles, node);
 }
 
 static char	*strip_quotes(char *str)
@@ -58,7 +67,7 @@ void	push_heredoc_line(int fd, char *line, t_redir_data *rd,
 
 	if (rd->heredoc_expand)
 	{
-		expanded = expand_word(line, shell->env, shell->exit_status);
+		expanded = expand_word_heredoc(line, shell->env, shell->exit_status);
 		if (expanded)
 		{
 			ft_putstr_fd(expanded, fd);
@@ -85,9 +94,7 @@ static int	process_redir_list(t_list *redirs, t_minishell *shell, int *idx)
 {
 	t_redir_data	*rd;
 	char			*stripped;
-	t_list			*head;
 
-	head = redirs;
 	while (redirs)
 	{
 		rd = (t_redir_data *)redirs->content;
@@ -98,9 +105,9 @@ static int	process_redir_list(t_list *redirs, t_minishell *shell, int *idx)
 				return (-1);
 			free(rd->filename);
 			rd->filename = stripped;
-			if (setup_heredoc_fd(rd, shell, (*idx)++, head) == -1)
+			if (setup_heredoc_fd(rd, shell, (*idx)++) == -1)
 				return (-1);
-			add_to_openfiles(shell, rd->heredoc_fd);
+			track_fd(shell, &rd->heredoc_fd);
 		}
 		redirs = redirs->next;
 	}

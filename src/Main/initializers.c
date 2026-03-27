@@ -42,6 +42,8 @@ t_minishell	*init_shell(void)
 		return (NULL);
 	shell->is_interactive = isatty(STDIN_FILENO);
 	shell->openfiles = NULL;
+	shell->builtin_temp_stdin = -1;
+	shell->builtin_temp_stdout = -1;
 	return (shell);
 }
 

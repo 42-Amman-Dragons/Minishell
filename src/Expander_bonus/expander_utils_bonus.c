@@ -44,16 +44,94 @@ void	strip_empty_args(t_tree *node, int count)
 	}
 }
 
+static void	normalize_ifs(char *s)
+{
+	while (*s)
+	{
+		if (*s == '\t' || *s == '\n')
+			*s = ' ';
+		s++;
+	}
+}
+
 char	**add_to_args(char **args, int i, char *expanded, int is_wc)
 {
-	if (is_wc && expanded && contains(expanded, ' ') == 1)
-		args = generate_expanded_list(args, i, expanded);
-	else
+	if (is_wc && expanded)
 	{
-		free(args[i]);
-		args[i] = expanded;
+		normalize_ifs(expanded);
+		if (contains(expanded, ' ') == 1)
+			return (generate_expanded_list(args, i, expanded));
 	}
+	free(args[i]);
+	args[i] = expanded;
 	return (args);
+}
+
+static char	*get_unquoted_var_val(char *word, int *i, char **env,
+				int exit_status)
+{
+	int		j;
+	char	*name;
+	char	*val;
+
+	j = *i + 1;
+	if (!word[j])
+		return (NULL);
+	if (word[j] == '?')
+	{
+		*i = j;
+		return (ft_itoa(exit_status));
+	}
+	if (word[j] == '$')
+	{
+		*i = j;
+		return (NULL);
+	}
+	while (ft_isalnum(word[j]) || word[j] == '_')
+		j++;
+	if (j == *i + 1)
+		return (NULL);
+	name = ft_substr(word, *i + 1, j - *i - 1);
+	if (!name)
+		return (NULL);
+	val = get_env_value(name, env);
+	free(name);
+	*i = j - 1;
+	if (!val)
+		return (ft_strdup(""));
+	return (ft_strdup(val));
+}
+
+static int	unquoted_dollar_has_space(char *word, char **env, int exit_status)
+{
+	int		sq;
+	int		dq;
+	int		i;
+	char	*val;
+
+	sq = 0;
+	dq = 0;
+	i = 0;
+	while (word[i])
+	{
+		if (word[i] == '\'' && !dq)
+			sq = !sq;
+		else if (word[i] == '"' && !sq)
+			dq = !dq;
+		else if (word[i] == '$' && !sq && !dq)
+		{
+			val = get_unquoted_var_val(word, &i, env, exit_status);
+			if (val && (contains(val, ' ') || contains(val, '\t')
+					|| contains(val, '\n')))
+			{
+				free(val);
+				return (1);
+			}
+			free(val);
+		}
+		i++;
+	}
+	return (0);
 }
 
 char	**expand_one_arg(char **args, int i, t_minishell *shell)
@@ -63,21 +141,21 @@ char	**expand_one_arg(char **args, int i, t_minishell *shell)
 	int		is_wc;
 
 	quoted = word_has_quotes(args[i]);
-	is_wc = (!quoted && contains(args[i], '*')) || (!quoted && contains(args[i], '$'));
+	is_wc = unquoted_dollar_has_space(args[i], shell->env, shell->exit_status);
 	expanded = expand_word(args[i], shell->env, shell->exit_status);
 	if (!expanded)
 		return (args);
 	if (!quoted && expanded[0] == '\0')
 	{
-		if (is_wc)
-		{
-			free(expanded);
-			expanded = NULL;
-			return (args);
-		}
 		free(expanded);
-		expanded = NULL;
+		free(args[i]);
+		while (args[i])
+		{
+			args[i] = args[i + 1];
+			i++;
+		}
+		return (args);
 	}
-	args = add_to_args(args, i, expanded, is_wc); // @edits has edit this
+	args = add_to_args(args, i, expanded, is_wc);
 	return (args);
 }

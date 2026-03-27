@@ -12,6 +12,15 @@
 
 #include "minishell.h"
 
+int	is_command_a_directory(const char *path)
+{
+	struct stat	st;
+
+	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+		return (1);
+	return (0);
+}
+
 static char	*get_path(char **env)
 {
 	char	*path;
@@ -51,7 +60,7 @@ static char	*search_in_paths(char **paths, char *cmd)
 	while (paths[i])
 	{
 		sub = asssemple_path(paths[i], cmd);
-		if (access(sub, F_OK) == 0)
+		if (access(sub, F_OK) == 0 && !is_command_a_directory(sub))
 		{
 			errno = 0;
 			free_splitted(paths);
@@ -79,10 +88,3 @@ char	*absoulute_path(char *cmd, char **env)
 	return (search_in_paths(paths, cmd));
 }
 
-void	cmd_not_found(char *cmd_name, t_tree *node, t_minishell *shell)
-{
-	ft_putstr_fd(cmd_name, 2);
-	ft_putstr_fd(": command not found\n", 2);
-	free(cmd_name);
-	free_and_exit(node, shell, 127);
-}

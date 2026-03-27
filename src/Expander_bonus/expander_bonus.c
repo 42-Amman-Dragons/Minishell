@@ -12,12 +12,6 @@
 
 #include "minishell_bonus.h"
 
-// @TODO: redirection errors.
-// This bug needs fixing, it should be similar to the mandatory
-// The error message for "" is different from $NONEXISTENT_VAR, the first 
-// should be "ambiguous redirect" and the second should be 
-// "No such file or directory" 
-
 static void	expand_redirs(t_list *redirs, t_minishell *shell)
 {
 	t_redir_data	*rd;
@@ -32,12 +26,6 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 					shell->exit_status);
 			if (expanded)
 			{
-				if (expanded[0] == '\0')
-				{
-					free(expanded);
-					redirs = redirs->next;
-					continue ;
-				}
 				free(rd->filename);
 				rd->filename = expanded;
 			}

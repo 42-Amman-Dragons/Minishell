@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 10:40:19 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/03/19 06:47:53 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/27 04:36:18 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
-	// struct s_list	*prev;
 }					t_list;
 
 int					ft_isalpha(int c);

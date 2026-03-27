@@ -28,10 +28,13 @@ static void	handle_normal(char *word, t_expand *ctx)
 	}
 	else if (word[ctx->i] == '$' && ft_isdigit(word[ctx->i + 1]))
 	{
-		if(word[ctx->i + 1] == '0')
+		if (word[ctx->i + 1] == '0')
 			ctx->result = append_str(ctx->result, ft_strdup("minishell"));
-		ctx->i = ctx->i + 2;
+		ctx->i += 2;
 	}
+	else if (word[ctx->i] == '$' && (word[ctx->i + 1] == '"' ||
+		word[ctx->i + 1] == '\''))
+		ctx->i++;
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != ' ')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
 	else if (word[ctx->i] == '*')
@@ -110,10 +113,8 @@ char	*expand_word_heredoc(char *word, char **env, int exit_status)
 	ctx.state = EXP_NORMAL;
 	while (word[ctx.i])
 	{
-		if (word[ctx.i] == '$' && word[ctx.i + 1]
-			&& word[ctx.i + 1] != ' ')
-			ctx.result = append_str(ctx.result,
-					expand_dollar(word, &ctx));
+		if (word[ctx.i] == '$' && word[ctx.i + 1] && word[ctx.i + 1] != ' ')
+			ctx.result = append_str(ctx.result, expand_dollar(word, &ctx));
 		else
 			ctx.result = append_char(ctx.result, word[ctx.i++]);
 	}

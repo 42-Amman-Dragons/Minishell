@@ -261,7 +261,6 @@ void				prepare_prompt_beggining(char **prompt, t_minishell *shell);
 void				prepare_prompt_path(char **prompt, char *buff);
 int					init_prompt(t_minishell *shell);
 
-
-// Testing 
-void add_to_openfiles(t_minishell *shell, t_tree *node, int fd);
+void				close_tracked_fds(t_minishell *shell);
+void				track_fd(t_minishell *shell, int *heredoc_fd_ptr);
 #endif

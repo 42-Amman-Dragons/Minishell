@@ -24,6 +24,11 @@ t_dir_mode	identify_redirection_mode(char *str, int *i)
 		(*i) += 2;
 		return (DIR_OUT_APPEND);
 	}
+	else if (ft_strncmp(">|", str, 2) == 0)
+	{
+		(*i) += 2;
+		return (DIR_OUT_TRUNC);
+	}
 	else if (ft_strncmp("<", str, 1) == 0)
 	{
 		(*i)++;

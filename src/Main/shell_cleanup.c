@@ -35,8 +35,6 @@ int	cleanup_shell(t_minishell *shell, int exit_code)
 	rl_clear_history();
 	if (shell->history)
 		ft_lstclear(&(shell->history), free);
-	if (shell->openfiles)
-		close_open_files(shell);
 	shell->history = NULL;
 	if (shell->prompt)
 		free(shell->prompt);
@@ -50,6 +48,7 @@ int	cleanup_shell(t_minishell *shell, int exit_code)
 		free(shell->line);
 		shell->line = NULL;
 	}
+	close_tracked_fds(shell);
 	ft_bzero(shell, sizeof(*shell));
 	free(shell);
 	return (exit_code);

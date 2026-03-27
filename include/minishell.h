@@ -95,6 +95,8 @@ typedef struct s_minishell
 	int				exit_status;
 	char			*username;
 	char			*servername;
+	int				builtin_temp_stdin;
+	int				builtin_temp_stdout;
 }					t_minishell;
 
 /*AST Node Types*/
@@ -198,12 +200,17 @@ typedef struct s_expand
 
 void				expander(t_tree *tree, t_minishell *shell);
 char				*expand_word(char *word, char **env, int exit_status);
+char				*expand_word_heredoc(char *word, char **env, int exit_status);
+char				**expand_one_arg(char **args, int i, t_minishell *shell);
+void				strip_empty_args(t_tree *node, int count);
+int					calc_len_args(char **args);
+void				free_args(char **args);
 char				*expand_dollar(char *word, t_expand *ctx);
 char				*append_char(char *result, char c);
 char				*append_str(char *result, char *s);
 int					init_heredocs(t_tree *tree, t_minishell *shell);
 int					setup_heredoc_fd(t_redir_data *rd, t_minishell *shell,
-						int idx, t_list *redirs_head);
+						int idx);
 int					read_heredoc_nointeractive(t_redir_data *rd,
 						t_minishell *shell, char *tmp);
 void				push_heredoc_line(int fd, char *line, t_redir_data *rd,
@@ -211,7 +218,6 @@ void				push_heredoc_line(int fd, char *line, t_redir_data *rd,
 void				print_eof_warning(char *limiter);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
-void				expand_one_arg(char **args, int i, t_minishell *shell);
 char				*append_astersk(char *result, char *pattern);
 
 /*Tokenizer*/
@@ -248,23 +254,34 @@ int					exec_tree(t_tree *node, t_minishell *shell);
 int					exec_cmd(t_tree *node, t_minishell *shell);
 int					exec_pipe(t_tree *node, t_minishell *shell);
 int					exec_and_or(t_tree *node, t_minishell *shell);
-void				close_heredoc_fds(t_tree *node);
-int					child_exit_status(int status);
-void				secure_close(int fd, t_tree *node, t_minishell *shell);
-int					handle_redirections(t_tree *node);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
-void				cmd_not_found(char *cmd_name, t_tree *node,
-						t_minishell *shell);
+// Pipe utils
+int					wait_all(pid_t pid);
+int					temp_redir(int *temp_stdin, int *temp_stdout);
+void				safe_close(int *fd, char *msg);
+int					restore_redir(int *temp_stdin, int *temp_stdout);
+int					restore_close_redir(int *fd, int *temp_stdin,
+						int *temp_stdout);
+// Execution utils
+int					child_exit_status(int status);
+void				secure_close(int fd, t_tree *node, t_minishell *shell);
+void				free_splitted(char **splitted);
+// Redirections
+int					handle_redirections(t_tree *node);
+int					redirect_input(t_redir_data *rd);
+int					redirect_output(t_redir_data *rd);
+int					redirect_append(t_redir_data *rd);
+int					redirect_heredoc(t_redir_data *rd);
 
 // Main
 t_minishell			*init_shell(void);
 int					init_terminal(t_minishell *shell);
 int					init_interactive_shell(t_minishell *shell);
 void				parse_and_execute(t_minishell *shell);
-void				free_splitted(char **splitted);
 char				*get_prompt(t_minishell *shell);
+int					is_command_a_directory(const char *path);
 char				*absoulute_path(char *cmd, char **env);
 char				*safe_join(char *str1, char *str2);
 void				print_welcome_message(void);
@@ -275,6 +292,6 @@ void				prepare_prompt_beggining(char **prompt, t_minishell *shell);
 void				prepare_prompt_path(char **prompt, char *buff);
 void				init_prompt(t_minishell *shell);
 
-void				close_open_files(t_minishell *shell);
-void				add_to_openfiles(t_minishell *shell, int fd);
+void				close_tracked_fds(t_minishell *shell);
+void				track_fd(t_minishell *shell, int *heredoc_fd_ptr);
 #endif

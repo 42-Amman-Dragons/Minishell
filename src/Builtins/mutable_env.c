@@ -25,6 +25,25 @@ char	*mk_env_entry(char *name, char *value)
 	return (entry);
 }
 
+static void	increment_shlvl(t_minishell *shell)
+{
+	char	*shlvl_str;
+	int		shlvl;
+	char	*new_val;
+
+	shlvl_str = get_env_value("SHLVL", shell->env);
+	if (shlvl_str)
+		shlvl = ft_atoi(shlvl_str) + 1;
+	else
+		shlvl = 1;
+	new_val = ft_itoa(shlvl);
+	if (new_val)
+	{
+		set_env_value("SHLVL", new_val, shell);
+		free(new_val);
+	}
+}
+
 int	init_mutable_env(char **env, t_minishell *shell)
 {
 	char	*entry;
@@ -47,5 +66,6 @@ int	init_mutable_env(char **env, t_minishell *shell)
 		}
 		i++;
 	}
+	increment_shlvl(shell);
 	return (0);
 }

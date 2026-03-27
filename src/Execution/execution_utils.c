@@ -12,27 +12,25 @@
 
 #include "minishell.h"
 
-void	close_heredoc_fds(t_tree *node)
+void	close_tracked_fds(t_minishell *shell)
 {
-	t_list			*redir;
-	t_redir_data	*rd;
+	t_list	*curr;
+	int		**ref;
 
-	if (node->type == NODE_CMD)
-		redir = node->data.cmd.redirections;
-	else if (node->type == NODE_SUBSHELL)
-		redir = node->data.subshell.redirections;
-	else
+	if (!shell->openfiles)
 		return ;
-	while (redir)
+	curr = shell->openfiles;
+	while (curr)
 	{
-		rd = (t_redir_data *)redir->content;
-		if (rd->heredoc_fd >= 0)
+		ref = (int **)curr->content;
+		if (**ref >= 0)
 		{
-			close(rd->heredoc_fd);
-			rd->heredoc_fd = -1;
+			close(**ref);
+			**ref = -1;
 		}
-		redir = redir->next;
+		curr = curr->next;
 	}
+	ft_lstclear(&(shell->openfiles), free);
 }
 
 void	secure_close(int fd, t_tree *node, t_minishell *shell)
@@ -57,7 +55,8 @@ int	child_exit_status(int status)
 
 void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
 {
-	if(node)
+	close_tracked_fds(shell);
+	if (node)
 		free_tree(node);
 	exit(cleanup_shell(shell, exit_code));
 }

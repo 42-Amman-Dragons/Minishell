@@ -78,7 +78,14 @@ static void	print_export_entry(char *entry)
 	}
 	ft_putstr_fd("=\"", 1);
 	i++;
-	ft_putstr_fd(entry + i, 1);
+	while (entry[i])
+	{
+		if (entry[i] == '"')
+			ft_putstr_fd("\\\"", 1);
+		else
+			ft_putchar_fd(entry[i], 1);
+		i++;
+	}
 	ft_putstr_fd("\"\n", 1);
 }
 
@@ -97,7 +104,8 @@ int	print_sorted_env(t_minishell *shell)
 	i = 0;
 	while (i < count)
 	{
-		print_export_entry(shell->env[idx[i]]);
+		if (ft_strncmp(shell->env[idx[i]], "_=", 2) != 0)
+			print_export_entry(shell->env[idx[i]]);
 		i++;
 	}
 	free(idx);

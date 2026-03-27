@@ -24,8 +24,14 @@ static void	handle_normal(char *word, t_expand *ctx)
 		ctx->state = EXP_DQUOTE;
 		ctx->i++;
 	}
-	else if (word[ctx->i] == '$' && (word[ctx->i + 1] == '"' || 
-		word[ctx->i+ 1] == '\''))
+	else if (word[ctx->i] == '$' && ft_isdigit(word[ctx->i + 1]))
+	{
+		if (word[ctx->i + 1] == '0')
+			ctx->result = append_str(ctx->result, ft_strdup("minishell"));
+		ctx->i += 2;
+	}
+	else if (word[ctx->i] == '$' && (word[ctx->i + 1] == '"' ||
+		word[ctx->i + 1] == '\''))
 		ctx->i++;
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != ' ')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));

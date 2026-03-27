@@ -68,6 +68,7 @@ char	**generate_expanded_list(char **args, int i, char *expanded)
 			copy_arg(new_args, args, &j, k);
 		k++;
 	}
-	free_args_expanded(args, expanded);
+	free(args);
+	free(expanded);
 	return (new_args);
 }

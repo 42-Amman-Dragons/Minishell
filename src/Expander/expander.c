@@ -38,6 +38,8 @@ static void	expand_node(t_tree *node, t_minishell *shell)
 {
 	int	i;
 	int	count;
+	int	prev_len;
+	int	added;
 
 	i = 0;
 	count = 0;
@@ -47,9 +49,16 @@ static void	expand_node(t_tree *node, t_minishell *shell)
 		count++;
 	while (i < count)
 	{
-		expand_one_arg(node->data.cmd.args, i, shell);
-		i++;
+		prev_len = calc_len_args(node->data.cmd.args);
+		node->data.cmd.args = expand_one_arg(node->data.cmd.args, i, shell);
+		if (!node->data.cmd.args)
+			return ;
+		added = calc_len_args(node->data.cmd.args) - prev_len;
+		count += added;
+		i += 1 + added;
 	}
+	while (node->data.cmd.args[count])
+		count++;
 	strip_empty_args(node, count);
 	expand_redirs(node->data.cmd.redirections, shell);
 }

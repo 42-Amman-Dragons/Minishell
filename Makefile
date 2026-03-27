@@ -37,7 +37,8 @@ MAIN_SRC = main.c initializers.c history.c shell_cleanup.c parse_and_execute.c p
 
 EXEC_DIR = Execution
 EXEC_SRC = execution.c execute_cmd.c exeute_cmd_utils.c execute_oper.c execute_pipe.c \
-	execute_subshell.c execution_utils.c handle_redirections.c
+	execute_subshell.c execution_utils.c handle_redirections.c \
+	pipe_utils.c redirect_utils.c
 
 UTILS_DIR = utils
 UTILS_SRC = string_utils.c

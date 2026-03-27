@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_execute.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/24 18:45:52 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/27 05:46:33 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static t_tree	*build_tree(t_minishell *shell)
 	if (init_heredocs(tree, shell) == -1)
 	{
 		shell->exit_status = 130;
+		close_tracked_fds(shell);
 		free_tree(tree);
 		return (NULL);
 	}
@@ -45,8 +46,14 @@ void	parse_and_execute(t_minishell *shell)
 
 	tree = build_tree(shell);
 	if (!tree)
+	{
+		// In non-interactive a syntax error should exit
+		if (!shell->is_interactive && shell->exit_status == 2)
+			exit(cleanup_shell(shell, 2));
 		return ;
+	}
 	exec_tree(tree, shell);
+	close_tracked_fds(shell);
 	rl_on_new_line();
 	free_tree(tree);
 }

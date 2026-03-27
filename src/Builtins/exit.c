@@ -42,34 +42,32 @@ int	calc_len_args(char **args)
 
 int	check_boundries(const char *nptr)
 {
-	int	i;
-	long long	num;
-	int	sign;
+	int					i;
+	unsigned long long	num;
+	int					sign;
 
 	i = 0;
 	num = 0;
 	sign = 1;
-	while (isspace(nptr[i]) == 1)
-	{
-		i = i + 1;
-	}
+	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
+		i++;
 	if (nptr[i] == '+' || nptr[i] == '-')
 	{
 		if (nptr[i] == '-')
-		{
-			sign = sign * -1;
-		}
+			sign = -1;
 		i++;
 	}
 	while (nptr[i] >= '0' && nptr[i] <= '9')
 	{
+		if (num > (unsigned long long)__LONG_LONG_MAX__ / 10 + 1)
+			return (-1);
 		num = 10 * num + (nptr[i] - '0');
-		if (sign == -1 && num > (-1*__LONG_MAX__) - 1)
-			return (-1);
-		else if(sign && num > __LONG_MAX__)
-			return (-1);
 		i++;
 	}
+	if (sign == 1 && num > (unsigned long long)__LONG_LONG_MAX__)
+		return (-1);
+	if (sign == -1 && num > (unsigned long long)__LONG_LONG_MAX__ + 1)
+		return (-1);
 	return (0);
 }
 
@@ -93,10 +91,19 @@ int	ft_exit(char **args, t_minishell *shell)
 	}
 	if (calc_len_args(args) == 2)
 	{
+		if (check_boundries(args[1]) == -1)
+		{
+			ft_putstr_fd("minishell: exit: ", 2);
+			ft_putstr_fd(args[1], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
+			custom_save_history(shell);
+			exit(cleanup_shell(shell, 2));
+		}
 		custom_save_history(shell);
 		exit(cleanup_shell(shell, ft_atoi(args[1])));
 	}
-	ft_putstr_fd("exit\n", 1);
+	if (shell->is_interactive)
+		ft_putstr_fd("exit\n", 2);
 	custom_save_history(shell);
 	exit(cleanup_shell(shell, shell->exit_status));
 	return (0);

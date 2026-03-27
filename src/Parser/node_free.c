@@ -20,7 +20,10 @@ void	free_redir(void *ptr)
 		return ;
 	redir = (t_redir_data *)ptr;
 	if (redir->heredoc_fd >= 0)
+	{
 		close(redir->heredoc_fd);
+		redir->heredoc_fd = -1;
+	}
 	free(redir->filename);
 	free(redir);
 }
