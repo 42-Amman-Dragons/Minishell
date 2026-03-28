@@ -16,6 +16,7 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 {
 	t_redir_data	*rd;
 	char			*expanded;
+	char			*globbed;
 
 	while (redirs)
 	{
@@ -26,6 +27,27 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 					shell->exit_status);
 			if (expanded)
 			{
+				if (ft_strchr(expanded, '*'))
+				{
+					globbed = append_astersk(NULL, expanded);
+					if (globbed && ft_strchr(globbed, ' '))
+					{
+						ft_putstr_fd("minishell: ", 2);
+						ft_putstr_fd(rd->filename, 2);
+						ft_putstr_fd(": ambiguous redirect\n", 2);
+						free(globbed);
+						free(expanded);
+						redirs = redirs->next;
+						continue ;
+					}
+					else if (globbed)
+					{
+						free(expanded);
+						expanded = globbed;
+					}
+					else
+						restore_astersks(expanded);
+				}
 				free(rd->filename);
 				rd->filename = expanded;
 			}

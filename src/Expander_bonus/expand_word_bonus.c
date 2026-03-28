@@ -46,6 +46,8 @@ static void	handle_squote(char *word, t_expand *ctx)
 		ctx->state = EXP_NORMAL;
 		ctx->i++;
 	}
+	else if (word[ctx->i] == '*')
+		ctx->result = append_char(ctx->result, '\x01'), ctx->i++;
 	else
 		ctx->result = append_char(ctx->result, word[ctx->i++]);
 }
@@ -57,6 +59,8 @@ static void	handle_dquote(char *word, t_expand *ctx)
 		ctx->state = EXP_NORMAL;
 		ctx->i++;
 	}
+	else if (word[ctx->i] == '*')
+		ctx->result = append_char(ctx->result, '\x01'), ctx->i++;
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != '"')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
 	else

@@ -54,7 +54,8 @@ static void	normalize_ifs(char *s)
 	}
 }
 
-char	**add_to_args(char **args, int i, char *expanded, int is_wc)
+char	**add_to_args(char **args, int i, char *expanded, int is_wc,
+				int quoted)
 {
 	char	*globbed;
 
@@ -67,9 +68,12 @@ char	**add_to_args(char **args, int i, char *expanded, int is_wc)
 			expanded = globbed;
 		}
 	}
+	if (expanded)
+		restore_astersks(expanded);
 	if (is_wc && expanded)
 	{
-		normalize_ifs(expanded);
+		if (!quoted)
+			normalize_ifs(expanded);
 		if (contains(expanded, ' ') == 1)
 			return (generate_expanded_list(args, i, expanded));
 	}
@@ -177,6 +181,8 @@ char	**expand_one_arg(char **args, int i, t_minishell *shell)
 	expanded = expand_word(args[i], shell->env, shell->exit_status);
 	if (!expanded)
 		return (args);
+	if (!is_wc && !quoted && ft_strchr(expanded, '*'))
+		is_wc = 1;
 	if (!quoted && expanded[0] == '\0')
 	{
 		free(expanded);
@@ -188,6 +194,6 @@ char	**expand_one_arg(char **args, int i, t_minishell *shell)
 		}
 		return (args);
 	}
-	args = add_to_args(args, i, expanded, is_wc);
+	args = add_to_args(args, i, expanded, is_wc, quoted);
 	return (args);
 }

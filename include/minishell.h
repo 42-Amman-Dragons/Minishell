@@ -205,6 +205,8 @@ char				**expand_one_arg(char **args, int i, t_minishell *shell);
 void				strip_empty_args(t_tree *node, int count);
 int					calc_len_args(char **args);
 void				free_args(char **args);
+char				**split_respecting_quotes(char *s, char c);
+char				*strip_quotes_str(char *str);
 char				*expand_dollar(char *word, t_expand *ctx);
 char				*append_char(char *result, char c);
 char				*append_str(char *result, char *s);

@@ -104,12 +104,30 @@ int	handle_builtin(int idx, t_tree *node, t_minishell *shell)
 	return (shell->exit_status);
 }
 
+static void	update_underscore_var(t_tree *node, t_minishell *shell)
+{
+	int		i;
+	char	*last_arg;
+
+	if (!node->data.cmd.args)
+		return ;
+	i = 0;
+	while (node->data.cmd.args[i])
+		i++;
+	if (i > 0)
+	{
+		last_arg = node->data.cmd.args[i - 1];
+		set_env_value("_", last_arg, shell);
+	}
+}
+
 int	exec_cmd(t_tree *node, t_minishell *shell)
 {
 	int	idx;
 
 	if (node->data.cmd.args)
 	{
+		update_underscore_var(node, shell);
 		idx = is_builtin(node->data.cmd.args[0]);
 		if (idx >= 0)
 			return (handle_builtin(idx, node, shell));

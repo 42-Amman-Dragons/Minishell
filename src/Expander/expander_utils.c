@@ -106,11 +106,13 @@ static void	normalize_ifs(char *s)
 	}
 }
 
-static char	**add_to_args(char **args, int i, char *expanded, int is_wc)
+static char	**add_to_args(char **args, int i, char *expanded, int is_wc,
+				int quoted)
 {
 	if (is_wc && expanded)
 	{
-		normalize_ifs(expanded);
+		if (!quoted)
+			normalize_ifs(expanded);
 		if (contains(expanded, ' ') == 1)
 			return (generate_expanded_list(args, i, expanded));
 	}
@@ -208,6 +210,6 @@ char	**expand_one_arg(char **args, int i, t_minishell *shell)
 		}
 		return (args);
 	}
-	args = add_to_args(args, i, expanded, is_wc);
+	args = add_to_args(args, i, expanded, is_wc, quoted);
 	return (args);
 }

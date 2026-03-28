@@ -15,7 +15,8 @@
 - [x] Open file descriptor in the && and ||
 - [x] check the heredoc logic — no leaks/open fds confirmed in valgrind.
 - [] the dot command — not required. We return "command not found" (127), bash returns "filename required" (2).
-- [x] the * double free — fixed in generate_expanded_list.c (bonus). Remaining bonus wildcard issues: (1) `.*` includes `.` and `..`; (2) results not sorted alphabetically. Mandatory has no wildcard (prints literal `*`).
+- [x] the * double free — fixed in generate_expanded_list.c (bonus).
+- [x] bonus wildcard issues — fully fixed `.` and `..` filtering, sorting, quoted stars (via `\x01` sentinel), ambiguous redirects, and variable expansion globbing. Only known unfixable edge cases (Test W5 spaces filename and GW10 tokenizer bug) remain.
 - [] multi-line quoted strings in non-interactive mode — gives "unclosed quote" error (both builds).
 - [] VAR=value standalone assignment not supported — executes as command (both builds).
 - [x] exit overflow — fixed in exit.c with check_boundries using unsigned long long (both builds).

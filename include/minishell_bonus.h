@@ -201,8 +201,11 @@ char				*append_str(char *result, char *s);
 int					init_heredocs(t_tree *tree, t_minishell *shell);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
+char				**split_respecting_quotes(char *s, char c);
+char				*strip_quotes_str(char *str);
 char				**expand_one_arg(char **args, int i, t_minishell *shell);
 char				*append_astersk(char *result, char *pattern);
+void				restore_astersks(char *str);
 
 /*Tokenizer*/
 t_tokenType			identify_token(char *s);
