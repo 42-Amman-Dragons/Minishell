@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/26 11:13:02 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/28 17:54:14 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
-
 
 # define DRAGON_GREEN "\001\033[1;32m\002"
 # define DRAGON_CYAN "\001\033[0;36m\002"
@@ -200,7 +199,8 @@ typedef struct s_expand
 
 void				expander(t_tree *tree, t_minishell *shell);
 char				*expand_word(char *word, char **env, int exit_status);
-char				*expand_word_heredoc(char *word, char **env, int exit_status);
+char				*expand_word_heredoc(char *word, char **env,
+						int exit_status);
 char				**expand_one_arg(char **args, int i, t_minishell *shell);
 void				strip_empty_args(t_tree *node, int count);
 int					calc_len_args(char **args);

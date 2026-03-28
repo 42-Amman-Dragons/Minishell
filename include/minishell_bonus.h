@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/26 12:32:41 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/28 20:17:27 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "libft.h"
 # include <dirent.h>
 # include <errno.h>
+# include <limits.h>
 # include <linux/limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
@@ -27,7 +28,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <termios.h>
-# include <limits.h>
 
 # define DRAGON_GREEN "\001\033[1;32m\002"
 # define DRAGON_CYAN "\001\033[0;36m\002"
@@ -138,13 +138,13 @@ typedef struct s_tree
 }					t_tree;
 
 int					add_to_history(char *line, t_list **history);
-// int					load_history(t_list **history);
+int					load_history(t_list **history);
 void				custom_save_history(t_minishell *shell);
 void				handle_sigint(int sig);
 void				set_signals_prompt(void);
 void				set_signals_exec(void);
 void				set_signals_child(void);
-// void				set_signals_heredoc(void);
+void				set_signals_heredoc(void);
 int					init_mutable_env(char **env, t_minishell *shell);
 void				free_env(char **env);
 char				*get_env_value(char *name, char **env);
@@ -246,8 +246,6 @@ int					handle_redirections(t_tree *node);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
-void				cmd_not_found(char *cmd_name, t_tree *node,
-						t_minishell *shell);
 char				**generate_expanded_list(char **args, int i,
 						char *expanded);
 

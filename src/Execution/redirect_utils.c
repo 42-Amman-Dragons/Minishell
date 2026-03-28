@@ -6,18 +6,33 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/27 00:00:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/28 03:16:29 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/28 21:07:13 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	redir_has_ambiguous_target(t_redir_data *rd)
+{
+	if (!rd->filename)
+		return (1);
+	if (rd->filename[0] == '\0')
+		return (1);
+	return (0);
+}
+
+static int	print_ambiguous_redirect(void)
+{
+	ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+	return (-1);
+}
+
 int	redirect_input(t_redir_data *rd)
 {
 	int	fd;
 
-	if (!rd->filename)
-		return (-1);
+	if (redir_has_ambiguous_target(rd))
+		return (print_ambiguous_redirect());
 	fd = open(rd->filename, O_RDONLY);
 	if (fd == -1)
 	{
@@ -39,8 +54,8 @@ int	redirect_output(t_redir_data *rd)
 {
 	int	fd;
 
-	if (!rd->filename)
-		return (-1);
+	if (redir_has_ambiguous_target(rd))
+		return (print_ambiguous_redirect());
 	fd = open(rd->filename, O_RDWR | O_CREAT | O_TRUNC, 0666);
 	if (fd == -1)
 	{
@@ -62,8 +77,8 @@ int	redirect_append(t_redir_data *rd)
 {
 	int	fd;
 
-	if (!rd->filename)
-		return (-1);
+	if (redir_has_ambiguous_target(rd))
+		return (print_ambiguous_redirect());
 	fd = open(rd->filename, O_RDWR | O_CREAT | O_APPEND, 0666);
 	if (fd == -1)
 	{

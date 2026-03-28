@@ -6,27 +6,34 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/27 23:44:48 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/28 22:37:05 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_space_char(char c)
+{
+	return (c == ' ' || (c >= 9 && c <= 13));
+}
 
 int	is_all_num(char *str)
 {
 	int	i;
 
 	i = 0;
+	while (str[i] && is_space_char(str[i]))
+		i++;
 	if (str[i] == '+' || str[i] == '-')
 		i++;
-	if (!str[i])
+	if (!str[i] || !ft_isdigit(str[i]))
 		return (0);
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
+	while (str[i] && ft_isdigit(str[i]))
 		i++;
-	}
+	while (str[i] && is_space_char(str[i]))
+		i++;
+	if (str[i] != '\0')
+		return (0);
 	return (1);
 }
 

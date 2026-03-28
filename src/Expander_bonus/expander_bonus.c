@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/26 11:13:56 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/28 17:50:05 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 						ft_putstr_fd(": ambiguous redirect\n", 2);
 						free(globbed);
 						free(expanded);
+						free(rd->filename);
+						rd->filename = NULL;
 						redirs = redirs->next;
 						continue ;
 					}

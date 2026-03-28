@@ -45,3 +45,21 @@ These 5 test cases (10 individual checks) still fail in both builds. Run `bash 4
 - [] **2_path_check.sh:49** — `touch tmp_x_file1; chmod +x tmp_x_file1; ./tmp_x_file1` (empty executable file).
   - STD_OUT ❌: we print "Exec format error" (exit 126), bash treats an empty executable as an empty shell script (exit 0, no output).
   - Root cause: execve returns ENOEXEC for empty files; bash retries with `/bin/sh`, we don't. Both builds.
+
+
+--- 
+- Test ID: [30] [EXPORT]
+- Command: export test2= - env
+- Why included:
+  - stdout differs
+- Observed:
+  - mini and bash env output differ in content/order in this scenario.
+- Interpretation:
+  - Export/env interaction with empty assignment is part of required builtin behavior.
+  - Needs normalization/validation against expected env semantics (not just stderr wording).
+
+
+### pwd/cd blocks
+- [018] `mkdir a a/b; cd a/b; rm -rf ../../a; pwd`
+- [059] `mkdir a a/b; cd a/b; rm -rf ../../a; cd ..`
+- [060] `mkdir a a/b; cd a/b; rm -rf ../../a; unset PWD OLDPWD; cd ..`

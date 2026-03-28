@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/03/28 17:21:13 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/28 18:20:33 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static int	process_line_non_interactive(t_minishell *shell)
 {
 	size_t	len;
 
-	ft_putendl_fd("minishell$ ", STDOUT_FILENO);
+	// ft_putendl_fd("minishell$ ", STDOUT_FILENO);
 	/* fixed prompt for tester */
 	shell->line = get_next_line(STDIN_FILENO);
 	if (!shell->line)

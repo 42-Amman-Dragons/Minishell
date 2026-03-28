@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/27 05:46:33 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/28 18:09:32 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	parse_and_execute(t_minishell *shell)
 			exit(cleanup_shell(shell, 2));
 		return ;
 	}
-	exec_tree(tree, shell);
+	shell->exit_status = exec_tree(tree, shell);
 	close_tracked_fds(shell);
 	rl_on_new_line();
 	free_tree(tree);

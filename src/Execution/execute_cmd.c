@@ -6,11 +6,16 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/27 04:34:46 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/28 23:26:30 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	path_is_unset(t_minishell *shell)
+{
+	return (get_env_value("PATH", shell->env) == NULL);
+}
 
 static void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 {
@@ -18,15 +23,18 @@ static void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 
 	ft_putstr_fd(cmd_name, 2);
 	ft_putstr_fd(": ", 2);
-	if (!node->data.cmd.args[0])
-	{
-		ft_putstr_fd("command not found\n", 2);
-		exit_code = 127;
-	}
-	else if (is_command_a_directory(node->data.cmd.args[0]))
+	if (is_command_a_directory(cmd_name))
 	{
 		ft_putstr_fd("Is a directory\n", 2);
 		exit_code = 126;
+	}
+	else if (!node->data.cmd.args[0])
+	{
+		if (!ft_strchr(cmd_name, '/') && path_is_unset(shell))
+			ft_putstr_fd("No such file or directory\n", 2);
+		else
+			ft_putstr_fd("command not found\n", 2);
+		exit_code = 127;
 	}
 	else
 	{
@@ -89,7 +97,8 @@ int	handle_external_cmd(t_minishell *shell, t_tree *node)
 
 int	handle_builtin(int idx, t_tree *node, t_minishell *shell)
 {
-	if (temp_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout) == -1)
+	if (temp_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout) ==
+		-1)
 		return (shell->exit_status = 1);
 	track_fd(shell, &shell->builtin_temp_stdin);
 	track_fd(shell, &shell->builtin_temp_stdout);
@@ -99,9 +108,26 @@ int	handle_builtin(int idx, t_tree *node, t_minishell *shell)
 		return (shell->exit_status = 1);
 	}
 	shell->exit_status = call_builtin(idx, node->data.cmd.args, shell);
-	if (restore_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout) == -1)
+	if (restore_redir(&shell->builtin_temp_stdin,
+			&shell->builtin_temp_stdout) == -1)
 		shell->exit_status = 1;
 	return (shell->exit_status);
+}
+
+static int	handle_redir_only_cmd(t_tree *node, t_minishell *shell)
+{
+	if (temp_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout) ==
+		-1)
+		return (shell->exit_status = 1);
+	if (handle_redirections(node) == -1)
+	{
+		restore_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout);
+		return (shell->exit_status = 1);
+	}
+	if (restore_redir(&shell->builtin_temp_stdin,
+			&shell->builtin_temp_stdout) == -1)
+		return (shell->exit_status = 1);
+	return (shell->exit_status = 0);
 }
 
 static void	update_underscore_var(t_tree *node, t_minishell *shell)
@@ -119,12 +145,17 @@ static void	update_underscore_var(t_tree *node, t_minishell *shell)
 		last_arg = node->data.cmd.args[i - 1];
 		set_env_value("_", last_arg, shell);
 	}
+	/* If only the command name is present (e.g. "ls"), keep _ as argv[0]. */
+	else if (node->data.cmd.args[0])
+		set_env_value("_", node->data.cmd.args[0], shell);
 }
 
 int	exec_cmd(t_tree *node, t_minishell *shell)
 {
 	int	idx;
 
+	if (!node->data.cmd.args)
+		return (handle_redir_only_cmd(node, shell));
 	if (node->data.cmd.args)
 	{
 		update_underscore_var(node, shell);
