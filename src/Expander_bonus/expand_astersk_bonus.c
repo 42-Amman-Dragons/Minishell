@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 09:53:10 by haya              #+#    #+#             */
-/*   Updated: 2026/03/27 23:50:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/29 16:59:09 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	is_matching(char *pattern, char *file_name)
 {
+	// 
 	if (*pattern == '\x01')
 	{
 		if (*file_name == '*')

@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 10:32:15 by haya              #+#    #+#             */
-/*   Updated: 2026/03/29 04:00:01 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/29 17:24:43 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ static char	*get_path(char **env)
 		}
 		i++;
 	}
+	// handle UNSET path and the current directory in inside the path (bin)
 	if (!path)
 		return (NULL);
 	return (ft_strdup(path + 5));
@@ -87,4 +88,3 @@ char	*absoulute_path(char *cmd, char **env)
 		return (NULL);
 	return (search_in_paths(paths, cmd));
 }
-

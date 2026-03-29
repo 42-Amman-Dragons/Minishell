@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/29 03:58:52 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/29 17:21:02 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 	}
 	else if (!node->data.cmd.args[0])
 	{
+
 		if (!ft_strchr(cmd_name, '/') && path_is_unset(shell))
 			ft_putstr_fd("No such file or directory\n", 2);
 		else

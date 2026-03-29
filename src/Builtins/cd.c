@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 02:53:20 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/27 23:44:08 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/29 17:42:25 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ int	ft_strcmp(char *s1, char *s2)
 
 static int	cd_get_path(char **args, char **path_out, t_minishell *shell)
 {
-	if (!args[1] || ft_strcmp(args[1], "~") == 0)
+	if (!args[1] || ft_strncmp(args[1], "~", 1) == 0)
 	{
+		// Join the home directory with the rest of the path if it exists (e.g. "~/folder")
+		//*path_out = ft_strjoin(get_env_value("HOME", shell->env), args[1]	+ 1);
 		*path_out = get_env_value("HOME", shell->env);
 		if (!*path_out)
 		{
@@ -92,3 +94,5 @@ int	ft_cd(char **args, t_minishell *shell)
 	free(newpwd);
 	return (0);
 }
+
+
