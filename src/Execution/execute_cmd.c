@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/28 23:43:50 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/29 03:58:52 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,37 @@
 static int	path_is_unset(t_minishell *shell)
 {
 	return (get_env_value("PATH", shell->env) == NULL);
+}
+
+static int	exec_with_sh_fallback(char **args, char **env)
+{
+	char	**sh_args;
+	int		argc;
+	int		i;
+
+	argc = 0;
+	while (args[argc])
+		argc++;
+	sh_args = ft_calloc(argc + 2, sizeof(char *));
+	if (!sh_args)
+		return (-1);
+	sh_args[0] = ft_strdup("/bin/sh");
+	if (!sh_args[0])
+	{
+		free(sh_args);
+		return (-1);
+	}
+	sh_args[1] = args[0];
+	i = 1;
+	while (i < argc)
+	{
+		sh_args[i + 1] = args[i];
+		i++;
+	}
+	execve("/bin/sh", sh_args, env);
+	free(sh_args[0]);
+	free(sh_args);
+	return (-1);
 }
 
 static void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
@@ -66,9 +97,14 @@ void	execve_cmd(t_tree *node, t_minishell *shell)
 		free(node->data.cmd.args[0]);
 		node->data.cmd.args[0] = absoulute_path(cmd_name, shell->env);
 	}
-	if (!node->data.cmd.args[0] || execve(node->data.cmd.args[0],
-			node->data.cmd.args, shell->env) == -1)
+	if (!node->data.cmd.args[0])
 		handle_cmd_error(cmd_name, node, shell);
+	if (execve(node->data.cmd.args[0], node->data.cmd.args, shell->env) == -1)
+	{
+		if (errno == ENOEXEC)
+			exec_with_sh_fallback(node->data.cmd.args, shell->env);
+		handle_cmd_error(cmd_name, node, shell);
+	}
 }
 
 int	handle_external_cmd(t_minishell *shell, t_tree *node)

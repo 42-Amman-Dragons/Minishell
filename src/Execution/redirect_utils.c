@@ -56,7 +56,7 @@ int	redirect_output(t_redir_data *rd)
 
 	if (redir_has_ambiguous_target(rd))
 		return (print_ambiguous_redirect());
-	fd = open(rd->filename, O_RDWR | O_CREAT | O_TRUNC, 0666);
+	fd = open(rd->filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
 	if (fd == -1)
 	{
 		ft_putstr_fd("minishell: ", 2);
@@ -79,7 +79,7 @@ int	redirect_append(t_redir_data *rd)
 
 	if (redir_has_ambiguous_target(rd))
 		return (print_ambiguous_redirect());
-	fd = open(rd->filename, O_RDWR | O_CREAT | O_APPEND, 0666);
+	fd = open(rd->filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
 	if (fd == -1)
 	{
 		ft_putstr_fd("minishell: ", 2);
@@ -95,6 +95,52 @@ int	redirect_append(t_redir_data *rd)
 	close(fd);
 	return (0);
 }
+
+// /*
+// ** Walk the full pipeline tree and open+close every output redirect
+// ** (DIR_OUT_TRUNC / DIR_OUT_APPEND) in the *parent* process before any fork.
+// ** This guarantees the file exists on disk so that sibling pipeline segments
+// ** that read those files with '<' never get ENOENT.
+// ** (Mirrors bash's behaviour of opening redirect fds before forking children.)
+// */
+// void	precreate_output_redirects(t_tree *node)
+// {
+// 	t_list			*redir;
+// 	t_redir_data	*rd;
+// 	int				fd;
+// 	int				flags;
+
+// 	if (!node)
+// 		return ;
+// 	if (node->type == NODE_PIPE)
+// 	{
+// 		precreate_output_redirects(node->data.oper.left);
+// 		precreate_output_redirects(node->data.oper.right);
+// 		return ;
+// 	}
+// 	if (node->type == NODE_CMD)
+// 		redir = node->data.cmd.redirections;
+// 	else if (node->type == NODE_SUBSHELL)
+// 		redir = node->data.subshell.redirections;
+// 	else
+// 		return ;
+// 	while (redir)
+// 	{
+// 		rd = (t_redir_data *)redir->content;
+// 		if ((rd->mode == DIR_OUT_TRUNC || rd->mode == DIR_OUT_APPEND)
+// 			&& rd->filename && rd->filename[0])
+// 		{
+// 			if (rd->mode == DIR_OUT_TRUNC)
+// 				flags = O_WRONLY | O_CREAT | O_TRUNC;
+// 			else
+// 				flags = O_WRONLY | O_CREAT | O_APPEND;
+// 			fd = open(rd->filename, flags, 0666);
+// 			if (fd != -1)
+// 				close(fd);
+// 		}
+// 		redir = redir->next;
+// 	}
+// }
 
 int	redirect_heredoc(t_redir_data *rd)
 {

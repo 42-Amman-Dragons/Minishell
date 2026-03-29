@@ -276,6 +276,7 @@ int					redirect_input(t_redir_data *rd);
 int					redirect_output(t_redir_data *rd);
 int					redirect_append(t_redir_data *rd);
 int					redirect_heredoc(t_redir_data *rd);
+void				precreate_output_redirects(t_tree *node);
 
 // Main
 t_minishell			*init_shell(void);
