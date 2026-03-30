@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:14:26 by haya              #+#    #+#             */
-/*   Updated: 2026/03/28 23:42:50 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/30 12:02:20 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,24 +71,21 @@ static pid_t	handle_right_pipe(int *fd, int *temp_std, t_tree *node,
 	return (right_id);
 }
 
-int	exec_pipe(t_tree *node, t_minishell *shell)
+int pipe_error_and_close(int *temp_std)
+{
+	perror("PIPE ERROR: ");
+	safe_close(&temp_std[0], "close error");
+	safe_close(&temp_std[1], "close error");
+	return (1);
+}
+
+
+int handle_pipe(int *right_id, int *temp_std, t_minishell *shell, t_tree *node)
 {
 	int		fd[2];
-	pid_t	right_id;
-	int		exit_code;
-	int		temp_std[2];
-
-	if (temp_redir(&temp_std[0], &temp_std[1]) == -1)
-		return (-1);
-	right_id = 0;
-	exit_code = 0;
+	
 	if (pipe(fd) == -1)
-	{
-		perror("PIPE ERROR: ");
-		safe_close(&temp_std[0], "close error");
-		safe_close(&temp_std[1], "close error");
-		return (1);
-	}
+		return(pipe_error_and_close(temp_std));
 	set_signals_exec();
 	if (handle_left_pipe(fd, temp_std, node, shell) == -1)
 	{
@@ -97,8 +94,8 @@ int	exec_pipe(t_tree *node, t_minishell *shell)
 		set_signals_prompt();
 		return (1);
 	}
-	right_id = handle_right_pipe(fd, temp_std, node, shell);
-	if (right_id == -1)
+	*right_id = handle_right_pipe(fd, temp_std, node, shell);
+	if (*right_id == -1)
 	{
 		waitpid(-1, NULL, 0);
 		if (restore_close_redir(fd, &temp_std[0], &temp_std[1]) == -1)
@@ -108,6 +105,23 @@ int	exec_pipe(t_tree *node, t_minishell *shell)
 	}
 	if (restore_close_redir(fd, &temp_std[0], &temp_std[1]) == -1)
 		free_and_exit(node, shell, 1);
+	return(0);
+}
+
+int	exec_pipe(t_tree *node, t_minishell *shell)
+{
+	int		err;
+	pid_t	right_id;
+	int		exit_code;
+	int		temp_std[2];
+
+	if (temp_redir(&temp_std[0], &temp_std[1]) == -1)
+		return (-1);
+	right_id = 0;
+	exit_code = 0;
+	err = handle_pipe(&right_id, temp_std, shell, node);
+	if (err != 0)
+		return (err);
 	exit_code = wait_all(right_id);
 	set_signals_prompt();
 	shell->exit_status = exit_code;

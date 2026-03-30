@@ -20,7 +20,7 @@ PARSER_DIR = Parser
 PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_free.c
 
 EXPAND_DIR = Expander
-EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c
+EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c add_to_args.c
 EXPAND_BONUS_DIR = Expander_bonus
 EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c \
 	expand_utils_bonus.c expand_astersk_bonus.c generate_expanded_list.c
@@ -37,8 +37,8 @@ MAIN_SRC = main.c initializers.c history.c shell_cleanup.c parse_and_execute.c p
 
 EXEC_DIR = Execution
 EXEC_SRC = execution.c execute_cmd.c exeute_cmd_utils.c execute_oper.c execute_pipe.c \
-	execute_subshell.c execution_utils.c handle_redirections.c \
-	pipe_utils.c redirect_utils.c
+	execute_subshell.c execution_utils.c handle_redirections.c cmd_err.c \
+	pipe_utils.c redirect_utils.c cmd_env.c ambigous_redirect.c
 
 UTILS_DIR = utils
 UTILS_SRC = string_utils.c

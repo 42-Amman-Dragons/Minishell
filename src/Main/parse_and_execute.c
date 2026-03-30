@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_execute.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/28 18:09:32 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/30 12:20:12 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,14 @@ static t_tree	*build_tree(t_minishell *shell)
 	if (init_heredocs(tree, shell) == -1)
 	{
 		shell->exit_status = 130;
+		close_tracked_fds(shell);
+		free_tree(tree);
+		return (NULL);
+	}
+	if(err == 20)
+	{
+		shell->exit_status = 2;
+		ft_putstr_fd("minishell: syntax error near unexpected token newline`'\n", 2);
 		close_tracked_fds(shell);
 		free_tree(tree);
 		return (NULL);

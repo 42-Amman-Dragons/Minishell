@@ -3,83 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/29 17:21:02 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/30 11:50:39 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	path_is_unset(t_minishell *shell)
-{
-	return (get_env_value("PATH", shell->env) == NULL);
-}
-
-static int	exec_with_sh_fallback(char **args, char **env)
-{
-	char	**sh_args;
-	int		argc;
-	int		i;
-
-	argc = 0;
-	while (args[argc])
-		argc++;
-	sh_args = ft_calloc(argc + 2, sizeof(char *));
-	if (!sh_args)
-		return (-1);
-	sh_args[0] = ft_strdup("/bin/sh");
-	if (!sh_args[0])
-	{
-		free(sh_args);
-		return (-1);
-	}
-	sh_args[1] = args[0];
-	i = 1;
-	while (i < argc)
-	{
-		sh_args[i + 1] = args[i];
-		i++;
-	}
-	execve("/bin/sh", sh_args, env);
-	free(sh_args[0]);
-	free(sh_args);
-	return (-1);
-}
-
-static void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
-{
-	int	exit_code;
-
-	ft_putstr_fd(cmd_name, 2);
-	ft_putstr_fd(": ", 2);
-	if (is_command_a_directory(cmd_name))
-	{
-		ft_putstr_fd("Is a directory\n", 2);
-		exit_code = 126;
-	}
-	else if (!node->data.cmd.args[0])
-	{
-
-		if (!ft_strchr(cmd_name, '/') && path_is_unset(shell))
-			ft_putstr_fd("No such file or directory\n", 2);
-		else
-			ft_putstr_fd("command not found\n", 2);
-		exit_code = 127;
-	}
-	else
-	{
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
-		if (errno == ENOENT)
-			exit_code = 127;
-		else
-			exit_code = 126;
-	}
-	free(cmd_name);
-	free_and_exit(node, shell, exit_code);
-}
 
 void	execve_cmd(t_tree *node, t_minishell *shell)
 {
@@ -165,26 +97,6 @@ static int	handle_redir_only_cmd(t_tree *node, t_minishell *shell)
 			&shell->builtin_temp_stdout) == -1)
 		return (shell->exit_status = 1);
 	return (shell->exit_status = 0);
-}
-
-static void	update_underscore_var(t_tree *node, t_minishell *shell)
-{
-	int		i;
-	char	*last_arg;
-
-	if (!node->data.cmd.args)
-		return ;
-	i = 0;
-	while (node->data.cmd.args[i])
-		i++;
-	if (i > 0)
-	{
-		last_arg = node->data.cmd.args[i - 1];
-		set_env_value("_", last_arg, shell);
-	}
-	/* If only the command name is present (e.g. "ls"), keep _ as argv[0]. */
-	else if (node->data.cmd.args[0])
-		set_env_value("_", node->data.cmd.args[0], shell);
 }
 
 int	exec_cmd(t_tree *node, t_minishell *shell)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/28 17:29:42 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/30 11:40:26 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ int	parse_redir(t_list **cur, t_list **redirs, int *err)
 	redir_tok = advance(cur);
 	if (cur_type(cur) != WORD)
 	{
-		syntax_error(*cur, err);
-		return (1);
+		// syntax_error(*cur, err);
+		*err = 20;
+		return (0);
 	}
 	redir = build_redir(cur, redir_tok, err);
 	if (!redir)
@@ -73,7 +74,7 @@ t_tree	*parse_subshell(t_list **cur, int *err)
 
 	advance(cur);
 	child = parse_logic_expr(cur, err);
-	if (*err)
+	if (*err  && *err != 20)
 		return (NULL);
 	if (cur_type(cur) != CLOSE_PAREN)
 	{
@@ -84,7 +85,14 @@ t_tree	*parse_subshell(t_list **cur, int *err)
 	advance(cur);
 	redirs = NULL;
 	while (!*err && cur_type(cur) == REDIRECT)
+	{
 		parse_redir(cur, &redirs, err);
+		// if (*err == 2)
+		// {
+		// 	printf("HERE!\n");
+		// 	create_subshell_node(child, redirs, err);
+		// }
+	}
 	if (*err)
 	{
 		free_tree(child);

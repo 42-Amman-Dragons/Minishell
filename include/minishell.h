@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/28 23:42:03 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/30 12:15:03 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,8 @@ void				print_eof_warning(char *limiter);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
 char				*append_astersk(char *result, char *pattern);
+char				**add_to_args(char **args, int i, char *expanded, int is_wc,
+						int quoted);
 
 /*Tokenizer*/
 t_tokenType			identify_token(char *s);
@@ -259,6 +261,13 @@ int					exec_and_or(t_tree *node, t_minishell *shell);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
+void				handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell);
+int					path_is_unset(t_minishell *shell);
+int					exec_with_sh_fallback(char **args, char **env);
+void				update_underscore_var(t_tree *node, t_minishell *shell);
+int					redir_has_ambiguous_target(t_redir_data *rd);
+int					print_ambiguous_redirect(void);
+
 // Pipe utils
 int					wait_all(pid_t pid);
 int					temp_redir(int *temp_stdin, int *temp_stdout);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_simple_cmd.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 17:53:52 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/30 11:40:14 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static int	collect_tokens(t_list **cur, t_list **words, t_list **redirs,
 			add_word(words, cur, err);
 		else
 			parse_redir(cur, redirs, err);
-		if (*err)
+		if (*err && *err != 20)
 		{
 			ft_lstclear(words, free);
 			ft_lstclear(redirs, free_redir);

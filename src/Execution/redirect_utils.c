@@ -3,29 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   redirect_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/27 00:00:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/28 21:07:13 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/30 12:05:07 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	redir_has_ambiguous_target(t_redir_data *rd)
-{
-	if (!rd->filename)
-		return (1);
-	if (rd->filename[0] == '\0')
-		return (1);
-	return (0);
-}
-
-static int	print_ambiguous_redirect(void)
-{
-	ft_putstr_fd("minishell: ambiguous redirect\n", 2);
-	return (-1);
-}
 
 int	redirect_input(t_redir_data *rd)
 {

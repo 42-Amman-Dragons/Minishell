@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/28 17:54:35 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/30 11:41:34 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,19 @@ t_tree	*parse_pipe_seq(t_list **cur, int *err)
 	t_tree	*right;
 
 	left = parse_cmd_or_sub(cur, err);
-	if (*err)
+	if (*err  && *err != 20)
 		return (NULL);
 	while (cur_type(cur) == PIPE)
 	{
 		advance(cur);
 		right = parse_cmd_or_sub(cur, err);
-		if (*err)
+		if (*err && *err !=20)
 		{
 			free_tree(left);
 			return (NULL);
 		}
 		left = create_oper_node(NODE_PIPE, left, right, err);
-		if (*err)
+		if (*err  && *err != 20)
 			return (NULL);
 	}
 	return (left);
@@ -43,7 +43,7 @@ t_tree	*parse_logic_expr(t_list **cur, int *err)
 	t_node_type	type;
 
 	left = parse_pipe_seq(cur, err);
-	if (*err)
+	if (*err  && *err != 20)
 		return (NULL);
 	while (cur_type(cur) == AND || cur_type(cur) == OR)
 	{
@@ -53,13 +53,13 @@ t_tree	*parse_logic_expr(t_list **cur, int *err)
 			type = NODE_OR;
 		advance(cur);
 		right = parse_pipe_seq(cur, err);
-		if (*err)
+		if (*err && *err != 20)
 		{
 			free_tree(left);
 			return (NULL);
 		}
 		left = create_oper_node(type, left, right, err);
-		if (*err)
+		if (*err  && *err != 20)
 			return (NULL);
 	}
 	return (left);
@@ -74,12 +74,12 @@ t_tree	*build_ast(t_list *tokens, int *err)
 		return (NULL);
 	cur = tokens;
 	tree = parse_logic_expr(&cur, err);
-	if (*err)
+	if (*err  && *err != 20)
 	{
 		free_tree(tree);
 		return (NULL);
 	}
-	if (cur)
+	if (cur && *err != 20)
 	{
 		syntax_error(cur, err);
 		free_tree(tree);

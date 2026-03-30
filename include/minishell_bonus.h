@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/28 20:17:27 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/30 12:06:02 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,12 @@ void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
 char				**generate_expanded_list(char **args, int i,
 						char *expanded);
+void				handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell);
+int					path_is_unset(t_minishell *shell);
+int					exec_with_sh_fallback(char **args, char **env);
+void				update_underscore_var(t_tree *node, t_minishell *shell);
+int					redir_has_ambiguous_target(t_redir_data *rd);
+int					print_ambiguous_redirect(void);
 
 // Main
 t_minishell			*init_shell(void);

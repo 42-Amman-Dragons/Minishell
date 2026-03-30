@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ambigous_redirect.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/13 13:47:52 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/03/30 10:14:07 by haya             ###   ########.fr       */
+/*   Created: 2026/03/30 12:04:53 by haya              #+#    #+#             */
+/*   Updated: 2026/03/30 12:05:28 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_putstr_fd(char *s, int fd)
+int	redir_has_ambiguous_target(t_redir_data *rd)
 {
-	if (!s)
-		return ;
+	if (!rd->filename)
+		return (1);
+	if (rd->filename[0] == '\0')
+		return (1);
+	return (0);
+}
 
-	write(fd, s, ft_strlen(s));	
+int	print_ambiguous_redirect(void)
+{
+	ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+	return (-1);
 }
