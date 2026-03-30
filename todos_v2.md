@@ -72,7 +72,7 @@ cd: error retrieving current directory: getcwd: cannot access parent directories
 
 - [x] `NONCMD | NONCMD | NONCMD`
 - [x] `cd ~/Desktop` ==> needs implementations
-- [] `cat << 1 >`
+- [x] `cat << 1 >`
   - Syntax result differs in message details (`bash:` prefix and wording differ), exit code both `2`.
   - Whether heredoc is opened before syntax error is still manual/fd-level.
 
