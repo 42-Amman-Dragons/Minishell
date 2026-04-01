@@ -51,7 +51,6 @@ cd: error retrieving current directory: getcwd: cannot access parent directories
 - [] `mkdir a a/b; cd a/b; rm -rf ../../a; unset PWD OLDPWD; cd ..`
 
 
-
 ## Mohannad:
 - [] `unset PATH; cd /bin; ls`
   - still diff: bash `0`, minishell `127`.
@@ -67,16 +66,22 @@ cd: error retrieving current directory: getcwd: cannot access parent directories
 - [] unclosed quotes exit code must be 2
 - [] the error code for `sleep 1000 | ls | sleep 1000; CTRL+\\`
   - Manual interactive signal test needed (expected `Quit (core dumped)`, exit `131`).
+- [] unset PATH then call executable like ls. 
 
 ## Haya
 
 - [x] `NONCMD | NONCMD | NONCMD`
-- [x] `cd ~/Desktop` ==> needs implementations
+- [x] `cd ~/Desktop` ==> needs implementations ; handle the free path
 - [x] `cat << 1 >`
   - Syntax result differs in message details (`bash:` prefix and wording differ), exit code both `2`.
   - Whether heredoc is opened before syntax error is still manual/fd-level.
 
 
-
-- Execution  --> 
-- Expansion  --> 
+__________________________
+AFTER TESTING
+___________________________
+- [] $$ and $= (؟؟ should it be handled ??)
+- [] export 13k="a"
+    - Dragonsshell -> minishell: export: '13k': not a valid identifier
+    - bash - > bash: export: `13k=a': not a valid identifier
+- [] 

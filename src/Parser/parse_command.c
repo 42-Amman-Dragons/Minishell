@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/30 11:40:26 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/31 13:48:43 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static t_redir_data	*build_redir(t_list **cur, t_token *rtok, int *err)
 	redir->heredoc_expand = 0;
 	redir->heredoc_fd = -1;
 	if (redir->mode == DIR_IN_HEREDOC && !ft_strchr(redir->filename, '\'')
-			&& !ft_strchr(redir->filename, '"'))
+		&& !ft_strchr(redir->filename, '"'))
 		redir->heredoc_expand = 1;
 	return (redir);
 }
@@ -47,8 +47,8 @@ int	parse_redir(t_list **cur, t_list **redirs, int *err)
 	redir_tok = advance(cur);
 	if (cur_type(cur) != WORD)
 	{
-		// syntax_error(*cur, err);
-		*err = 20;
+		syntax_error(*cur, err);
+		*err = -1;
 		return (0);
 	}
 	redir = build_redir(cur, redir_tok, err);
@@ -67,6 +67,12 @@ int	parse_redir(t_list **cur, t_list **redirs, int *err)
 	return (0);
 }
 
+void	update_redirect_error(int *err)
+{
+	if (*err == -1)
+		*err = -2;
+}
+
 t_tree	*parse_subshell(t_list **cur, int *err)
 {
 	t_tree	*child;
@@ -74,7 +80,7 @@ t_tree	*parse_subshell(t_list **cur, int *err)
 
 	advance(cur);
 	child = parse_logic_expr(cur, err);
-	if (*err  && *err != 20)
+	if (*err && *err > 0)
 		return (NULL);
 	if (cur_type(cur) != CLOSE_PAREN)
 	{
@@ -84,16 +90,10 @@ t_tree	*parse_subshell(t_list **cur, int *err)
 	}
 	advance(cur);
 	redirs = NULL;
+	update_redirect_error(err);
 	while (!*err && cur_type(cur) == REDIRECT)
-	{
 		parse_redir(cur, &redirs, err);
-		// if (*err == 2)
-		// {
-		// 	printf("HERE!\n");
-		// 	create_subshell_node(child, redirs, err);
-		// }
-	}
-	if (*err)
+	if (*err > 0)
 	{
 		free_tree(child);
 		ft_lstclear(&redirs, free_redir);

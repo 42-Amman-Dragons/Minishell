@@ -55,8 +55,8 @@ void	safe_close(int *fd, char *msg)
 
 int	restore_redir(int *temp_stdin, int *temp_stdout)
 {
-	if (dup2(*temp_stdin, STDIN_FILENO) == -1
-		|| dup2(*temp_stdout, STDOUT_FILENO) == -1)
+	if (dup2(*temp_stdin, STDIN_FILENO) == -1 || dup2(*temp_stdout,
+			STDOUT_FILENO) == -1)
 	{
 		perror("minishell: dup2");
 		safe_close(temp_stdin, "close error");

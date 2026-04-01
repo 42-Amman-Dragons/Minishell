@@ -6,12 +6,11 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/30 11:50:39 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/31 10:39:48 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	execve_cmd(t_tree *node, t_minishell *shell)
 {
@@ -33,11 +32,7 @@ void	execve_cmd(t_tree *node, t_minishell *shell)
 	if (!node->data.cmd.args[0])
 		handle_cmd_error(cmd_name, node, shell);
 	if (execve(node->data.cmd.args[0], node->data.cmd.args, shell->env) == -1)
-	{
-		if (errno == ENOEXEC)
-			exec_with_sh_fallback(node->data.cmd.args, shell->env);
 		handle_cmd_error(cmd_name, node, shell);
-	}
 }
 
 int	handle_external_cmd(t_minishell *shell, t_tree *node)
@@ -66,8 +61,8 @@ int	handle_external_cmd(t_minishell *shell, t_tree *node)
 
 int	handle_builtin(int idx, t_tree *node, t_minishell *shell)
 {
-	if (temp_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout) ==
-		-1)
+	if (temp_redir
+		(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout) == -1)
 		return (shell->exit_status = 1);
 	track_fd(shell, &shell->builtin_temp_stdin);
 	track_fd(shell, &shell->builtin_temp_stdout);
@@ -85,8 +80,8 @@ int	handle_builtin(int idx, t_tree *node, t_minishell *shell)
 
 static int	handle_redir_only_cmd(t_tree *node, t_minishell *shell)
 {
-	if (temp_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout) ==
-		-1)
+	if (temp_redir
+		(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout) == -1)
 		return (shell->exit_status = 1);
 	if (handle_redirections(node) == -1)
 	{

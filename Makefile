@@ -10,7 +10,7 @@ OBJ_DIR = obj
 SRC =
 
 SIGNALS_DIR = Signals
-SIGNALS_SRC = signals.c signal_status.c
+SIGNALS_SRC = signals.c signal_status.c set_signal.c
 
 TOK_DIR = Tokenizer
 TOK_SRC = tokenizer.c tokenizer_utils.c tokenizer_factory.c \
@@ -20,17 +20,18 @@ PARSER_DIR = Parser
 PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_free.c
 
 EXPAND_DIR = Expander
-EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c add_to_args.c
+EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c add_to_args.c get_unquoted.c
 EXPAND_BONUS_DIR = Expander_bonus
 EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c \
-	expand_utils_bonus.c expand_astersk_bonus.c generate_expanded_list.c
-
+	expand_utils_bonus.c expand_astersk_bonus.c generate_expanded_list_bonus.c \
+	is_matching_bonus.c get_unquoted_bonus.c add_to_args_bonus.c \
+	expander_utils_2_bonus.c
 HEREDOC_DIR = Heredoc
-HEREDOC_SRC = heredoc.c heredoc_io.c heredoc_nonint.c
+HEREDOC_SRC = heredoc.c heredoc_io.c heredoc_nonint.c heredoc_utils.c
 
 BUILTIN_DIR = Builtins
 BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c export.c export_sort.c \
-	unset.c mutable_env.c env_crud.c exit.c
+	unset.c mutable_env.c env_crud.c exit.c exit_utils.c
 
 MAIN_DIR = Main
 MAIN_SRC = main.c initializers.c history.c shell_cleanup.c parse_and_execute.c prompt.c prompt_utils.c

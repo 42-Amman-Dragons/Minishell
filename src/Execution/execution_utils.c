@@ -35,8 +35,8 @@ void	close_tracked_fds(t_minishell *shell)
 
 void	secure_close(int fd, t_tree *node, t_minishell *shell)
 {
-	if(fd == -1)
-		return;
+	if (fd == -1)
+		return ;
 	if (close(fd) == -1)
 	{
 		perror("Close file error");

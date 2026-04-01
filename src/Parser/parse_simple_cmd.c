@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/30 11:40:14 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/31 11:24:53 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static int	collect_tokens(t_list **cur, t_list **words, t_list **redirs,
 			add_word(words, cur, err);
 		else
 			parse_redir(cur, redirs, err);
-		if (*err && *err != 20)
+		if (*err && *err > 0)
 		{
 			ft_lstclear(words, free);
 			ft_lstclear(redirs, free_redir);
@@ -104,7 +104,7 @@ t_tree	*parse_simple_cmd(t_list **cur, int *err)
 		return (NULL);
 	if (!words && !redirs)
 	{
-		syntax_error(*cur, err); 
+		syntax_error(*cur, err);
 		return (NULL);
 	}
 	args = list_to_args(words);

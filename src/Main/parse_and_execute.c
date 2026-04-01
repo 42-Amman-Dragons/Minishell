@@ -6,11 +6,46 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/30 12:20:12 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/31 13:51:27 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	syntax_err_msg(char *token)
+{
+	char	*buff;
+
+	buff = ft_strdup("");
+	buff = safe_join(buff, "minishell: ");
+	buff = safe_join(buff, "syntax error near unexpected token `");
+	buff = safe_join(buff, token);
+	buff = safe_join(buff, "\'\n");
+	ft_putstr_fd(buff, 2);
+	free(buff);
+	buff = NULL;
+}
+
+int	handle_heredoc(t_tree *tree, t_minishell *shell, int err)
+{
+	if (init_heredocs(tree, shell) == -1)
+	{
+		shell->exit_status = 130;
+		close_tracked_fds(shell);
+		free_tree(tree);
+		return (-1);
+	}
+	if (err < 0)
+	{
+		shell->exit_status = 2;
+		if (err == -1)
+			syntax_err_msg("newline");
+		close_tracked_fds(shell);
+		free_tree(tree);
+		return (-1);
+	}
+	return (0);
+}
 
 static t_tree	*build_tree(t_minishell *shell)
 {
@@ -29,21 +64,8 @@ static t_tree	*build_tree(t_minishell *shell)
 		shell->exit_status = err;
 		return (NULL);
 	}
-	if (init_heredocs(tree, shell) == -1)
-	{
-		shell->exit_status = 130;
-		close_tracked_fds(shell);
-		free_tree(tree);
+	if (handle_heredoc(tree, shell, err) != 0)
 		return (NULL);
-	}
-	if(err == 20)
-	{
-		shell->exit_status = 2;
-		ft_putstr_fd("minishell: syntax error near unexpected token newline`'\n", 2);
-		close_tracked_fds(shell);
-		free_tree(tree);
-		return (NULL);
-	}
 	expander(tree, shell);
 	return (tree);
 }
@@ -55,7 +77,6 @@ void	parse_and_execute(t_minishell *shell)
 	tree = build_tree(shell);
 	if (!tree)
 	{
-		// In non-interactive a syntax error should exit
 		if (!shell->is_interactive && shell->exit_status == 2)
 			exit(cleanup_shell(shell, 2));
 		return ;

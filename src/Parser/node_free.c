@@ -28,7 +28,6 @@ void	free_redir(void *ptr)
 	free(redir);
 }
 
-
 void	free_args(char **args)
 {
 	int	i;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 04:19:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 08:52:27 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/01 12:40:39 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,33 @@ static int	valid_identifier(char *name)
 
 static int	export_invalid(char *id)
 {
-	ft_putstr_fd("export: '", 2);
-	ft_putstr_fd(id, 2);
-	ft_putstr_fd("': not a valid identifier\n", 2);
+	char	*buff;
+
+	buff = ft_strdup("");
+	buff = safe_join(buff, "minishell: ");
+	buff = safe_join(buff, "export: '");
+	buff = safe_join(buff, id);
+	buff = safe_join(buff, "': not a valid identifier\n");
+	ft_putstr_fd(buff, 2);
+	free(buff);
+	buff = NULL;
 	return (1);
+}
+
+static int	handle_not_eq(char *arg, char *dup, t_minishell *shell)
+{
+	if (!valid_identifier(arg))
+		return (export_invalid(arg));
+	if (!get_env_value(arg, shell->env))
+	{
+		dup = ft_strdup(arg);
+		if (!dup || add_env(dup, shell) != 0)
+		{
+			free(dup);
+			return (1);
+		}
+	}
+	return (0);
 }
 
 static int	export_one(char *arg, t_minishell *shell)
@@ -44,21 +67,9 @@ static int	export_one(char *arg, t_minishell *shell)
 	char	*dup;
 
 	eq = ft_strchr(arg, '=');
+	dup = "";
 	if (!eq)
-	{
-		if (!valid_identifier(arg))
-			return (export_invalid(arg));
-		if (!get_env_value(arg, shell->env))
-		{
-			dup = ft_strdup(arg);
-			if (!dup || add_env(dup, shell) != 0)
-			{
-				free(dup);
-				return (1);
-			}
-		}
-		return (0);
-	}
+		return (handle_not_eq(arg, dup, shell));
 	name = ft_substr(arg, 0, eq - arg);
 	if (!name)
 		return (1);

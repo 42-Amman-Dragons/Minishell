@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 12:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/30 12:16:24 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/01 10:51:55 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,39 +44,10 @@ void	strip_empty_args(t_tree *node, int count)
 	}
 }
 
-static char	*get_unquoted_var_val(char *word, int *i, char **env,
-				int exit_status)
+static int	free_val_return(char *val)
 {
-	int		j;
-	char	*name;
-	char	*val;
-
-	j = *i + 1;
-	if (!word[j])
-		return (NULL);
-	if (word[j] == '?')
-	{
-		*i = j;
-		return (ft_itoa(exit_status));
-	}
-	if (word[j] == '$')
-	{
-		*i = j;
-		return (NULL);
-	}
-	while (ft_isalnum(word[j]) || word[j] == '_')
-		j++;
-	if (j == *i + 1)
-		return (NULL);
-	name = ft_substr(word, *i + 1, j - *i - 1);
-	if (!name)
-		return (NULL);
-	val = get_env_value(name, env);
-	free(name);
-	*i = j - 1;
-	if (!val)
-		return (ft_strdup(""));
-	return (ft_strdup(val));
+	free(val);
+	return (1);
 }
 
 static int	unquoted_dollar_has_space(char *word, char **env, int exit_status)
@@ -100,10 +71,7 @@ static int	unquoted_dollar_has_space(char *word, char **env, int exit_status)
 			val = get_unquoted_var_val(word, &i, env, exit_status);
 			if (val && (contains(val, ' ') || contains(val, '\t')
 					|| contains(val, '\n')))
-			{
-				free(val);
-				return (1);
-			}
+				return (free_val_return(val));
 			free(val);
 		}
 		i++;
@@ -111,18 +79,20 @@ static int	unquoted_dollar_has_space(char *word, char **env, int exit_status)
 	return (0);
 }
 
+// flags[0] qouted
+// flags[1] unqouted $ has space
 char	**expand_one_arg(char **args, int i, t_minishell *shell)
 {
 	char	*expanded;
-	int		quoted;
-	int		is_wc;
+	int		flags[2];
 
-	quoted = word_has_quotes(args[i]);
-	is_wc = unquoted_dollar_has_space(args[i], shell->env, shell->exit_status);
+	flags[0] = word_has_quotes(args[i]);
+	flags[1] = unquoted_dollar_has_space(args[i], shell->env,
+			shell->exit_status);
 	expanded = expand_word(args[i], shell->env, shell->exit_status);
 	if (!expanded)
 		return (args);
-	if (!quoted && expanded[0] == '\0')
+	if (!flags[0] && expanded[0] == '\0')
 	{
 		free(expanded);
 		free(args[i]);
@@ -133,6 +103,6 @@ char	**expand_one_arg(char **args, int i, t_minishell *shell)
 		}
 		return (args);
 	}
-	args = add_to_args(args, i, expanded, is_wc, quoted);
+	args = add_to_args(args, i, expanded, flags);
 	return (args);
 }

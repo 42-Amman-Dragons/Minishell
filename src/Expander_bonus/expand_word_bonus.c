@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/26 12:45:20 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/01 11:13:52 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static void	handle_normal(char *word, t_expand *ctx)
 			ctx->result = append_str(ctx->result, ft_strdup("minishell"));
 		ctx->i += 2;
 	}
-	else if (word[ctx->i] == '$' && (word[ctx->i + 1] == '"' ||
-		word[ctx->i + 1] == '\''))
+	else if (word[ctx->i] == '$' && (word[ctx->i + 1] == '"' || word[ctx->i
+				+ 1] == '\''))
 		ctx->i++;
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != ' ')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
@@ -47,7 +47,10 @@ static void	handle_squote(char *word, t_expand *ctx)
 		ctx->i++;
 	}
 	else if (word[ctx->i] == '*')
-		ctx->result = append_char(ctx->result, '\x01'), ctx->i++;
+	{
+		ctx->result = append_char(ctx->result, '\x01');
+		ctx->i++;
+	}
 	else
 		ctx->result = append_char(ctx->result, word[ctx->i++]);
 }
@@ -60,7 +63,10 @@ static void	handle_dquote(char *word, t_expand *ctx)
 		ctx->i++;
 	}
 	else if (word[ctx->i] == '*')
-		ctx->result = append_char(ctx->result, '\x01'), ctx->i++;
+	{
+		ctx->result = append_char(ctx->result, '\x01');
+		ctx->i++;
+	}
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != '"')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 16:26:42 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 18:05:10 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/03/31 12:22:18 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int	word_boundary(char *str)
 	if (squote_flag || dquote_flag)
 	{
 		ft_putstr_fd("minishell: syntax error: unclosed quote\n", 2);
-		// Set the exit code to 2
 		return (-1);
 	}
 	return (y);

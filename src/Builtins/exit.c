@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/28 22:37:05 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/31 10:28:16 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,47 +47,25 @@ int	calc_len_args(char **args)
 	return (i);
 }
 
-int	check_boundries(const char *nptr)
+void	num_arg_req_err(char *arg, t_minishell *shell)
 {
-	int					i;
-	unsigned long long	num;
-	int					sign;
+	char	*buff;
 
-	i = 0;
-	num = 0;
-	sign = 1;
-	while (nptr[i] == ' ' || (nptr[i] >= 9 && nptr[i] <= 13))
-		i++;
-	if (nptr[i] == '+' || nptr[i] == '-')
-	{
-		if (nptr[i] == '-')
-			sign = -1;
-		i++;
-	}
-	while (nptr[i] >= '0' && nptr[i] <= '9')
-	{
-		if (num > (unsigned long long)__LONG_LONG_MAX__ / 10 + 1)
-			return (-1);
-		num = 10 * num + (nptr[i] - '0');
-		i++;
-	}
-	if (sign == 1 && num > (unsigned long long)__LONG_LONG_MAX__)
-		return (-1);
-	if (sign == -1 && num > (unsigned long long)__LONG_LONG_MAX__ + 1)
-		return (-1);
-	return (0);
+	buff = ft_strdup("");
+	buff = safe_join(buff, "minishell: exit: ");
+	buff = safe_join(buff, arg);
+	buff = safe_join(buff, ": numeric argument required\n");
+	ft_putstr_fd(buff, 2);
+	free(buff);
+	buff = NULL;
+	custom_save_history(shell);
+	exit(cleanup_shell(shell, 2));
 }
 
 int	ft_exit(char **args, t_minishell *shell)
 {
 	if (calc_len_args(args) >= 2 && (!is_all_num(args[1])))
-	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(args[1], 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
-		custom_save_history(shell);
-		exit(cleanup_shell(shell, 2));
-	}
+		num_arg_req_err(args[1], shell);
 	if (calc_len_args(args) > 2)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
@@ -96,13 +74,7 @@ int	ft_exit(char **args, t_minishell *shell)
 	if (calc_len_args(args) == 2)
 	{
 		if (check_boundries(args[1]) == -1)
-		{
-			ft_putstr_fd("minishell: exit: ", 2);
-			ft_putstr_fd(args[1], 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
-			custom_save_history(shell);
-			exit(cleanup_shell(shell, 2));
-		}
+			num_arg_req_err(args[1], shell);
 		custom_save_history(shell);
 		exit(cleanup_shell(shell, ft_atoi(args[1])));
 	}

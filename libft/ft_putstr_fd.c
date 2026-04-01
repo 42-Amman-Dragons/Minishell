@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 13:47:52 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/03/30 10:14:07 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/01 11:54:01 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,5 @@ void	ft_putstr_fd(char *s, int fd)
 {
 	if (!s)
 		return ;
-
-	write(fd, s, ft_strlen(s));	
+	write(fd, s, ft_strlen(s));
 }

@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/30 12:15:03 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/31 13:18:14 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <linux/limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/ioctl.h>
@@ -52,7 +53,8 @@ typedef enum e_dir_mode
 	DIR_OUT_TRUNC = 1,
 	DIR_OUT_APPEND,
 	DIR_IN_FILE,
-	DIR_IN_HEREDOC
+	DIR_IN_HEREDOC,
+	NOT_FOUND
 }					t_dir_mode;
 
 typedef struct s_redir_data
@@ -143,6 +145,7 @@ int					add_to_history(char *line, t_list **history);
 int					load_history(t_minishell *shell);
 void				custom_save_history(t_minishell *shell);
 void				handle_sigint(int sig);
+void				handle_quit(int sig);
 void				handle_signal_status(t_minishell *shell);
 void				set_signals_prompt(void);
 void				set_signals_exec(void);
@@ -221,8 +224,10 @@ void				print_eof_warning(char *limiter);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
 char				*append_astersk(char *result, char *pattern);
-char				**add_to_args(char **args, int i, char *expanded, int is_wc,
-						int quoted);
+char				**add_to_args(char **args, int i, char *expanded,
+						int *flags);
+char				*get_unquoted_var_val(char *word, int *i, char **env,
+						int exit_status);
 
 /*Tokenizer*/
 t_tokenType			identify_token(char *s);
@@ -252,6 +257,7 @@ int					ft_unset(char **args, t_minishell *shell);
 int					ft_env(t_minishell *shell);
 int					ft_exit(char **args, t_minishell *shell);
 int					call_builtin(int idx, char **args, t_minishell *shell);
+int					check_boundries(const char *nptr);
 
 // Execution
 int					exec_tree(t_tree *node, t_minishell *shell);
@@ -261,7 +267,8 @@ int					exec_and_or(t_tree *node, t_minishell *shell);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
-void				handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell);
+void				handle_cmd_error(char *cmd_name, t_tree *node,
+						t_minishell *shell);
 int					path_is_unset(t_minishell *shell);
 int					exec_with_sh_fallback(char **args, char **env);
 void				update_underscore_var(t_tree *node, t_minishell *shell);
@@ -306,4 +313,5 @@ void				init_prompt(t_minishell *shell);
 
 void				close_tracked_fds(t_minishell *shell);
 void				track_fd(t_minishell *shell, int *heredoc_fd_ptr);
+void				syntax_err_msg(char *token);
 #endif

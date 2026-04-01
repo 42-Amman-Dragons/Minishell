@@ -6,17 +6,17 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 11:45:54 by haya              #+#    #+#             */
-/*   Updated: 2026/03/30 11:49:29 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/30 20:50:27 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void cmd_error_message(char *cmd_name, char *message)
+static void	cmd_error_message(char *cmd_name, char *message)
 {
-	char *buff;
-	buff = ft_strdup("");
+	char	*buff;
 
+	buff = ft_strdup("");
 	buff = safe_join(buff, cmd_name);
 	buff = safe_join(buff, ": ");
 	buff = safe_join(buff, message);
@@ -29,7 +29,7 @@ static void cmd_error_message(char *cmd_name, char *message)
 void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 {
 	int	exit_code;
-	
+
 	if (is_command_a_directory(cmd_name))
 	{
 		cmd_error_message(cmd_name, "Is a directory");

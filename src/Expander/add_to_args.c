@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 12:12:34 by haya              #+#    #+#             */
-/*   Updated: 2026/03/30 12:16:32 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/31 13:20:39 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ static void	add_splitted(char **new_args, int *j, char *expanded)
 
 static char	**free_args_expanded_return(char **args, char *expanded, char **ret)
 {
-		free_args(args);
-		free(expanded);
-		return (ret);
+	free_args(args);
+	free(expanded);
+	return (ret);
 }
 
 static char	**generate_expanded_list(char **args, int i, char *expanded)
@@ -57,7 +57,7 @@ static char	**generate_expanded_list(char **args, int i, char *expanded)
 	args_len = calc_len_args(args);
 	new_args = ft_calloc(args_len + cal_len(expanded, ' ') + 1, sizeof(char *));
 	if (!new_args)
-		return free_args_expanded_return(args, expanded, NULL);
+		return (free_args_expanded_return(args, expanded, NULL));
 	j = 0;
 	k = 0;
 	while (k < args_len)
@@ -75,12 +75,11 @@ static char	**generate_expanded_list(char **args, int i, char *expanded)
 	return (free_args_expanded_return(args, expanded, new_args));
 }
 
-char	**add_to_args(char **args, int i, char *expanded, int is_wc,
-				int quoted)
+char	**add_to_args(char **args, int i, char *expanded, int *flags)
 {
-	if (is_wc && expanded)
+	if (flags[1] && expanded)
 	{
-		if (!quoted)
+		if (!flags[0])
 			normalize_ifs(expanded);
 		if (contains(expanded, ' ') == 1)
 			return (generate_expanded_list(args, i, expanded));

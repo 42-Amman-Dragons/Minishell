@@ -3,20 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   expander_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/28 17:50:05 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/01 11:07:39 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
+static int	handle_wild_redirect(char **expanded, t_redir_data *rd,
+		t_list **redirs)
+{
+	char	*globbed;
+
+	globbed = append_astersk(NULL, *expanded);
+	if (globbed && ft_strchr(globbed, ' '))
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(rd->filename, 2);
+		ft_putstr_fd(": ambiguous redirect\n", 2);
+		free(globbed);
+		free(*expanded);
+		free(rd->filename);
+		rd->filename = NULL;
+		*redirs = (*redirs)->next;
+		return (1);
+	}
+	else if (globbed)
+	{
+		free(*expanded);
+		*expanded = globbed;
+	}
+	else
+		restore_astersks(*expanded);
+	return (0);
+}
+
 static void	expand_redirs(t_list *redirs, t_minishell *shell)
 {
 	t_redir_data	*rd;
 	char			*expanded;
-	char			*globbed;
 
 	while (redirs)
 	{
@@ -29,26 +56,8 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 			{
 				if (ft_strchr(expanded, '*'))
 				{
-					globbed = append_astersk(NULL, expanded);
-					if (globbed && ft_strchr(globbed, ' '))
-					{
-						ft_putstr_fd("minishell: ", 2);
-						ft_putstr_fd(rd->filename, 2);
-						ft_putstr_fd(": ambiguous redirect\n", 2);
-						free(globbed);
-						free(expanded);
-						free(rd->filename);
-						rd->filename = NULL;
-						redirs = redirs->next;
+					if (handle_wild_redirect(&expanded, rd, &redirs) == 1)
 						continue ;
-					}
-					else if (globbed)
-					{
-						free(expanded);
-						expanded = globbed;
-					}
-					else
-						restore_astersks(expanded);
 				}
 				free(rd->filename);
 				rd->filename = expanded;

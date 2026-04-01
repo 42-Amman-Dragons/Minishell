@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 10:40:19 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/03/30 10:57:46 by haya             ###   ########.fr       */
+/*   Updated: 2026/03/31 13:49:22 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
 int					ft_printf(const char *format, ...);
-int					ft_fprintf(int fd, const char *format, ...);
 char				*get_next_line(int fd);
 char				*return_line(char **line, char **buffer, int bytes_read);
 int					contains(char const *set, char c);

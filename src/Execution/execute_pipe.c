@@ -71,7 +71,7 @@ static pid_t	handle_right_pipe(int *fd, int *temp_std, t_tree *node,
 	return (right_id);
 }
 
-int pipe_error_and_close(int *temp_std)
+int	pipe_error_and_close(int *temp_std)
 {
 	perror("PIPE ERROR: ");
 	safe_close(&temp_std[0], "close error");
@@ -79,13 +79,12 @@ int pipe_error_and_close(int *temp_std)
 	return (1);
 }
 
-
-int handle_pipe(int *right_id, int *temp_std, t_minishell *shell, t_tree *node)
+int	handle_pipe(int *right_id, int *temp_std, t_minishell *shell, t_tree *node)
 {
-	int		fd[2];
-	
+	int	fd[2];
+
 	if (pipe(fd) == -1)
-		return(pipe_error_and_close(temp_std));
+		return (pipe_error_and_close(temp_std));
 	set_signals_exec();
 	if (handle_left_pipe(fd, temp_std, node, shell) == -1)
 	{
@@ -105,7 +104,7 @@ int handle_pipe(int *right_id, int *temp_std, t_minishell *shell, t_tree *node)
 	}
 	if (restore_close_redir(fd, &temp_std[0], &temp_std[1]) == -1)
 		free_and_exit(node, shell, 1);
-	return(0);
+	return (0);
 }
 
 int	exec_pipe(t_tree *node, t_minishell *shell)

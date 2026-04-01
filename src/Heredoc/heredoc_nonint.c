@@ -37,8 +37,7 @@ static void	fill_heredoc_file(int fd, char *lim, t_redir_data *rd,
 	print_eof_warning(lim);
 }
 
-int	read_heredoc_nointeractive(t_redir_data *rd, t_minishell *shell,
-		char *tmp)
+int	read_heredoc_nointeractive(t_redir_data *rd, t_minishell *shell, char *tmp)
 {
 	int	fd;
 

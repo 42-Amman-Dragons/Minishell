@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_word.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 08:44:16 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/31 13:48:03 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ static void	handle_normal(char *word, t_expand *ctx)
 			ctx->result = append_str(ctx->result, ft_strdup("minishell"));
 		ctx->i += 2;
 	}
-	else if (word[ctx->i] == '$' && (word[ctx->i + 1] == '"' ||
-		word[ctx->i + 1] == '\''))
+	else if (word[ctx->i] == '$' && (word[ctx->i + 1] == '"' || word[ctx->i
+				+ 1] == '\''))
 		ctx->i++;
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != ' ')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));

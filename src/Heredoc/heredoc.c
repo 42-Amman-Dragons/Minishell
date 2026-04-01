@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 15:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/28 18:17:41 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/31 10:45:17 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	track_fd(t_minishell *shell, int *heredoc_fd_ptr)
 {
@@ -80,14 +79,6 @@ void	push_heredoc_line(int fd, char *line, t_redir_data *rd,
 		ft_putstr_fd(line, fd);
 		ft_putchar_fd('\n', fd);
 	}
-}
-
-void	print_eof_warning(char *limiter)
-{
-	ft_putstr_fd("minishell: warning: here-document delimited by"
-		" end-of-file (wanted `", 2);
-	ft_putstr_fd(limiter, 2);
-	ft_putstr_fd("')\n", 2);
 }
 
 static int	process_redir_list(t_list *redirs, t_minishell *shell, int *idx)

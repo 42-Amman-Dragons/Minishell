@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exeute_cmd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 10:32:15 by haya              #+#    #+#             */
-/*   Updated: 2026/03/29 17:24:43 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/31 10:40:57 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static char	*get_path(char **env)
 		}
 		i++;
 	}
-	// handle UNSET path and the current directory in inside the path (bin)
 	if (!path)
 		return (NULL);
 	return (ft_strdup(path + 5));
