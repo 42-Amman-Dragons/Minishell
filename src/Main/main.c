@@ -41,6 +41,42 @@ static int	process_line_interactive(t_minishell *shell)
 	return (0);
 }
 
+static int	has_unclosed_quotes(char *line)
+{
+	int	sq;
+	int	dq;
+	int	i;
+
+	sq = 0;
+	dq = 0;
+	i = -1;
+	while (line[++i])
+	{
+		if (line[i] == '"' && !sq)
+			dq = !dq;
+		else if (line[i] == '\'' && !dq)
+			sq = !sq;
+	}
+	return (sq || dq);
+}
+
+static void	join_next_line(t_minishell *shell)
+{
+	char	*next;
+	char	*tmp;
+
+	while (has_unclosed_quotes(shell->line))
+	{
+		next = get_next_line(STDIN_FILENO);
+		if (!next)
+			break ;
+		tmp = ft_strjoin(shell->line, next);
+		free(shell->line);
+		free(next);
+		shell->line = tmp;
+	}
+}
+
 static int	process_line_non_interactive(t_minishell *shell)
 {
 	size_t	len;
@@ -48,6 +84,7 @@ static int	process_line_non_interactive(t_minishell *shell)
 	shell->line = get_next_line(STDIN_FILENO);
 	if (!shell->line)
 		return (1);
+	join_next_line(shell);
 	len = ft_strlen(shell->line);
 	if (len > 0 && shell->line[len - 1] == '\n')
 		shell->line[len - 1] = '\0';

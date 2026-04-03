@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 00:56:53 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 01:09:45 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,25 +96,12 @@ static void	expand_node(t_tree *node, t_minishell *shell)
 	expand_redirs(node->data.cmd.redirections, shell);
 }
 
-static void	expand_traversal(t_tree *tree, t_minishell *shell)
-{
-	if (tree->type == NODE_CMD)
-		expand_node(tree, shell);
-	else if (tree->type == NODE_SUBSHELL)
-	{
-		expand_redirs(tree->data.subshell.redirections, shell);
-		expand_traversal(tree->data.subshell.child, shell);
-	}
-	else
-	{
-		expand_traversal(tree->data.oper.left, shell);
-		expand_traversal(tree->data.oper.right, shell);
-	}
-}
-
 void	expander(t_tree *tree, t_minishell *shell)
 {
 	if (!tree)
 		return ;
-	expand_traversal(tree, shell);
+	if (tree->type == NODE_CMD)
+		expand_node(tree, shell);
+	else if (tree->type == NODE_SUBSHELL)
+		expand_redirs(tree->data.subshell.redirections, shell);
 }

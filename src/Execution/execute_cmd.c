@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 01:01:42 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 01:09:45 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int	exec_cmd(t_tree *node, t_minishell *shell)
 {
 	int	idx;
 
+	expander(node, shell);
 	if (!node->data.cmd.args)
 		return (handle_redir_only_cmd(node, shell));
 	if (node->data.cmd.args)
