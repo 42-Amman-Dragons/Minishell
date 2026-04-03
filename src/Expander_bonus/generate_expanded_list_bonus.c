@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generate_expanded_list_bonus.c                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 13:28:15 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/04/01 11:51:47 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 00:12:12 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ static void	*free_args_expanded(char **args, char *expanded)
 	return (NULL);
 }
 
-static void	fill_expanded_args(char **new_args, char **args,
-				int i, char *expanded)
+static void	fill_expanded_args(char **new_args, char **args, int i,
+		char *expanded)
 {
 	int	j;
 	int	k;
@@ -69,8 +69,6 @@ static void	fill_expanded_args(char **new_args, char **args,
 
 char	**generate_expanded_list(char **args, int i, char *expanded)
 {
-	int		j;
-	int		k;
 	int		args_len;
 	char	**new_args;
 

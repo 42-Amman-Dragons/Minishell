@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   add_to_args.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 12:12:34 by haya              #+#    #+#             */
-/*   Updated: 2026/03/31 13:20:39 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 00:13:43 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,19 @@ static void	add_splitted(char **new_args, int *j, char *expanded)
 	free(splitted);
 }
 
-static char	**free_args_expanded_return(char **args, char *expanded, char **ret)
+static char	**free_args_expanded_return(char **args, char **expanded,
+		char **ret)
 {
-	free_args(args);
-	free(expanded);
+	if (!ret)
+	{
+		free_args(args);
+		free(*expanded);
+		*expanded = NULL;
+		return (NULL);
+	}
+	free(args);
+	free(*expanded);
+	*expanded = NULL;
 	return (ret);
 }
 
@@ -57,7 +66,7 @@ static char	**generate_expanded_list(char **args, int i, char *expanded)
 	args_len = calc_len_args(args);
 	new_args = ft_calloc(args_len + cal_len(expanded, ' ') + 1, sizeof(char *));
 	if (!new_args)
-		return (free_args_expanded_return(args, expanded, NULL));
+		return (free_args_expanded_return(args, &expanded, NULL));
 	j = 0;
 	k = 0;
 	while (k < args_len)
@@ -72,7 +81,7 @@ static char	**generate_expanded_list(char **args, int i, char *expanded)
 			new_args[j++] = args[k];
 		k++;
 	}
-	return (free_args_expanded_return(args, expanded, new_args));
+	return (free_args_expanded_return(args, &expanded, new_args));
 }
 
 char	**add_to_args(char **args, int i, char *expanded, int *flags)

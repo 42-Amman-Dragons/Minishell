@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exeute_cmd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 10:32:15 by haya              #+#    #+#             */
-/*   Updated: 2026/03/31 10:40:57 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 00:15:15 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char	*get_path(char **env)
 		i++;
 	}
 	if (!path)
-		return (NULL);
+		return (ft_strdup("."));
 	return (ft_strdup(path + 5));
 }
 

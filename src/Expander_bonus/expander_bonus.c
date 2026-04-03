@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/01 11:07:39 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 00:56:53 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ static int	handle_wild_redirect(char **expanded, t_redir_data *rd,
 	globbed = append_astersk(NULL, *expanded);
 	if (globbed && ft_strchr(globbed, ' '))
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(rd->filename, 2);
-		ft_putstr_fd(": ambiguous redirect\n", 2);
+		// ft_putstr_fd("minishell: ", 2);
+		// ft_putstr_fd(rd->filename, 2);
+		// ft_putstr_fd(": ambiguous redirect\n", 2);
 		free(globbed);
 		free(*expanded);
 		free(rd->filename);

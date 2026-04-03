@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/31 11:24:53 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 00:46:26 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ t_tree	*build_ast(t_list *tokens, int *err)
 		free_tree(tree);
 		return (NULL);
 	}
-	if (cur && *err > 0)
+	/* Any remaining token means trailing invalid syntax (e.g. ")" or extra words). */
+	if (cur)
 	{
+		*err = 2;
 		syntax_error(cur, err);
 		free_tree(tree);
 		return (NULL);

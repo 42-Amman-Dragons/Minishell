@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_execute.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/31 13:51:27 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 00:54:29 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ static t_tree	*build_tree(t_minishell *shell)
 	}
 	if (handle_heredoc(tree, shell, err) != 0)
 		return (NULL);
-	expander(tree, shell);
 	return (tree);
 }
 
