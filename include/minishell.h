@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 19:48:32 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 20:28:35 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,12 +222,11 @@ void				push_heredoc_line(int fd, char *line, t_redir_data *rd,
 void				print_eof_warning(char *limiter);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
-char				*append_astersk(char *result, char *pattern);
 char				**add_to_args(char **args, int i, char *expanded,
 						int *flags);
 char				*get_unquoted_var_val(char *word, int *i, char **env,
 						int exit_status);
-
+int					calc_arr_len(char **arr);
 /*Tokenizer*/
 t_tokenType			identify_token(char *s);
 t_list				*tokenizer(char *line, int *err);

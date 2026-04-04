@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 19:48:44 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 20:29:25 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,6 +266,8 @@ void				update_underscore_var(t_tree *node, t_minishell *shell);
 int					redir_has_ambiguous_target(t_redir_data *rd);
 int					print_ambiguous_redirect(void);
 int					pipe_error_and_close(int *temp_std);
+int					calc_arr_len(char **arr);
+void				*free_args_expanded_asterisk(char **args, char **expanded);
 
 // Main
 t_minishell			*init_shell(void);

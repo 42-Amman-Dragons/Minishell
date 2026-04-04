@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 12:12:34 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 19:41:58 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 20:31:39 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,11 @@ char	**handle_qouted_asterisk(char **args, int i, char *expanded)
 		free(expanded);
 		return (new_args);
 	}
+	return (NULL);
 }
 
 char	**add_to_args(char **args, int i, char *expanded, int *flags)
 {
-	char	**matched_paths;
-	char	**new_args;
-
 	if (flags[1] && expanded && ft_strchr(expanded, '*'))
 		return (handle_qouted_asterisk(args, i, expanded));
 	if (expanded)

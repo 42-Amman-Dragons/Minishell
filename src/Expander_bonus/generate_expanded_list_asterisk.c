@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 19:37:51 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 19:38:02 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 20:29:10 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void	fill_expanded_args_asterisk(char **new_args, char **args, int i,
 	}
 }
 
-static void	*free_args_expanded_asterisk(char **args, char **expanded)
+void	*free_args_expanded_asterisk(char **args, char **expanded)
 {
 	free_args(args);
 	free_args(expanded);
