@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/31 13:48:43 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 11:11:10 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static t_redir_data	*build_redir(t_list **cur, t_token *rtok, int *err)
 	redir->heredoc_expand = 0;
 	redir->heredoc_fd = -1;
 	if (redir->mode == DIR_IN_HEREDOC && !ft_strchr(redir->filename, '\'')
-		&& !ft_strchr(redir->filename, '"'))
+			&& !ft_strchr(redir->filename, '"'))
 		redir->heredoc_expand = 1;
 	return (redir);
 }
@@ -47,8 +47,10 @@ int	parse_redir(t_list **cur, t_list **redirs, int *err)
 	redir_tok = advance(cur);
 	if (cur_type(cur) != WORD)
 	{
-		syntax_error(*cur, err);
-		*err = -1;
+		if (!*cur)
+			*err = -1;
+		else
+			syntax_error(*cur, err);
 		return (0);
 	}
 	redir = build_redir(cur, redir_tok, err);

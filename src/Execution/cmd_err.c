@@ -45,11 +45,19 @@ void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 	}
 	else
 	{
-		cmd_error_message(cmd_name, strerror(errno));
-		if (errno == ENOENT)
+		if (!ft_strchr(cmd_name, '/') && errno == ENOENT)
+		{
+			cmd_error_message(cmd_name, "command not found");
 			exit_code = 127;
+		}
 		else
-			exit_code = 126;
+		{
+			cmd_error_message(cmd_name, strerror(errno));
+			if (errno == ENOENT)
+				exit_code = 127;
+			else
+				exit_code = 126;
+		}
 	}
 	free(cmd_name);
 	free_and_exit(node, shell, exit_code);
