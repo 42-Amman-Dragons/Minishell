@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 01:09:45 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 12:36:12 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,22 @@
 static int	handle_wild_redirect(char **expanded, t_redir_data *rd,
 		t_list **redirs)
 {
-	char	*globbed;
+	char	*matched_paths;
 
-	globbed = append_astersk(NULL, *expanded);
-	if (globbed && ft_strchr(globbed, ' '))
+	matched_paths = append_astersk(NULL, *expanded);
+	if (matched_paths && ft_strchr(matched_paths, ' '))
 	{
-		// ft_putstr_fd("minishell: ", 2);
-		// ft_putstr_fd(rd->filename, 2);
-		// ft_putstr_fd(": ambiguous redirect\n", 2);
-		free(globbed);
+		free(matched_paths);
 		free(*expanded);
 		free(rd->filename);
 		rd->filename = NULL;
 		*redirs = (*redirs)->next;
 		return (1);
 	}
-	else if (globbed)
+	else if (matched_paths)
 	{
 		free(*expanded);
-		*expanded = globbed;
+		*expanded = matched_paths;
 	}
 	else
 		restore_astersks(*expanded);

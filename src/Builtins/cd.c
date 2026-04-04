@@ -3,26 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 02:53:20 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/01 12:47:45 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 12:42:57 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	len1;
-	int	len2;
-
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	if (len1 != len2)
-		return (1);
-	return (strncmp(s1, s2, len1));
-}
 
 static int	cd_get_path(char **args, char **path_out, t_minishell *shell)
 {

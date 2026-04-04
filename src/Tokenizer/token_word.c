@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   token_word.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 16:26:42 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/31 12:22:18 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 12:29:45 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	word_boundary(char *str)
+int	word_boundary(char *str, int *err)
 {
 	int	y;
 	int	squote_flag;
@@ -34,17 +34,18 @@ int	word_boundary(char *str)
 	if (squote_flag || dquote_flag)
 	{
 		ft_putstr_fd("minishell: syntax error: unclosed quote\n", 2);
+		*err = 2;
 		return (-1);
 	}
 	return (y);
 }
 
-char	*extract_word(char *str, int *i)
+char	*extract_word(char *str, int *i, int *err)
 {
 	char	*word;
 	int		len;
 
-	len = word_boundary(str);
+	len = word_boundary(str, err);
 	if (len < 0)
 		return (NULL);
 	word = ft_substr(str, 0, len);
@@ -52,7 +53,7 @@ char	*extract_word(char *str, int *i)
 	return (word);
 }
 
-t_token	*create_word_token(char *str, int *i)
+t_token	*create_word_token(char *str, int *i, int *err)
 {
 	t_token	*token;
 
@@ -60,7 +61,7 @@ t_token	*create_word_token(char *str, int *i)
 	if (!token)
 		return (NULL);
 	token->type = WORD;
-	token->data.word.value = extract_word(str, i);
+	token->data.word.value = extract_word(str, i, err);
 	if (!token->data.word.value)
 	{
 		free(token);

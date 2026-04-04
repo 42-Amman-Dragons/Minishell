@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_err.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 11:45:54 by haya              #+#    #+#             */
-/*   Updated: 2026/03/30 20:50:27 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 11:17:56 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,11 @@ void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 	}
 	else
 	{
-		if (!ft_strchr(cmd_name, '/') && errno == ENOENT)
-		{
-			cmd_error_message(cmd_name, "command not found");
+		cmd_error_message(cmd_name, strerror(errno));
+		if (errno == ENOENT)
 			exit_code = 127;
-		}
 		else
-		{
-			cmd_error_message(cmd_name, strerror(errno));
-			if (errno == ENOENT)
-				exit_code = 127;
-			else
-				exit_code = 126;
-		}
+			exit_code = 126;
 	}
 	free(cmd_name);
 	free_and_exit(node, shell, exit_code);

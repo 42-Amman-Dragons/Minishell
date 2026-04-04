@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   add_to_args_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 12:12:34 by haya              #+#    #+#             */
-/*   Updated: 2026/04/01 11:05:54 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 12:36:37 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,15 @@ static void	normalize_ifs(char *s)
 
 char	**add_to_args(char **args, int i, char *expanded, int *flags)
 {
-	char	*globbed;
+	char	*matched_paths;
 
 	if (flags[1] && expanded && ft_strchr(expanded, '*'))
 	{
-		globbed = append_astersk(NULL, expanded);
-		if (globbed)
+		matched_paths = append_astersk(NULL, expanded);
+		if (matched_paths)
 		{
 			free(expanded);
-			expanded = globbed;
+			expanded = matched_paths;
 		}
 	}
 	if (expanded)

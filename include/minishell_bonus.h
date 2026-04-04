@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 10:15:05 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 12:44:02 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,8 +204,6 @@ char				*append_str(char *result, char *s);
 int					init_heredocs(t_tree *tree, t_minishell *shell);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
-char				**split_respecting_quotes(char *s, char c);
-char				*strip_quotes_str(char *str);
 char				**expand_one_arg(char **args, int i, t_minishell *shell);
 char				*append_astersk(char *result, char *pattern);
 void				restore_astersks(char *str);
@@ -217,20 +215,20 @@ char				*get_unquoted_var_val(char *word, int *i, char **env,
 
 /*Tokenizer*/
 t_tokenType			identify_token(char *s);
-t_list				*tokenizer(char *line);
+t_list				*tokenizer(char *line, int *err);
 void				free_token(void *ptr);
-t_token				*create_token(char *str, int *i);
+t_token				*create_token(char *str, int *i, int *err);
 t_token				*create_pipe_token(int *i);
 t_token				*create_background_token(int *i);
 t_token				*create_redirect_token(char *str, int *i);
 t_token				*create_and_or_token(char *str, int *i);
 t_token				*create_paren_token(char *str, int *i);
-t_token				*create_word_token(char *str, int *i);
+t_token				*create_word_token(char *str, int *i, int *err);
 int					is_whitespace(char c);
 void				skip_whitespaces(char *ptr, int *i);
 t_dir_mode			identify_redirection_mode(char *str, int *i);
-char				*extract_word(char *str, int *i);
-int					word_boundary(char *str);
+char				*extract_word(char *str, int *i, int *err);
+int					word_boundary(char *str, int *err);
 
 /*Builtins*/
 int					is_builtin(char *cmd);
@@ -260,7 +258,6 @@ char				**generate_expanded_list(char **args, int i,
 void				handle_cmd_error(char *cmd_name, t_tree *node,
 						t_minishell *shell);
 int					path_is_unset(t_minishell *shell);
-int					exec_with_sh_fallback(char **args, char **env);
 void				update_underscore_var(t_tree *node, t_minishell *shell);
 int					redir_has_ambiguous_target(t_redir_data *rd);
 int					print_ambiguous_redirect(void);

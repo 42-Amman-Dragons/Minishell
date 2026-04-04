@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 00:46:26 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 12:02:51 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ t_tree	*build_ast(t_list *tokens, int *err)
 		free_tree(tree);
 		return (NULL);
 	}
-	/* Any remaining token means trailing invalid syntax (e.g. ")" or extra words). */
 	if (cur)
 	{
 		*err = 2;

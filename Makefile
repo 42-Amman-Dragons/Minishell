@@ -34,7 +34,7 @@ BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c export.c export_sort.c 
 	unset.c mutable_env.c env_crud.c exit.c exit_utils.c
 
 MAIN_DIR = Main
-MAIN_SRC = main.c initializers.c history.c shell_cleanup.c parse_and_execute.c prompt.c prompt_utils.c
+MAIN_SRC = main.c initializers.c history.c shell_cleanup.c parse_and_execute.c prompt.c prompt_utils.c non_interactive.c
 
 EXEC_DIR = Execution
 EXEC_SRC = execution.c execute_cmd.c exeute_cmd_utils.c execute_oper.c execute_pipe.c \

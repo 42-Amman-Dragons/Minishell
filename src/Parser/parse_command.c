@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 11:11:10 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 12:00:14 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,16 +33,31 @@ static t_redir_data	*build_redir(t_list **cur, t_token *rtok, int *err)
 	redir->heredoc_expand = 0;
 	redir->heredoc_fd = -1;
 	if (redir->mode == DIR_IN_HEREDOC && !ft_strchr(redir->filename, '\'')
-			&& !ft_strchr(redir->filename, '"'))
+		&& !ft_strchr(redir->filename, '"'))
 		redir->heredoc_expand = 1;
 	return (redir);
+}
+
+static int	append_redir(t_list **redirs, t_redir_data *redir, int *err)
+{
+	t_list	*node;
+
+	node = ft_lstnew(redir);
+	if (!node)
+	{
+		free(redir->filename);
+		free(redir);
+		*err = 1;
+		return (1);
+	}
+	ft_lstadd_back(redirs, node);
+	return (0);
 }
 
 int	parse_redir(t_list **cur, t_list **redirs, int *err)
 {
 	t_redir_data	*redir;
 	t_token			*redir_tok;
-	t_list			*node;
 
 	redir_tok = advance(cur);
 	if (cur_type(cur) != WORD)
@@ -56,23 +71,10 @@ int	parse_redir(t_list **cur, t_list **redirs, int *err)
 	redir = build_redir(cur, redir_tok, err);
 	if (!redir)
 		return (1);
-	node = ft_lstnew(redir);
-	if (!node)
-	{
-		free(redir->filename);
-		free(redir);
-		*err = 1;
+	if (append_redir(redirs, redir, err))
 		return (1);
-	}
-	ft_lstadd_back(redirs, node);
 	advance(cur);
 	return (0);
-}
-
-void	update_redirect_error(int *err)
-{
-	if (*err == -1)
-		*err = -2;
 }
 
 t_tree	*parse_subshell(t_list **cur, int *err)
@@ -92,7 +94,6 @@ t_tree	*parse_subshell(t_list **cur, int *err)
 	}
 	advance(cur);
 	redirs = NULL;
-	update_redirect_error(err);
 	while (!*err && cur_type(cur) == REDIRECT)
 		parse_redir(cur, &redirs, err);
 	if (*err > 0)

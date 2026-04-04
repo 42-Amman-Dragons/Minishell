@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 00:54:29 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 12:29:45 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,13 @@ static t_tree	*build_tree(t_minishell *shell)
 	t_tree	*tree;
 	int		err;
 
-	tokens = tokenizer(shell->line);
+	err = 1;
+	tokens = tokenizer(shell->line, &err);
 	if (!tokens)
+	{
+		shell->exit_status = err;
 		return (NULL);
+	}
 	err = 0;
 	tree = build_ast(tokens, &err);
 	ft_lstclear(&tokens, free_token);
