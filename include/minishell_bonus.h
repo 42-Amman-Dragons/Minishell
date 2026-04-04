@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 00:57:16 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 10:15:05 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ typedef struct s_minishell
 	struct termios	new_termos;
 	struct termios	original_termos;
 	int				is_interactive;
+	int				is_child;
 	int				exit_status;
 	char			*username;
 	char			*servername;

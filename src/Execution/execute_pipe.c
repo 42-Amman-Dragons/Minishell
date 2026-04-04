@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:14:26 by haya              #+#    #+#             */
-/*   Updated: 2026/03/30 12:02:20 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 10:21:51 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ static pid_t	handle_left_pipe(int *fd, int *temp_std, t_tree *node,
 	}
 	else if (left_id == 0)
 	{
+		shell->is_child = 1;
 		set_signals_child();
 		safe_close(&temp_std[0], "close error");
 		safe_close(&temp_std[1], "close error");
@@ -54,6 +55,7 @@ static pid_t	handle_right_pipe(int *fd, int *temp_std, t_tree *node,
 	}
 	else if (right_id == 0)
 	{
+		shell->is_child = 1;
 		set_signals_child();
 		safe_close(&temp_std[0], "close error");
 		safe_close(&temp_std[1], "close error");
@@ -121,7 +123,7 @@ int	exec_pipe(t_tree *node, t_minishell *shell)
 	err = handle_pipe(&right_id, temp_std, shell, node);
 	if (err != 0)
 		return (err);
-	exit_code = wait_all(right_id);
+	exit_code = wait_all(right_id, shell);
 	set_signals_prompt();
 	shell->exit_status = exit_code;
 	return (exit_code);

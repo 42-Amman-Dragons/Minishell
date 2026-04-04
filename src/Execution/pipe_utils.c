@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/27 00:00:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/27 00:00:00 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 10:29:15 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	wait_all(pid_t pid)
+int	wait_all(pid_t pid, t_minishell *shell)
 {
 	pid_t	id;
 	int		err;
@@ -25,7 +25,10 @@ int	wait_all(pid_t pid)
 	{
 		id = waitpid(-1, &status, 0);
 		if (id == pid)
+		{
 			err = child_exit_status(status);
+			print_sigquit_if_needed(status, shell);
+		}
 		if (id <= 0)
 			break ;
 	}

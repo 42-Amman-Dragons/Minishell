@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 01:09:45 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 10:29:15 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	handle_external_cmd(t_minishell *shell, t_tree *node)
 	}
 	waitpid(id, &status, 0);
 	set_signals_prompt();
+	print_sigquit_if_needed(status, shell);
 	shell->exit_status = child_exit_status(status);
 	return (shell->exit_status);
 }

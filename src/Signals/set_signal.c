@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   set_signal.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 12:19:47 by haya              #+#    #+#             */
-/*   Updated: 2026/03/31 12:21:01 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 10:33:50 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <signal.h>
 
 extern int	g_signum;
 
@@ -33,7 +34,7 @@ void	set_signals_prompt(void)
 void	set_signals_exec(void)
 {
 	setup_sig(SIGINT, SIG_IGN, 0);
-	setup_sig(SIGQUIT, handle_quit, 0);
+	setup_sig(SIGQUIT, SIG_IGN, 0);
 }
 
 void	set_signals_child(void)

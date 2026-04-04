@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 00:57:10 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 10:29:15 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ typedef struct s_minishell
 	struct termios	new_termos;
 	struct termios	original_termos;
 	int				is_interactive;
+	int				is_child;
 	int				exit_status;
 	char			*username;
 	char			*servername;
@@ -276,7 +277,7 @@ int					redir_has_ambiguous_target(t_redir_data *rd);
 int					print_ambiguous_redirect(void);
 
 // Pipe utils
-int					wait_all(pid_t pid);
+int					wait_all(pid_t pid, t_minishell *shell);
 int					temp_redir(int *temp_stdin, int *temp_stdout);
 void				safe_close(int *fd, char *msg);
 int					restore_redir(int *temp_stdin, int *temp_stdout);
@@ -284,6 +285,7 @@ int					restore_close_redir(int *fd, int *temp_stdin,
 						int *temp_stdout);
 // Execution utils
 int					child_exit_status(int status);
+void				print_sigquit_if_needed(int status, t_minishell *shell);
 void				secure_close(int fd, t_tree *node, t_minishell *shell);
 void				free_splitted(char **splitted);
 // Redirections

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:42:48 by haya              #+#    #+#             */
-/*   Updated: 2026/03/25 12:34:34 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/04 10:29:15 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,16 @@ int	child_exit_status(int status)
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	return (0);
+}
+
+void	print_sigquit_if_needed(int status, t_minishell *shell)
+{
+	int	err;
+
+	err = child_exit_status(status);
+	if (shell->is_child == 0 && (err == 131 || (WIFSIGNALED(status)
+				&& WTERMSIG(status) == SIGQUIT)))
+		write(2, "Quit (core dumped)\n", 19);
 }
 
 void	free_and_exit(t_tree *node, t_minishell *shell, int exit_code)
