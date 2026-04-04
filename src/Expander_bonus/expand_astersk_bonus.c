@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 09:53:10 by haya              #+#    #+#             */
-/*   Updated: 2026/04/01 11:09:33 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 13:50:25 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,52 @@ void	restore_astersks(char *str)
 	}
 }
 
-static void	add_to_result(int *i, char **result, char *file_name)
+
+int calc_arr_len(char **arr)
 {
-	if (*i != 0)
-		*result = append_str(*result, ft_strdup(" "));
-	*result = append_str(*result, ft_strdup(file_name));
-	(*i)++;
+	int len = 0;
+	if(!arr)
+		return 0;
+	while (arr[len])
+		len++;
+	return len;
 }
+
+char **append_string_to_list(char ***list, char *str)
+{
+	char **new_list;
+	int i;
+	int size;
+	
+	i = 0;
+	size = calc_arr_len(*list);
+	new_list = malloc(sizeof(char *) * (size + 2));
+	if(!new_list)
+	{
+		free(*list);
+		*list = NULL;
+		return NULL;
+	}
+	while(i < size)
+	{
+		new_list[i] = (*list)[i];
+		i++;
+	}
+	new_list[i] = str;
+	new_list[i + 1] = NULL;
+	free(*list);
+	*list = NULL;
+	*list = new_list;
+	return new_list;
+}
+
+// static void	add_to_result(int *i, char *result, char *file_name)
+// {
+// 	if (*i != 0)
+// 		*result = append_str(*result, ft_strdup(" "));
+// 	*result = append_str(*result, ft_strdup(file_name));
+// 	(*i)++;
+// }
 
 static int	should_skip_file(char *name, char *pattern)
 {
@@ -40,23 +79,28 @@ static int	should_skip_file(char *name, char *pattern)
 	return (0);
 }
 
-static void	process_entry(struct dirent *cf, char *pattern, char **result,
+static void	process_entry(struct dirent *cf, char *pattern, char ***result,
 		int *i)
 {
 	if (should_skip_file(cf->d_name, pattern))
 		return ;
 	if (is_matching(pattern, cf->d_name))
-		add_to_result(i, result, cf->d_name);
+	{
+		*result = append_string_to_list(result, ft_strdup(cf->d_name));
+		if(!result)
+			return ;
+		(*i)++;
+	}
 }
 
-char	*append_astersk(char *result, char *pattern)
+char	**append_astersk(char *pattern)
 {
 	DIR				*current_dir;
+	char			**result;
 	char			buff[PATH_MAX];
 	struct dirent	*cf;
 	int				i;
 
-	free(result);
 	result = NULL;
 	if (!getcwd(buff, PATH_MAX))
 		return (NULL);

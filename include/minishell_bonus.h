@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 12:44:02 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 14:27:41 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,7 @@ int					init_heredocs(t_tree *tree, t_minishell *shell);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
 char				**expand_one_arg(char **args, int i, t_minishell *shell);
-char				*append_astersk(char *result, char *pattern);
+char				**append_astersk(char *pattern);
 void				restore_astersks(char *str);
 int					is_matching(char *pattern, char *file_name);
 char				**add_to_args(char **args, int i, char *expanded,
