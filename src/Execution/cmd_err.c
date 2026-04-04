@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_err.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 11:45:54 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 11:17:56 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 16:06:16 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,24 @@ void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 		cmd_error_message(cmd_name, "Is a directory");
 		exit_code = 126;
 	}
-	else if (!node->data.cmd.args[0])
+	else if (cmd_name)
 	{
-		if (!ft_strchr(cmd_name, '/') && path_is_unset(shell))
-			cmd_error_message(cmd_name, "No such file or directory");
-		else
-			cmd_error_message(cmd_name, "command not found");
-		exit_code = 127;
-	}
-	else
-	{
-		cmd_error_message(cmd_name, strerror(errno));
-		if (errno == ENOENT)
+		if (!ft_strchr(cmd_name, '/'))
+		{
+			if (path_is_unset(shell))
+				cmd_error_message(cmd_name, "No such file or directory");
+			else
+				cmd_error_message(cmd_name, "command not found");
 			exit_code = 127;
+		}
 		else
-			exit_code = 126;
+		{
+			cmd_error_message(cmd_name, strerror(errno));
+			if (errno == ENOENT)
+				exit_code = 127;
+			else
+				exit_code = 126;
+		}
 	}
 	free(cmd_name);
 	free_and_exit(node, shell, exit_code);

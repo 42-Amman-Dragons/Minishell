@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exeute_cmd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/16 10:32:15 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 00:15:15 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 16:01:21 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	is_command_a_directory(const char *path)
 {
 	struct stat	st;
 
-	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode))
+	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode) && contains(path, '/'))
 		return (1);
 	return (0);
 }

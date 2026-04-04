@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 12:36:12 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 14:13:53 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,26 +15,28 @@
 static int	handle_wild_redirect(char **expanded, t_redir_data *rd,
 		t_list **redirs)
 {
-	char	*matched_paths;
+	char	**matched_paths;
+	int 	i;
 
-	matched_paths = append_astersk(NULL, *expanded);
-	if (matched_paths && ft_strchr(matched_paths, ' '))
+	i =0;
+	matched_paths = append_astersk(*expanded);
+	if(!matched_paths)
 	{
-		free(matched_paths);
-		free(*expanded);
-		free(rd->filename);
-		rd->filename = NULL;
-		*redirs = (*redirs)->next;
-		return (1);
-	}
-	else if (matched_paths)
-	{
-		free(*expanded);
-		*expanded = matched_paths;
-	}
-	else
 		restore_astersks(*expanded);
-	return (0);
+		free(*expanded);
+		return (0);
+	}	
+	while (matched_paths[i])
+	{
+		rd = (t_redir_data *)(*redirs)->content;
+		rd->filename = ft_strdup(matched_paths[i]);
+		free(matched_paths[i]);
+		matched_paths[i] = NULL;
+		*redirs = (*redirs)->next;
+		i++;
+	}
+	free(matched_paths);
+	return (1);
 }
 
 static void	expand_redirs(t_list *redirs, t_minishell *shell)
