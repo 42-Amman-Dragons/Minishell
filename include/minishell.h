@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 12:44:02 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 19:48:32 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,6 +272,7 @@ int					path_is_unset(t_minishell *shell);
 void				update_underscore_var(t_tree *node, t_minishell *shell);
 int					redir_has_ambiguous_target(t_redir_data *rd);
 int					print_ambiguous_redirect(void);
+int					pipe_error_and_close(int *temp_std);
 
 // Pipe utils
 int					wait_all(pid_t pid, t_minishell *shell);

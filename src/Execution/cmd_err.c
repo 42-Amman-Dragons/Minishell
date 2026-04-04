@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 11:45:54 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 16:06:16 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 18:16:42 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,26 @@ static void	cmd_error_message(char *cmd_name, char *message)
 	buff = NULL;
 }
 
+void	handle_if_cmd_name(char *cmd_name, t_minishell *shell, int *exit_code)
+{
+	if (!ft_strchr(cmd_name, '/'))
+	{
+		if (path_is_unset(shell))
+			cmd_error_message(cmd_name, "No such file or directory");
+		else
+			cmd_error_message(cmd_name, "command not found");
+		*exit_code = 127;
+	}
+	else
+	{
+		cmd_error_message(cmd_name, strerror(errno));
+		if (errno == ENOENT)
+			*exit_code = 127;
+		else
+			*exit_code = 126;
+	}
+}
+
 void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 {
 	int	exit_code;
@@ -36,24 +56,7 @@ void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 		exit_code = 126;
 	}
 	else if (cmd_name)
-	{
-		if (!ft_strchr(cmd_name, '/'))
-		{
-			if (path_is_unset(shell))
-				cmd_error_message(cmd_name, "No such file or directory");
-			else
-				cmd_error_message(cmd_name, "command not found");
-			exit_code = 127;
-		}
-		else
-		{
-			cmd_error_message(cmd_name, strerror(errno));
-			if (errno == ENOENT)
-				exit_code = 127;
-			else
-				exit_code = 126;
-		}
-	}
+		handle_if_cmd_name(cmd_name, shell, &exit_code);
 	free(cmd_name);
 	free_and_exit(node, shell, exit_code);
 }

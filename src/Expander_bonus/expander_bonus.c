@@ -6,38 +6,11 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 14:13:53 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 19:33:44 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
-
-static int	handle_wild_redirect(char **expanded, t_redir_data *rd,
-		t_list **redirs)
-{
-	char	**matched_paths;
-	int 	i;
-
-	i =0;
-	matched_paths = append_astersk(*expanded);
-	if(!matched_paths)
-	{
-		restore_astersks(*expanded);
-		free(*expanded);
-		return (0);
-	}	
-	while (matched_paths[i])
-	{
-		rd = (t_redir_data *)(*redirs)->content;
-		rd->filename = ft_strdup(matched_paths[i]);
-		free(matched_paths[i]);
-		matched_paths[i] = NULL;
-		*redirs = (*redirs)->next;
-		i++;
-	}
-	free(matched_paths);
-	return (1);
-}
 
 static void	expand_redirs(t_list *redirs, t_minishell *shell)
 {

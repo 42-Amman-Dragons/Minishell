@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 10:29:15 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 18:24:16 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ int	handle_external_cmd(t_minishell *shell, t_tree *node)
 
 int	handle_builtin(int idx, t_tree *node, t_minishell *shell)
 {
-	if (temp_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout) ==
-		-1)
+	if (temp_redir(&shell->builtin_temp_stdin,
+			&shell->builtin_temp_stdout) == -1)
 		return (shell->exit_status = 1);
 	track_fd(shell, &shell->builtin_temp_stdin);
 	track_fd(shell, &shell->builtin_temp_stdout);
@@ -83,8 +83,8 @@ int	handle_builtin(int idx, t_tree *node, t_minishell *shell)
 
 static int	handle_redir_only_cmd(t_tree *node, t_minishell *shell)
 {
-	if (temp_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout) ==
-		-1)
+	if (temp_redir(&shell->builtin_temp_stdin,
+			&shell->builtin_temp_stdout) == -1)
 		return (shell->exit_status = 1);
 	if (handle_redirections(node) == -1)
 	{

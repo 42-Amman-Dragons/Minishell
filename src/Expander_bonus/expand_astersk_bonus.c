@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 09:53:10 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 13:50:25 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 19:35:17 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,33 +22,22 @@ void	restore_astersks(char *str)
 	}
 }
 
-
-int calc_arr_len(char **arr)
+char	**append_string_to_list(char ***list, char *str)
 {
-	int len = 0;
-	if(!arr)
-		return 0;
-	while (arr[len])
-		len++;
-	return len;
-}
+	char	**new_list;
+	int		i;
+	int		size;
 
-char **append_string_to_list(char ***list, char *str)
-{
-	char **new_list;
-	int i;
-	int size;
-	
 	i = 0;
 	size = calc_arr_len(*list);
 	new_list = malloc(sizeof(char *) * (size + 2));
-	if(!new_list)
+	if (!new_list)
 	{
 		free(*list);
 		*list = NULL;
-		return NULL;
+		return (NULL);
 	}
-	while(i < size)
+	while (i < size)
 	{
 		new_list[i] = (*list)[i];
 		i++;
@@ -58,7 +47,7 @@ char **append_string_to_list(char ***list, char *str)
 	free(*list);
 	*list = NULL;
 	*list = new_list;
-	return new_list;
+	return (new_list);
 }
 
 // static void	add_to_result(int *i, char *result, char *file_name)
@@ -87,7 +76,7 @@ static void	process_entry(struct dirent *cf, char *pattern, char ***result,
 	if (is_matching(pattern, cf->d_name))
 	{
 		*result = append_string_to_list(result, ft_strdup(cf->d_name));
-		if(!result)
+		if (!result)
 			return ;
 		(*i)++;
 	}

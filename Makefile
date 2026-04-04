@@ -25,7 +25,7 @@ EXPAND_BONUS_DIR = Expander_bonus
 EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c \
 	expand_utils_bonus.c expand_astersk_bonus.c generate_expanded_list_bonus.c \
 	is_matching_bonus.c get_unquoted_bonus.c add_to_args_bonus.c \
-	expander_utils_2_bonus.c
+	expander_utils_2_bonus.c handle_wild_redirect.c
 HEREDOC_DIR = Heredoc
 HEREDOC_SRC = heredoc.c heredoc_io.c heredoc_nonint.c heredoc_utils.c
 
@@ -39,8 +39,9 @@ MAIN_SRC = main.c initializers.c history.c shell_cleanup.c parse_and_execute.c p
 EXEC_DIR = Execution
 EXEC_SRC = execution.c execute_cmd.c exeute_cmd_utils.c execute_oper.c execute_pipe.c \
 	execute_subshell.c execution_utils.c handle_redirections.c cmd_err.c \
-	pipe_utils.c redirect_utils.c cmd_env.c ambigous_redirect.c
-
+	pipe_utils.c redirect_utils.c cmd_env.c ambigous_redirect.c print_sigquit_if_needed.c\
+	pipe_error_and_close.c
+	
 UTILS_DIR = utils
 UTILS_SRC = string_utils.c
 
@@ -94,6 +95,11 @@ bonus: .bonus
 
 debug: CFLAGS += $(DEBUG_FLAG)
 debug: re
+
+debug_bonus: CFLAGS += $(DEBUG_FLAG)
+debug_bonus: re
+	rm .bonus
+debug_bonus: bonus
 
 $(LIBFT): $(LIBFT_OBJ)
 	make bonus -C $(LIBFT_DIR)

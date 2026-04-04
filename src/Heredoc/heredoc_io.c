@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_io.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 22:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/27 20:30:51 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 19:44:16 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	heredoc_child(int fd, char *limiter, t_redir_data *rd,
 {
 	char	*line;
 
-	set_signals_child();
+	set_signals_heredoc();
 	if (!shell->is_interactive)
 	{
 		close(fd);

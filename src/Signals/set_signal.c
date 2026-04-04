@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_signal.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 12:19:47 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 10:33:50 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 19:43:13 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,10 @@ void	set_signals_child(void)
 {
 	setup_sig(SIGINT, SIG_DFL, 0);
 	setup_sig(SIGQUIT, SIG_DFL, 0);
+}
+
+void	set_signals_heredoc(void)
+{
+	setup_sig(SIGINT, SIG_DFL, 0);
+	setup_sig(SIGQUIT, SIG_IGN, 0);
 }

@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 14:27:41 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 19:48:44 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,11 @@ char				**add_to_args(char **args, int i, char *expanded,
 						int *flags);
 char				*get_unquoted_var_val(char *word, int *i, char **env,
 						int exit_status);
-
+int					handle_wild_redirect(char **expanded, t_redir_data *rd,
+						t_list **redirs);
+char				**generate_expanded_list_asterisk(char **args, int i,
+						char **expanded);
+						
 /*Tokenizer*/
 t_tokenType			identify_token(char *s);
 t_list				*tokenizer(char *line, int *err);
@@ -261,6 +265,7 @@ int					path_is_unset(t_minishell *shell);
 void				update_underscore_var(t_tree *node, t_minishell *shell);
 int					redir_has_ambiguous_target(t_redir_data *rd);
 int					print_ambiguous_redirect(void);
+int					pipe_error_and_close(int *temp_std);
 
 // Main
 t_minishell			*init_shell(void);

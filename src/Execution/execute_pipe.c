@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:14:26 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 10:21:51 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 19:58:13 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,27 @@ static pid_t	handle_left_pipe(int *fd, int *temp_std, t_tree *node,
 	return (left_id);
 }
 
-static pid_t	handle_right_pipe(int *fd, int *temp_std, t_tree *node,
-		t_minishell *shell)
+static void	handle_right_child(int *fd, int *temp_std,
+		t_tree *node, t_minishell *shell)
+{
+	shell->is_child = 1;
+	set_signals_child();
+	safe_close(&temp_std[0], "close error");
+	safe_close(&temp_std[1], "close error");
+	secure_close(fd[1], node, shell);
+	if (dup2(fd[0], STDIN_FILENO) == -1)
+	{
+		perror("DUP ERROR: ");
+		secure_close(fd[0], node, shell);
+		free_and_exit(node, shell, 1);
+	}
+	secure_close(fd[0], node, shell);
+	exec_tree(node->data.oper.right, shell);
+	free_and_exit(node, shell, shell->exit_status);
+}
+
+static pid_t	handle_right_pipe(int *fd, int *temp_std,
+		t_tree *node, t_minishell *shell)
 {
 	pid_t	right_id;
 
@@ -53,32 +72,9 @@ static pid_t	handle_right_pipe(int *fd, int *temp_std, t_tree *node,
 		perror("minishell: fork");
 		return (-1);
 	}
-	else if (right_id == 0)
-	{
-		shell->is_child = 1;
-		set_signals_child();
-		safe_close(&temp_std[0], "close error");
-		safe_close(&temp_std[1], "close error");
-		secure_close(fd[1], node, shell);
-		if (dup2(fd[0], STDIN_FILENO) == -1)
-		{
-			perror("DUP ERROR: ");
-			secure_close(fd[0], node, shell);
-			free_and_exit(node, shell, 1);
-		}
-		secure_close(fd[0], node, shell);
-		exec_tree(node->data.oper.right, shell);
-		free_and_exit(node, shell, shell->exit_status);
-	}
+	if (right_id == 0)
+		handle_right_child(fd, temp_std, node, shell);
 	return (right_id);
-}
-
-int	pipe_error_and_close(int *temp_std)
-{
-	perror("PIPE ERROR: ");
-	safe_close(&temp_std[0], "close error");
-	safe_close(&temp_std[1], "close error");
-	return (1);
 }
 
 int	handle_pipe(int *right_id, int *temp_std, t_minishell *shell, t_tree *node)
