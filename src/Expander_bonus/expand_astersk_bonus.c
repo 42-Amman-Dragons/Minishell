@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_astersk_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 09:53:10 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 19:35:17 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 23:42:05 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,6 @@ char	**append_string_to_list(char ***list, char *str)
 	*list = new_list;
 	return (new_list);
 }
-
-// static void	add_to_result(int *i, char *result, char *file_name)
-// {
-// 	if (*i != 0)
-// 		*result = append_str(*result, ft_strdup(" "));
-// 	*result = append_str(*result, ft_strdup(file_name));
-// 	(*i)++;
-// }
 
 static int	should_skip_file(char *name, char *pattern)
 {

@@ -158,5 +158,15 @@ fclean: clean
 
 re: fclean all
 
+
+leaks_bonus: debug_bonus
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		--suppressions=readline.supp ./$(NAME)
+
+leaks: debug
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		--suppressions=readline.supp ./$(NAME)
+
+
 TOK_OBJ = $(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o))
 

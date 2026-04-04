@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   non_interactive.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 00:00:00 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 19:45:29 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/04 23:39:09 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ static void	join_next_line(t_minishell *shell)
 		shell->line = tmp;
 	}
 }
-
 
 // ft_putendl_fd("minishell$ ", STDOUT_FILENO);
 /* fixed prompt for tester */

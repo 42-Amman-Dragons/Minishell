@@ -28,24 +28,28 @@ char	**handle_qouted_asterisk(char **args, int i, char *expanded)
 	char	**new_args;
 
 	matched_paths = append_astersk(expanded);
-	if (matched_paths)
+	if (!matched_paths)
+		return (args);
+	new_args = generate_expanded_list_asterisk(args, i, matched_paths);
+	if (!new_args)
 	{
-		new_args = generate_expanded_list_asterisk(args, i, matched_paths);
-		if (!new_args)
-		{
-			free(expanded);
-			return (free_args_expanded_asterisk(args, matched_paths));
-		}
 		free(expanded);
-		return (new_args);
+		return (free_args_expanded_asterisk(args, matched_paths));
 	}
-	return (NULL);
+	free(expanded);
+	return (new_args);
 }
 
 char	**add_to_args(char **args, int i, char *expanded, int *flags)
 {
+	char	**result;
+
 	if (flags[1] && expanded && ft_strchr(expanded, '*'))
-		return (handle_qouted_asterisk(args, i, expanded));
+	{
+		result = handle_qouted_asterisk(args, i, expanded);
+		if (result != args)
+			return (result);
+	}
 	if (expanded)
 		restore_astersks(expanded);
 	if (flags[1] && expanded)
