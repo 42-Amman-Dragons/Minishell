@@ -204,6 +204,75 @@ Apply shell expansions over command args and non-heredoc redirection targets.
 - Expansion happens at execution time (`exec_cmd`/`exec_subshell` path), not parse time.
 - Quoted segments inhibit splitting and affect `$` interpretation.
 
+### Dedicated Expansion Logic and Flow
+
+This section focuses only on the expansion pipeline, from raw parsed `args` to final argv passed to builtin/`execve`.
+
+#### A) Expansion Entry Points
+
+- `exec_cmd()` and `exec_subshell()` call `expander()` before actual command execution.
+- `expander()` walks each command node and processes:
+  - command `args[]`,
+  - redirection filenames (excluding heredoc limiters).
+
+#### B) Argument Expansion Pipeline (Per Argument)
+
+For each original argument, the mandatory flow is:
+
+1. `expand_one_arg()` starts with the raw token text.
+2. `expand_word()` scans character-by-character using state:
+  - `EXP_NORMAL` (no quote context),
+  - `EXP_SQUOTE` (single-quoted),
+  - `EXP_DQUOTE` (double-quoted).
+3. When `$` is found in expandable context, `expand_dollar()` is used:
+  - `$VAR` -> env value,
+  - `$?` -> last exit code,
+  - `$0` -> `minishell` behavior in this project.
+4. The expanded string is post-processed for splitting rules:
+  - if unquoted variable expansion introduces spaces, argument may split,
+  - if expansion becomes empty in unquoted context, entry may be removed.
+5. Resulting pieces are appended to the rebuilt argv using shared arg utilities.
+
+#### C) Quote-Sensitive Behavior
+
+- Single quotes: content is literal; `$` is not expanded.
+- Double quotes: `$` is expanded, but word-splitting is constrained compared to unquoted context.
+- Unquoted context: full split/empty-removal behavior is applied after expansion.
+
+#### D) Redirection Target Expansion
+
+- Non-heredoc redirection filenames go through expansion like regular words.
+- Heredoc limiter tokens are not expanded here.
+- In bonus wildcard mode, redirect targets may become ambiguous if multiple filesystem matches are produced.
+
+#### E) Bonus Wildcard Layer (After Variable Expansion)
+
+In bonus mode, wildcard handling is applied after normal `$` expansion:
+
+1. Detect candidate args containing `*`.
+2. Enumerate directory entries.
+3. Match with `is_matching()`.
+4. Replace argument with matched list (or keep literal if no matches).
+5. For redirect targets, detect and flag ambiguous expansion when multiple matches exist.
+
+#### F) End-to-End Mini Example
+
+Input args before expansion:
+
+- `"$USER"`
+- `$EMPTY`
+- `$PATH_VAR_WITH_SPACES`
+- `*.c` (bonus)
+
+Output behavior:
+
+- `"$USER"` -> single argument with substituted value.
+- `$EMPTY` -> may disappear if unquoted and empty.
+- `$PATH_VAR_WITH_SPACES` -> may split into multiple args if unquoted.
+- `*.c` -> replaced with matching files in bonus mode, unchanged in mandatory mode.
+
+This final expanded argv is what builtin dispatch or `execve` receives.
+
 ## 7) Heredoc Module (`src/Heredoc`)
 
 ### Role

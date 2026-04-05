@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_redirect.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 16:26:38 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/31 12:27:31 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/05 10:54:50 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,6 @@ static t_dir_mode	handle_double_ops(char *str, int *i)
 	{
 		(*i) += 2;
 		return (DIR_OUT_APPEND);
-	}
-	else if (ft_strncmp(">|", str, 2) == 0)
-	{
-		(*i) += 2;
-		return (DIR_OUT_TRUNC);
 	}
 	return (NOT_FOUND);
 }
@@ -49,7 +44,7 @@ static t_dir_mode	handle_single_ops(char *str, int *i)
 
 t_dir_mode	identify_redirection_mode(char *str, int *i)
 {
-	t_dir_mode		mode;
+	t_dir_mode	mode;
 
 	mode = handle_double_ops(str, i);
 	if (mode != NOT_FOUND)

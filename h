@@ -1,0 +1,11 @@
+42_minishell_tester
+h
+include
+libft
+Makefile
+minishell
+minishell_tester
+MODULES_DETAILED_FLOW.md
+obj
+README.md
+src
