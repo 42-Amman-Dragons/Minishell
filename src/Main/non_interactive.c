@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   non_interactive.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 00:00:00 by haya              #+#    #+#             */
-/*   Updated: 2026/04/05 16:48:34 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/05 17:22:06 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	process_line_non_interactive(t_minishell *shell)
 {
 	size_t	len;
 
-	ft_putendl_fd("minishell$ ", STDOUT_FILENO);
+	// ft_putendl_fd("minishell$ ", STDOUT_FILENO);
 	shell->line = get_next_line(STDIN_FILENO);
 	if (!shell->line)
 		return (1);
