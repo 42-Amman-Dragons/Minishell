@@ -98,6 +98,7 @@ typedef struct s_minishell
 	char			*servername;
 	int				builtin_temp_stdin;
 	int				builtin_temp_stdout;
+	struct s_tree	*current_tree;
 }					t_minishell;
 
 /*AST Node Types*/

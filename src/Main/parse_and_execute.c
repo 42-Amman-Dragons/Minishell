@@ -84,7 +84,9 @@ void	parse_and_execute(t_minishell *shell)
 			exit(cleanup_shell(shell, 2));
 		return ;
 	}
+	shell->current_tree = tree;
 	shell->exit_status = exec_tree(tree, shell);
+	shell->current_tree = NULL;
 	close_tracked_fds(shell);
 	rl_on_new_line();
 	free_tree(tree);

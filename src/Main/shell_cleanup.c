@@ -43,6 +43,11 @@ int	cleanup_shell(t_minishell *shell, int exit_code)
 		free_env(shell->env);
 		shell->env = NULL;
 	}
+	if (shell->current_tree)
+	{
+		free_tree(shell->current_tree);
+		shell->current_tree = NULL;
+	}
 	if (shell->line)
 	{
 		free(shell->line);

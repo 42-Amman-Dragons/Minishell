@@ -117,7 +117,7 @@ Convert raw command text into a linear token stream with quote-aware words and o
 
 - Quote parsing is handled at token extraction time, so parser sees quote-preserved words.
 - Unclosed quotes fail early during tokenization.
-- `>|` is interpreted as truncate-out mode (`DIR_OUT_TRUNC`).
+- `>` is interpreted as truncate-out mode (`DIR_OUT_TRUNC`).
 
 ## 5) Parser Module (`src/Parser`)
 
@@ -477,6 +477,46 @@ Common patterns used across modules:
 - Syntax/parse errors map to status `2`.
 - Command-not-found/path errors map to `127`; non-executable or directory cases to `126`.
 - `free_and_exit()` is used in child/error execution paths to guarantee cleanup.
+
+## 16) Nontrivial Code Parts (Worth Extra Attention)
+
+This section highlights macros and shell-specific system/library functions that are easy to misuse.
+
+### 16.1 Core macros and constants
+
+- Prompt styling macros in `include/minishell.h` (`DRAGON_GREEN`, `DRAGON_CYAN`, `RESET`, `PROMPT_EMOJI`) are wrapped with readline control markers (`\001` / `\002`).
+- Why nontrivial: missing these wrappers breaks prompt cursor positioning and causes visual glitches while editing command lines.
+- `PATH_MAX` and fixed-size buffers are used in prompt/cwd logic; changes here can introduce truncation or fallback-path bugs.
+
+### 16.2 Readline/history API
+
+- `readline`, `add_history`, `rl_on_new_line`, `rl_replace_line`, `rl_redisplay`, `rl_clear_history` are central to interactive mode.
+- Why nontrivial: these APIs must be coordinated with signal handlers so Ctrl-C redraws the prompt correctly and does not corrupt internal readline state.
+- History load/save in `src/Main/history.c` uses shell-managed linked-list data plus readline’s own history state.
+
+### 16.3 Terminal and signal functions
+
+- `tcgetattr` / `tcsetattr` are used to snapshot and restore terminal settings.
+- `sigaction`-based mode switching is used for prompt, execution, child, and heredoc phases.
+- Why nontrivial: each phase requires different signal behavior; a wrong mode can cause parent interruption during child execution or broken heredoc cancel behavior.
+
+### 16.4 Filesystem and metadata calls
+
+- `open`, `close`, `read`, `write`, `unlink`, `access`, `getcwd`, `chdir`, `stat` are heavily used in redirects, heredoc, and path checks.
+- Why nontrivial: ordering of `open`/`dup2`/`close` and error-path cleanup determines correctness and leak safety.
+- `stat` is also used to detect command-is-directory cases for correct exit code mapping.
+
+### 16.5 Process control primitives
+
+- `fork`, `execve`, `waitpid`, `pipe`, `dup`, `dup2` implement command execution and pipelines.
+- Why nontrivial: builtin commands must run in parent in some cases, while external commands and subshells run in children; mixing responsibilities causes state bugs.
+- Exit-status propagation must preserve shell semantics (including signal-derived statuses).
+
+### 16.6 Shell-specific tricky flows tied to these APIs
+
+- Non-interactive multiline read join (`src/Main/non_interactive.c`) relies on repeated `get_next_line` + quote checks.
+- Heredoc preprocessing (`src/Heredoc`) combines forked readers, temp files, and signal-sensitive cancellation.
+- Expander split/remove behavior (`src/Expander*`) must preserve argument boundaries under quote rules.
 
 ---
 
