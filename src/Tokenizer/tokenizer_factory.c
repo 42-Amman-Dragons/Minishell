@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 00:14:20 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 12:29:45 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 09:28:40 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ t_token	*create_token(char *str, int *i, int *err)
 	type = identify_token(str);
 	if (type == PIPE)
 		return (create_pipe_token(i));
-	else if (type == BACKGROUND)
-		return (create_background_token(i));
 	else if (type == REDIRECT)
 		return (create_redirect_token(str, i));
 	else if (type == AND || type == OR)

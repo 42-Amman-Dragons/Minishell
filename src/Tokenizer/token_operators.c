@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 20:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:29:43 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 09:28:40 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,6 @@ t_token	*create_pipe_token(int *i)
 	if (!token)
 		return (NULL);
 	token->type = PIPE;
-	(*i)++;
-	return (token);
-}
-
-t_token	*create_background_token(int *i)
-{
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->type = BACKGROUND;
 	(*i)++;
 	return (token);
 }

@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/05 03:14:04 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 09:28:40 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,7 @@ typedef enum e_tokenType
 	OR,
 	OPEN_PAREN,
 	CLOSE_PAREN,
-	ASTERISK,
-	BACKGROUND
+	ASTERISK
 }					t_tokenType;
 
 typedef enum e_dir_mode
@@ -234,7 +233,6 @@ t_list				*tokenizer(char *line, int *err);
 void				free_token(void *ptr);
 t_token				*create_token(char *str, int *i, int *err);
 t_token				*create_pipe_token(int *i);
-t_token				*create_background_token(int *i);
 t_token				*create_redirect_token(char *str, int *i);
 t_token				*create_and_or_token(char *str, int *i);
 t_token				*create_paren_token(char *str, int *i);
