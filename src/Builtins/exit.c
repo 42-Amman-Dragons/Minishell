@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/31 10:28:16 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/05 16:46:04 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ int	ft_exit(char **args, t_minishell *shell)
 	if (shell->is_interactive)
 		ft_putstr_fd("exit\n", 2);
 	custom_save_history(shell);
+	if (shell->current_tree)
+	{
+		free_tree(shell->current_tree);
+		shell->current_tree = NULL;
+	}
 	exit(cleanup_shell(shell, shell->exit_status));
 	return (0);
 }

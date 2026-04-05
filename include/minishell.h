@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/05 09:28:40 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 16:56:04 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,10 +267,8 @@ void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
 void				handle_cmd_error(char *cmd_name, t_tree *node,
 						t_minishell *shell);
-int					path_is_unset(t_minishell *shell);
 void				update_underscore_var(t_tree *node, t_minishell *shell);
 int					redir_has_ambiguous_target(t_redir_data *rd);
-int					print_ambiguous_redirect(void);
 int					pipe_error_and_close(int *temp_std);
 
 // Pipe utils
@@ -313,5 +311,6 @@ int					process_line_non_interactive(t_minishell *shell);
 
 void				close_tracked_fds(t_minishell *shell);
 void				track_fd(t_minishell *shell, int *heredoc_fd_ptr);
-void				syntax_err_msg(char *token);
+int					is_all_spaces(char *str);
+
 #endif

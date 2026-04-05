@@ -47,7 +47,7 @@ EXEC_SRC_BONUS = execution.c execute_cmd.c exec_cmd_utils.c exec_cmd_utils_2.c e
 	execute_subshell_bonus.c process_utils.c handle_redirect.c handle_redirect_utils.c
 
 UTILS_DIR = utils
-UTILS_SRC = string_utils.c fd_utils.c
+UTILS_SRC = string_utils.c fd_utils.c string_utils_2.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(SIGNALS_DIR)/, $(SIGNALS_SRC:.c=.o)) \

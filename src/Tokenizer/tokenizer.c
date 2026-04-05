@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 00:14:20 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 12:29:45 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 16:53:54 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,11 @@ t_list	*tokenizer(char *line, int *err)
 		return (NULL);
 	head = NULL;
 	i = 0;
+	if (is_all_spaces(line))
+	{
+		*err = 0;
+		return (NULL);
+	}
 	while (line[i])
 	{
 		skip_whitespaces(line, &i);

@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:18 by haya              #+#    #+#             */
-/*   Updated: 2026/03/25 13:34:02 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/05 16:53:11 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,6 @@ int	cleanup_shell(t_minishell *shell, int exit_code)
 	{
 		free_env(shell->env);
 		shell->env = NULL;
-	}
-	if (shell->current_tree)
-	{
-		free_tree(shell->current_tree);
-		shell->current_tree = NULL;
 	}
 	if (shell->line)
 	{

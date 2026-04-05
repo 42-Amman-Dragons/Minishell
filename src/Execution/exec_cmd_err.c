@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd_err.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 11:45:54 by haya              #+#    #+#             */
-/*   Updated: 2026/04/05 00:10:08 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 16:34:34 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	handle_cmd_error(char *cmd_name, t_tree *node, t_minishell *shell)
 {
 	int	exit_code;
 
+	exit_code = 0;
 	if (is_command_a_directory(cmd_name))
 	{
 		cmd_error_message(cmd_name, "Is a directory");
