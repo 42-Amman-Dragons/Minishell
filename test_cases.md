@@ -69,8 +69,8 @@
 | Cases | Expected Output | `$?` | Required | Done? |
 | :--- | :--- | :--- | :--- | :--- |
 | `echo $SHLVL`<br>`./minishell`<br>`echo $SHLVL` | first echo will output current shell lvl second will output SHLVL + 1 | 0 | DEBATABLE | ✅ increments correctly (e.g. SHLVL=5 → 6) |
-| `export SHLVL=999`<br>`./minishell` | minishell: warning: shell level (1000) too high, resetting to 1 | 0 | DEBATABLE | ❌ no warning, sets SHLVL=1000 without resetting |
-| `export SHLVL=-129139`<br>`./minishell`<br>`echo $SHLVL` | 0 | 0 | DEBATABLE | ❌ outputs -129138 (just increments); bash clamps negative SHLVL to 0 |
+| `export SHLVL=999`<br>`./minishell` | minishell: warning: shell level (1000) too high, resetting to 1 | 0 | DEBATABLE | ✅ |
+| `export SHLVL=-129139`<br>`./minishell`<br>`echo $SHLVL` | 0 | 0 | DEBATABLE | ✅ |
 | `ls -la`<br>`echo $_` | ls output<br>-la | 0 | DEBATABLE | ✅ `$_` correctly expands to last arg of previous command |
 
 ### Export:
@@ -93,3 +93,83 @@
 | `echo &#124; echo &#124; echo &#124; echo &#124; echo &#124; echo &#124; echo &#124; echo &#124; echo &#124; echo &#124; echo &#124; echo` | blank line | 0 | YES | ✅ |
 | `. &#124; .. &#124; .` | `minishell>` | 0 | NO | (not required) |
 | `exit 1 &#124; exit 255 &#124; exit 2` | exits with last pipeline exit code | 2 | YES | ✅ |
+
+
+### Echo:
+
+| Cases | Expected Output | `$?` | Required | Done |
+| :--- | :--- | :--- | :--- | :--- |
+| `echo -n test` | `testminishell>` | 0 | YES | ✅ |
+| `echo -nnnnnn -n -nnnnnnb test` | `-nnnnnnb test` (no newline) | 0 | YES | ✅ matches bash |
+| `echo -nnnnnn -n -nnnennE test` | `testminishell>` | 0 | NO | ⚠️ outputs `-nnnennE test` — minishell doesn't treat `-e`/`-E` as valid echo flags (not required) |
+| `echo test` | `test` | 0 | YES | ✅ |
+| `echo """"""""` | (empty line) | 0 | YES | ✅ |
+| `echo A""""` | `A` | 0 | DEBATABLE | ✅ |
+
+### Unset:
+
+| Cases | Expected Output | `$?` | Required | Done |
+| :--- | :--- | :--- | :--- | :--- |
+| `unset USER` | Removes USER env | 0 | YES | ✅ |
+| `unset USER PATH` | Removes USER and<br>PATH envs | 0 | YES | ✅ |
+
+### Cd:
+
+| Cases | Expected Output | `$?` | Required | Done |
+| :--- | :--- | :--- | :--- | :--- |
+| `cd test/` | `minishell: cd: test/: No such file or directory` | 1 | YES | ✅ |
+| `cd /dev/vboxusb` | `minishell: cd: /dev/vboxusb: Permission denied` | 1 | YES | ✅ |
+| `cd ../../` | changes dir correctly | 0 | YES | ✅ |
+| `cd a b` | `minishell: cd: too many arguments` | 1 | YES | ⚠️ outputs `cd: too many arguments` — missing `minishell:` prefix |
+
+### Exit:
+
+| Cases | Expected Output | `$?` | Required | Done |
+| :--- | :--- | :--- | :--- | :--- |
+| `exit -1` | `exit` | 255 | YES | ✅ |
+| `exit 9223372036854775808-` | `minishell: exit: 9223372036854775808-: numeric argument required` | 2 | YES | ✅ |
+| `exit -9223372036854775808` | `exit` | 0 | YES | ✅ |
+| `exit 9223372036854775808` | `minishell: exit: 9223372036854775808: numeric argument required` | 2 | YES | ✅ |
+| `exit 9223372036854775807` | `exit` | 255 | YES | ✅ |
+| `exit 1 abc` | `minishell: exit: too many arguments` | 1 | YES | ✅ |
+| `exit abc` | `minishell: exit: abc: numeric argument required` | 2 | YES | ✅ |
+| `exit abc 123` | `minishell: exit: abc: numeric argument required` | 2 | YES | ✅ |
+| `exit 123 abc` | `minishell: exit: too many arguments` | 1 | YES | ✅ |
+
+
+
+### Error Handling:
+
+| Cases | Expected Output | `$?` | Required | Done |
+| :--- | :--- | :--- | :--- | :--- |
+| `./` | `./: Is a directory` | 126 | NO | ✅ correct exit code and message |
+| `.` | `.: command not found` | 127 | NO | ✅ |
+| `/` | `/: Is a directory` | 126 | NO | ✅ |
+| `file/` | `file/: Not a directory` | 126 | NO | ✅ |
+| `touch file_test`<br>`chmod +x file_test`<br>`./file_test` | Must not leak or<br>leave open fds | ... | YES | ✅ runs (returns "Exec format error" exit 126 for empty file) |
+
+### Redirections:
+
+| Cases | Expected Output | `$?` | Required | Done |
+| :--- | :--- | :--- | :--- | :--- |
+| `cat < in < in2 < in3 > out > out2 > out3` | cat reads from in3, output to out3 (last redirect wins) | 0 | YES | ✅ matches bash |
+| `<< 123 cat << 234 -e > out` | cat reads from 2nd heredoc with -e, outputs to out | 0 | YES | ✅ matches bash |
+| `> /` | `minishell: /: Is a directory` | 1 | NO | ✅ |
+| `<< 123`<br>`CTRL+C` | `minishell>` | 130 | YES | (interactive) |
+| `<< 123 cat`<br>`1234`<br>`CTRL+D` | warning: here-document delimited by end-of-file | 0 | YES | (interactive) |
+| `export test="123 test"`<br>`< $test` | `minishell: $test: ambiguous redirect` | 1 | NO | ⚠️ no ambiguous redirect detection — treats expanded value as filename |
+| `export test="123 test"`<br>`ls > $test` | `minishell: $test: ambiguous redirect` | 1 | NO | ⚠️ no ambiguous redirect detection — creates file instead |
+
+### Bonus:
+
+| Cases | Expected Output | `$?` | Required | Done |
+| :--- | :--- | :--- | :--- | :--- |
+| `test && echo hi &#124; sleep 10 &#124;&#124; echo nice` | `nice` | 0 | BONUS | ✅ |
+| `test && exit &#124;&#124; yes yes &#124; head -n 100 && cat`<br>`CTRL+D` | `yes` repeated 100 times | 0 | BONUS | (interactive) |
+| `test &#124;&#124; exit && echo hi` | shell exits | 1 | BONUS | ✅ matches bash (exit inherits $?=1 from `test`) |
+| `(ls && pwd && ls -la)` | `ls output`<br>`pwd output`<br>`ls -la output` | 0 | BONUS | ✅ |
+| `in < (cat && ls && ...) > out` | `minishell>` | 0 | NO | (not required — syntax error as expected) |
+| `*************M*******a******k*****` | `Makefile: command not found` | 127 | BONUS | ✅ |
+| `echo .*` | hidden files (excluding `.` and `..`) | 0 | BONUS | ✅ (files not sorted alphabetically, bash sorts them) |
+| `echo *` | all non-hidden files | 0 | BONUS | ✅ (files not sorted alphabetically, bash sorts them) |
+| `echo .*.` | `.*. ` (no match, literal) | 0 | BONUS | ✅ matches bash |
