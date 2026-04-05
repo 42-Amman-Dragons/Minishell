@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_utils_2_bonus.c                           :+:      :+:    :+:   */
+/*   expand_args_shared.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/01 11:16:50 by haya              #+#    #+#             */
-/*   Updated: 2026/04/01 11:51:55 by haya             ###   ########.fr       */
+/*   Created: 2026/02/28 12:00:00 by mabuqare          #+#    #+#             */
+/*   Updated: 2026/04/05 02:39:41 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 int	word_has_quotes(char *word)
 {
@@ -42,4 +42,39 @@ void	strip_empty_args(t_tree *node, int count)
 		free(node->data.cmd.args);
 		node->data.cmd.args = NULL;
 	}
+}
+
+static int	free_val_return(char *val)
+{
+	free(val);
+	return (1);
+}
+
+int	unquoted_dollar_has_space(char *word, char **env, int exit_status)
+{
+	int		sq;
+	int		dq;
+	int		i;
+	char	*val;
+
+	sq = 0;
+	dq = 0;
+	i = 0;
+	while (word[i])
+	{
+		if (word[i] == '\'' && !dq)
+			sq = !sq;
+		else if (word[i] == '"' && !sq)
+			dq = !dq;
+		else if (word[i] == '$' && !sq && !dq)
+		{
+			val = get_unquoted_var_val(word, &i, env, exit_status);
+			if (val && (contains(val, ' ') || contains(val, '\t')
+					|| contains(val, '\n')))
+				return (free_val_return(val));
+			free(val);
+		}
+		i++;
+	}
+	return (0);
 }

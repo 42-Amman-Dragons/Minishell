@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exeute_cmd_utils.c                                 :+:      :+:    :+:   */
+/*   execute_cmd_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,15 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	is_command_a_directory(const char *path)
-{
-	struct stat	st;
-
-	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode) && contains(path, '/'))
-		return (1);
-	return (0);
-}
 
 static char	*get_path(char **env)
 {

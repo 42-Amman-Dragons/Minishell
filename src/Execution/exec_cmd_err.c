@@ -1,16 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_err.c                                          :+:      :+:    :+:   */
+/*   exec_cmd_err.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 11:45:54 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 18:16:42 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/05 00:10:08 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_command_a_directory(const char *path)
+{
+	struct stat	st;
+
+	if (stat(path, &st) == 0 && S_ISDIR(st.st_mode) && contains(path, '/'))
+		return (1);
+	return (0);
+}
 
 static void	cmd_error_message(char *cmd_name, char *message)
 {
@@ -30,7 +39,7 @@ void	handle_if_cmd_name(char *cmd_name, t_minishell *shell, int *exit_code)
 {
 	if (!ft_strchr(cmd_name, '/'))
 	{
-		if (path_is_unset(shell))
+		if (!get_env_value("PATH", shell->env))
 			cmd_error_message(cmd_name, "No such file or directory");
 		else
 			cmd_error_message(cmd_name, "command not found");

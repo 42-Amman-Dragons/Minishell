@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 23:38:39 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 03:14:04 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,6 @@ int					add_to_history(char *line, t_list **history);
 int					load_history(t_minishell *shell);
 void				custom_save_history(t_minishell *shell);
 void				handle_sigint(int sig);
-void				handle_quit(int sig);
 void				handle_signal_status(t_minishell *shell);
 void				set_signals_prompt(void);
 void				set_signals_exec(void);
@@ -226,6 +225,8 @@ char				**add_to_args(char **args, int i, char *expanded,
 						int *flags);
 char				*get_unquoted_var_val(char *word, int *i, char **env,
 						int exit_status);
+int					unquoted_dollar_has_space(char *word, char **env,
+						int exit_status);
 int					calc_arr_len(char **arr);
 /*Tokenizer*/
 t_tokenType			identify_token(char *s);
@@ -301,6 +302,7 @@ char				*get_prompt(t_minishell *shell);
 int					is_command_a_directory(const char *path);
 char				*absoulute_path(char *cmd, char **env);
 char				*safe_join(char *str1, char *str2);
+void				normalize_spaces(char *s);
 void				print_welcome_message(void);
 
 void				consider_home_dir(char *buff, char **env);

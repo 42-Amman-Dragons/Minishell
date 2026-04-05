@@ -1,16 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_unquoted_bonus.c                               :+:      :+:    :+:   */
+/*   expand_dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/31 13:17:16 by haya              #+#    #+#             */
-/*   Updated: 2026/04/01 10:46:54 by haya             ###   ########.fr       */
+/*   Created: 2026/04/05 02:39:59 by mabuqare          #+#    #+#             */
+/*   Updated: 2026/04/05 02:40:10 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
+
+static char	*extract_var_name(char *str, int *i)
+{
+	int	start;
+
+	start = *i;
+	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
+		(*i)++;
+	if (*i == start)
+		return (ft_strdup(""));
+	return (ft_substr(str, start, *i - start));
+}
+
+char	*expand_dollar(char *word, t_expand *ctx)
+{
+	char	*name;
+	char	*value;
+
+	ctx->i++;
+	if (word[ctx->i] == '?')
+	{
+		ctx->i++;
+		return (ft_itoa(ctx->exit_status));
+	}
+	name = extract_var_name(word, &ctx->i);
+	if (!name || name[0] == '\0')
+	{
+		free(name);
+		return (ft_strdup("$"));
+	}
+	value = get_env_value(name, ctx->env);
+	free(name);
+	if (!value)
+		return (ft_strdup(""));
+	return (ft_strdup(value));
+}
 
 static char	*return_val(char *name, char **env, int *i, int j)
 {

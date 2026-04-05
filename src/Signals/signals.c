@@ -22,9 +22,3 @@ void	handle_sigint(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
-
-void	handle_quit(int sig)
-{
-	g_signum = sig;
-	write(1, "^\\Quit (core dumped)\n", 21);
-}

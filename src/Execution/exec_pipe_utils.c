@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe_utils.c                                       :+:      :+:    :+:   */
+/*   exec_pipe_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/27 00:00:00 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 10:29:15 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 00:27:28 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,6 @@ int	temp_redir(int *temp_stdin, int *temp_stdout)
 		return (-1);
 	}
 	return (0);
-}
-
-void	safe_close(int *fd, char *msg)
-{
-	if ((*fd) == -1)
-		return ;
-	if (close(*fd) == -1)
-		perror(msg);
-	(*fd) = -1;
 }
 
 int	restore_redir(int *temp_stdin, int *temp_stdout)

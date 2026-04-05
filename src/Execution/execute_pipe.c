@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/01 11:14:26 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 19:58:13 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/05 00:23:49 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ static pid_t	handle_left_pipe(int *fd, int *temp_std, t_tree *node,
 	return (left_id);
 }
 
-static void	handle_right_child(int *fd, int *temp_std,
-		t_tree *node, t_minishell *shell)
+static void	handle_right_child(int *fd, int *temp_std, t_tree *node,
+		t_minishell *shell)
 {
 	shell->is_child = 1;
 	set_signals_child();
@@ -61,8 +61,8 @@ static void	handle_right_child(int *fd, int *temp_std,
 	free_and_exit(node, shell, shell->exit_status);
 }
 
-static pid_t	handle_right_pipe(int *fd, int *temp_std,
-		t_tree *node, t_minishell *shell)
+static pid_t	handle_right_pipe(int *fd, int *temp_std, t_tree *node,
+		t_minishell *shell)
 {
 	pid_t	right_id;
 

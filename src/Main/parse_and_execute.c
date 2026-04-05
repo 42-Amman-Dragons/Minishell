@@ -6,13 +6,13 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 12:29:45 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 00:32:50 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	syntax_err_msg(char *token)
+void	syntax_err_heredoc(char *token)
 {
 	char	*buff;
 
@@ -39,7 +39,7 @@ int	handle_heredoc(t_tree *tree, t_minishell *shell, int err)
 	{
 		shell->exit_status = 2;
 		if (err == -1)
-			syntax_err_msg("newline");
+			syntax_err_heredoc("newline");
 		close_tracked_fds(shell);
 		free_tree(tree);
 		return (-1);

@@ -3,32 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 15:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/31 10:45:17 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/05 00:14:45 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	track_fd(t_minishell *shell, int *heredoc_fd_ptr)
-{
-	int		**ref;
-	t_list	*node;
-
-	ref = malloc(sizeof(int *));
-	if (!ref)
-		free_and_exit(NULL, shell, 1);
-	*ref = heredoc_fd_ptr;
-	node = ft_lstnew(ref);
-	if (!node)
-	{
-		free(ref);
-		free_and_exit(NULL, shell, 1);
-	}
-	ft_lstadd_back(&shell->openfiles, node);
-}
 
 static char	*strip_quotes(char *str)
 {

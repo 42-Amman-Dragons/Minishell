@@ -1,51 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_utils_bonus.c                             :+:      :+:    :+:   */
+/*   expand_args_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 12:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/01 11:16:56 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/05 02:45:01 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
-
-static int	free_val_return(char *val)
-{
-	free(val);
-	return (1);
-}
-
-static int	unquoted_dollar_has_space(char *word, char **env, int exit_status)
-{
-	int		sq;
-	int		dq;
-	int		i;
-	char	*val;
-
-	sq = 0;
-	dq = 0;
-	i = 0;
-	while (word[i])
-	{
-		if (word[i] == '\'' && !dq)
-			sq = !sq;
-		else if (word[i] == '"' && !sq)
-			dq = !dq;
-		else if (word[i] == '$' && !sq && !dq)
-		{
-			val = get_unquoted_var_val(word, &i, env, exit_status);
-			if (val && (contains(val, ' ') || contains(val, '\t')
-					|| contains(val, '\n')))
-				return (free_val_return(val));
-			free(val);
-		}
-		i++;
-	}
-	return (0);
-}
 
 static int	word_has_unquoted_asterisk(char *word)
 {
@@ -67,8 +32,8 @@ static int	word_has_unquoted_asterisk(char *word)
 	return (0);
 }
 
-// flags[0] qouted
-// flags[1] unqouted $ has space or wildcard
+// flags[0] quoted
+// flags[1] unquoted $ has space or wildcard
 char	**expand_one_arg(char **args, int i, t_minishell *shell)
 {
 	char	*expanded;
