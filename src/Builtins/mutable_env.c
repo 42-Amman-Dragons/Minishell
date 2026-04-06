@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mutable_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/05 18:16:06 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/06 13:19:00 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ static void	shlvl_error_message(int shell_lvl)
 	buff = safe_join(buff, ft_itoa(shell_lvl + 1));
 	buff = safe_join(buff, ") too high, resetting to 1\n");
 	ft_putstr_fd(buff, 2);
-	free(buff);
+	if (buff)
+		free(buff);
 	buff = NULL;
 }
 

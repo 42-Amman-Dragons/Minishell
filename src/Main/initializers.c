@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:30:32 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 11:47:59 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/06 13:03:33 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,6 @@ int	init_terminal(t_minishell *shell)
 {
 	if (!shell->is_interactive)
 		return (0);
-	if (tcgetattr(STDIN_FILENO, &(shell->original_termos)) == -1)
-		return (-1);
-	shell->new_termos = shell->original_termos;
-	shell->new_termos.c_cc[VMIN] = 1;
-	shell->new_termos.c_cc[VTIME] = 0;
-	if (tcsetattr(STDIN_FILENO, TCSANOW, &(shell->new_termos)) == -1)
-		return (-1);
 	return (0);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 02:53:20 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 12:42:57 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/06 13:20:27 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ int	cd_error(char **path)
 	buff = safe_join(buff, strerror(errno));
 	buff = safe_join(buff, "\n");
 	ft_putstr_fd(buff, 2);
-	free(buff);
+	if (buff)
+		free(buff);
 	buff = NULL;
 	safe_free(path);
 	return (1);

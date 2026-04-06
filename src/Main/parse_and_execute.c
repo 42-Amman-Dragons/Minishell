@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_execute.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/04/05 16:40:30 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/06 13:21:32 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void	syntax_err_heredoc(char *token)
 	buff = safe_join(buff, token);
 	buff = safe_join(buff, "\'\n");
 	ft_putstr_fd(buff, 2);
-	free(buff);
+	if (buff)
+		free(buff);
 	buff = NULL;
 }
 

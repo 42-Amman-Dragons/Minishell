@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 04:19:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/01 12:40:39 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/06 13:18:38 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ static int	export_invalid(char *id)
 	buff = safe_join(buff, id);
 	buff = safe_join(buff, "': not a valid identifier\n");
 	ft_putstr_fd(buff, 2);
-	free(buff);
+	if (buff)
+		free(buff);
 	buff = NULL;
 	return (1);
 }

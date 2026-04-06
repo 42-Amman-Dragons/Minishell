@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/05 16:56:04 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/06 11:58:09 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ typedef struct s_minishell
 	char			**env;
 	t_list			*history;
 	t_list			*openfiles;
-	struct termios	new_termos;
-	struct termios	original_termos;
 	int				is_interactive;
 	int				is_child;
 	int				exit_status;

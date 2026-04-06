@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 02:39:59 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/05 02:40:10 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/06 13:10:21 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ char	*expand_dollar(char *word, t_expand *ctx)
 	name = extract_var_name(word, &ctx->i);
 	if (!name || name[0] == '\0')
 	{
-		free(name);
+		if(name)
+			free(name);
 		return (ft_strdup("$"));
 	}
 	value = get_env_value(name, ctx->env);

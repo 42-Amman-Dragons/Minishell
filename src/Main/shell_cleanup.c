@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_cleanup.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/29 09:52:18 by haya              #+#    #+#             */
-/*   Updated: 2026/04/05 16:53:11 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/06 11:58:12 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int	cleanup_shell(t_minishell *shell, int exit_code)
 {
 	if (!shell)
 		return (exit_code);
-	tcsetattr(STDIN_FILENO, TCSANOW, &(shell->original_termos));
 	rl_clear_history();
 	if (shell->history)
 		ft_lstclear(&(shell->history), free);

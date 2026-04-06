@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd_err.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 11:45:54 by haya              #+#    #+#             */
-/*   Updated: 2026/04/05 17:26:07 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/06 13:19:17 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ static void	cmd_error_message(char *cmd_name, char *message)
 	buff = safe_join(buff, message);
 	buff = safe_join(buff, "\n");
 	ft_putstr_fd(buff, 2);
-	free(buff);
+	if (buff)
+		free(buff);
 	buff = NULL;
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/17 00:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/05 16:46:04 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/06 13:18:04 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void	num_arg_req_err(char *arg, t_minishell *shell)
 	buff = safe_join(buff, arg);
 	buff = safe_join(buff, ": numeric argument required\n");
 	ft_putstr_fd(buff, 2);
-	free(buff);
+	if (buff)
+		free(buff);
 	buff = NULL;
 	custom_save_history(shell);
 	exit(cleanup_shell(shell, 2));
