@@ -36,6 +36,9 @@ void	print_sigquit_if_needed(int status, t_minishell *shell)
 	int	err;
 
 	err = child_exit_status(status);
+	if (shell->is_child == 0 && (err == 130 || (WIFSIGNALED(status)
+				&& WTERMSIG(status) == SIGINT)))
+		write(2, "\n", 1);
 	if (shell->is_child == 0 && (err == 131 || (WIFSIGNALED(status)
 				&& WTERMSIG(status) == SIGQUIT)))
 		write(2, "Quit (core dumped)\n", 19);

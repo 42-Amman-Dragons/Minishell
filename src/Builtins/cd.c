@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 02:53:20 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/06 13:20:27 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/06 20:24:04 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ static int	cd_get_path(char **args, char **path_out, t_minishell *shell)
 	}
 	else
 		*path_out = ft_strdup(args[1]);
+	if (*path_out == NULL)
+		return (1);
 	return (0);
 }
 

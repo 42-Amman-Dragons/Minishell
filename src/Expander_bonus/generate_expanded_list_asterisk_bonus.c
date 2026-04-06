@@ -76,5 +76,6 @@ char	**generate_expanded_list_asterisk(char **args, int i, char **expanded)
 	if (!new_args)
 		return (free_args_expanded_asterisk(args, expanded));
 	fill_expanded_args_asterisk(new_args, args, i, expanded);
+	free(args);
 	return (new_args);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_wild_redirect.c                             :+:      :+:    :+:   */
+/*   handle_wild_redirect_bonus.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 19:30:11 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 19:56:23 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/06 21:54:35 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,21 +34,22 @@ static int	handle_single_match(char **expanded, char **matched_paths)
 	free(*expanded);
 	*expanded = ft_strdup(matched_paths[0]);
 	free_args(matched_paths);
+	if (!*expanded)
+		return (1);
 	return (0);
 }
 
-static int	handle_ambiguous(char **expanded, t_redir_data *rd, t_list **redirs,
+static int	handle_ambiguous(char **expanded, t_redir_data *rd,
 		char **matched_paths)
 {
 	free_args(matched_paths);
 	free(*expanded);
 	free(rd->filename);
 	rd->filename = NULL;
-	*redirs = (*redirs)->next;
 	return (1);
 }
 
-int	handle_wild_redirect(char **expanded, t_redir_data *rd, t_list **redirs)
+int	handle_wild_redirect(char **expanded, t_redir_data *rd)
 {
 	char	**matched_paths;
 	int		count;
@@ -62,7 +63,7 @@ int	handle_wild_redirect(char **expanded, t_redir_data *rd, t_list **redirs)
 	}
 	count = count_matches(matched_paths);
 	if (count > 1)
-		return (handle_ambiguous(expanded, rd, redirs, matched_paths));
+		return (handle_ambiguous(expanded, rd, matched_paths));
 	if (count == 1)
 		return (handle_single_match(expanded, matched_paths));
 	return (handle_no_match_array(expanded, matched_paths));

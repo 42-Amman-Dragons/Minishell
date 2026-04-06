@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/04 19:33:44 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/06 21:43:16 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,11 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 			{
 				if (ft_strchr(expanded, '*'))
 				{
-					if (handle_wild_redirect(&expanded, rd, &redirs) == 1)
+					if (handle_wild_redirect(&expanded, rd) == 1)
+					{
+						redirs = redirs->next;
 						continue ;
+					}
 				}
 				free(rd->filename);
 				rd->filename = expanded;

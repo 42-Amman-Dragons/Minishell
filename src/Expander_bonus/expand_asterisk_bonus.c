@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_astersk_bonus.c                             :+:      :+:    :+:   */
+/*   expand_asterisk_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 09:53:10 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 23:42:05 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/06 22:23:21 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,21 @@ static int	should_skip_file(char *name, char *pattern)
 static void	process_entry(struct dirent *cf, char *pattern, char ***result,
 		int *i)
 {
+	char	*dir_name;
+
+	dir_name = NULL;
 	if (should_skip_file(cf->d_name, pattern))
 		return ;
 	if (is_matching(pattern, cf->d_name))
 	{
-		*result = append_string_to_list(result, ft_strdup(cf->d_name));
+		dir_name = ft_strdup(cf->d_name);
+		*result = append_string_to_list(result, dir_name);
 		if (!result)
+		{
+			free(dir_name);
 			return ;
+		}
+		free(dir_name);
 		(*i)++;
 	}
 }
