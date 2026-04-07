@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expander_utils.c                                   :+:      :+:    :+:   */
+/*   expand_args_shared.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/28 12:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:28:24 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 02:39:41 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,20 +44,37 @@ void	strip_empty_args(t_tree *node, int count)
 	}
 }
 
-void	expand_one_arg(char **args, int i, t_minishell *shell)
+static int	free_val_return(char *val)
 {
-	char	*expanded;
-	int		quoted;
+	free(val);
+	return (1);
+}
 
-	quoted = word_has_quotes(args[i]);
-	expanded = expand_word(args[i], shell->env, shell->exit_status);
-	if (!expanded)
-		return ;
-	if (!quoted && expanded[0] == '\0')
+int	unquoted_dollar_has_space(char *word, char **env, int exit_status)
+{
+	int		sq;
+	int		dq;
+	int		i;
+	char	*val;
+
+	sq = 0;
+	dq = 0;
+	i = 0;
+	while (word[i])
 	{
-		free(expanded);
-		expanded = NULL;
+		if (word[i] == '\'' && !dq)
+			sq = !sq;
+		else if (word[i] == '"' && !sq)
+			dq = !dq;
+		else if (word[i] == '$' && !sq && !dq)
+		{
+			val = get_unquoted_var_val(word, &i, env, exit_status);
+			if (val && (contains(val, ' ') || contains(val, '\t')
+					|| contains(val, '\n')))
+				return (free_val_return(val));
+			free(val);
+		}
+		i++;
 	}
-	free(args[i]);
-	args[i] = expanded;
+	return (0);
 }

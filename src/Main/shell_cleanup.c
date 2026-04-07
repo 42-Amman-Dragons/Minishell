@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_cleanup.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/29 09:52:18 by haya              #+#    #+#             */
-/*   Updated: 2026/03/22 20:04:56 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/01/29 09:52:18 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/04/07 09:31:01 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ int	cleanup_shell(t_minishell *shell, int exit_code)
 {
 	if (!shell)
 		return (exit_code);
-	tcsetattr(STDIN_FILENO, TCSANOW, &(shell->original_termos));
 	rl_clear_history();
 	if (shell->history)
 		ft_lstclear(&(shell->history), free);
@@ -48,6 +47,7 @@ int	cleanup_shell(t_minishell *shell, int exit_code)
 		free(shell->line);
 		shell->line = NULL;
 	}
+	close_tracked_fds(shell);
 	ft_bzero(shell, sizeof(*shell));
 	free(shell);
 	return (exit_code);

@@ -5,12 +5,48 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/03 13:20:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/23 22:07:19 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/03 13:20:00 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/04/07 17:39:21 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	syntax_err_heredoc(char *token)
+{
+	char	*buff;
+
+	buff = ft_strdup("");
+	buff = safe_join(buff, "minishell: ");
+	buff = safe_join(buff, "syntax error near unexpected token `");
+	buff = safe_join(buff, token);
+	buff = safe_join(buff, "\'\n");
+	ft_putstr_fd(buff, 2);
+	if (buff)
+		free(buff);
+	buff = NULL;
+}
+
+int	handle_heredoc(t_tree *tree, t_minishell *shell, int err)
+{
+	if (init_heredocs(tree, shell) == -1)
+	{
+		shell->exit_status = 130;
+		close_tracked_fds(shell);
+		free_tree(tree);
+		return (-1);
+	}
+	if (err < 0)
+	{
+		shell->exit_status = 2;
+		if (err == -1)
+			syntax_err_heredoc("newline");
+		close_tracked_fds(shell);
+		free_tree(tree);
+		return (-1);
+	}
+	return (0);
+}
 
 static t_tree	*build_tree(t_minishell *shell)
 {
@@ -18,9 +54,13 @@ static t_tree	*build_tree(t_minishell *shell)
 	t_tree	*tree;
 	int		err;
 
-	tokens = tokenizer(shell->line);
+	err = 1;
+	tokens = tokenizer(shell->line, &err);
 	if (!tokens)
+	{
+		shell->exit_status = err;
 		return (NULL);
+	}
 	err = 0;
 	tree = build_ast(tokens, &err);
 	ft_lstclear(&tokens, free_token);
@@ -29,13 +69,8 @@ static t_tree	*build_tree(t_minishell *shell)
 		shell->exit_status = err;
 		return (NULL);
 	}
-	if (init_heredocs(tree, shell) == -1)
-	{
-		shell->exit_status = 130;
-		free_tree(tree);
+	if (handle_heredoc(tree, shell, err) != 0)
 		return (NULL);
-	}
-	expander(tree, shell);
 	return (tree);
 }
 
@@ -45,8 +80,15 @@ void	parse_and_execute(t_minishell *shell)
 
 	tree = build_tree(shell);
 	if (!tree)
+	{
+		if (!shell->is_interactive && shell->exit_status != 0)
+			exit(cleanup_shell(shell, shell->exit_status));
 		return ;
-	exec_tree(tree, shell);
+	}
+	shell->current_tree = tree;
+	shell->exit_status = exec_tree(tree, shell);
+	shell->current_tree = NULL;
+	close_tracked_fds(shell);
 	rl_on_new_line();
 	free_tree(tree);
 }

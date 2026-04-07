@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 16:42:30 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:25:18 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ void	free_redir(void *ptr)
 		return ;
 	redir = (t_redir_data *)ptr;
 	if (redir->heredoc_fd >= 0)
+	{
 		close(redir->heredoc_fd);
+		redir->heredoc_fd = -1;
+	}
 	free(redir->filename);
 	free(redir);
 }
@@ -46,7 +49,8 @@ void	free_tree(t_tree *tree)
 		return ;
 	if (tree->type == NODE_CMD)
 	{
-		free_args(tree->data.cmd.args);
+		if (tree->data.cmd.args)
+			free_args(tree->data.cmd.args);
 		ft_lstclear(&tree->data.cmd.redirections, free_redir);
 	}
 	else if (tree->type == NODE_SUBSHELL)

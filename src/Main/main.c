@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/29 09:52:23 by haya              #+#    #+#             */
-/*   Updated: 2026/03/24 08:53:13 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/01/29 09:52:23 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/04/07 09:41:06 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,28 +34,6 @@ static int	process_line_interactive(t_minishell *shell)
 	{
 		cleanup_shell(shell, 1);
 		return (-1);
-	}
-	parse_and_execute(shell);
-	free(shell->line);
-	shell->line = NULL;
-	return (0);
-}
-
-static int	process_line_non_interactive(t_minishell *shell)
-{
-	size_t	len;
-
-	shell->line = get_next_line(STDIN_FILENO);
-	if (!shell->line)
-		return (1);
-	len = ft_strlen(shell->line);
-	if (len > 0 && shell->line[len - 1] == '\n')
-		shell->line[len - 1] = '\0';
-	if (ft_strlen(shell->line) == 0)
-	{
-		free(shell->line);
-		shell->line = NULL;
-		return (0);
 	}
 	parse_and_execute(shell);
 	free(shell->line);

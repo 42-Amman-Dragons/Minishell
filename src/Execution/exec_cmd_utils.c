@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exeute_cmd_utils.c                                 :+:      :+:    :+:   */
+/*   execute_cmd_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/16 10:32:15 by haya              #+#    #+#             */
-/*   Updated: 2026/03/17 05:28:05 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/16 10:32:15 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/04/04 16:01:21 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static char	*get_path(char **env)
 		i++;
 	}
 	if (!path)
-		return (NULL);
+		return (ft_strdup("."));
 	return (ft_strdup(path + 5));
 }
 
@@ -51,7 +51,7 @@ static char	*search_in_paths(char **paths, char *cmd)
 	while (paths[i])
 	{
 		sub = asssemple_path(paths[i], cmd);
-		if (access(sub, F_OK) == 0)
+		if (access(sub, F_OK) == 0 && !is_command_a_directory(sub))
 		{
 			errno = 0;
 			free_splitted(paths);
@@ -77,12 +77,4 @@ char	*absoulute_path(char *cmd, char **env)
 	if (!paths)
 		return (NULL);
 	return (search_in_paths(paths, cmd));
-}
-
-void	cmd_not_found(char *cmd_name, t_tree *node, t_minishell *shell)
-{
-	ft_putstr_fd(cmd_name, 2);
-	ft_putstr_fd(": command not found\n", 2);
-	free(cmd_name);
-	free_and_exit(node, shell, 127);
 }

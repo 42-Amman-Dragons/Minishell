@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_io.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 22:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 22:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 09:36:25 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,13 @@
 
 extern int	g_signum;
 
-static void	close_inherited_heredoc_fds(t_list *redirs_head)
-{
-	t_redir_data	*r;
-
-	while (redirs_head)
-	{
-		r = (t_redir_data *)redirs_head->content;
-		if (r->heredoc_fd >= 0)
-			close(r->heredoc_fd);
-		redirs_head = redirs_head->next;
-	}
-}
-
 static void	heredoc_child(int fd, char *limiter, t_redir_data *rd,
 		t_minishell *shell)
 {
 	char	*line;
 
-	set_signals_child();
-	if (!isatty(STDIN_FILENO))
+	set_signals_heredoc();
+	if (!shell->is_interactive)
 	{
 		close(fd);
 		exit(0);
@@ -80,8 +67,7 @@ static int	heredoc_parent(int fd, int pid, t_redir_data *rd, char *tmp)
 	return (0);
 }
 
-static int	fork_heredoc(char *tmp, t_redir_data *rd,
-		t_minishell *shell, t_list *redirs_head)
+static int	fork_heredoc(char *tmp, t_redir_data *rd, t_minishell *shell)
 {
 	pid_t	pid;
 	int		fd;
@@ -103,14 +89,13 @@ static int	fork_heredoc(char *tmp, t_redir_data *rd,
 	}
 	if (pid == 0)
 	{
-		close_inherited_heredoc_fds(redirs_head);
+		close_tracked_fds(shell);
 		heredoc_child(fd, rd->filename, rd, shell);
 	}
 	return (heredoc_parent(fd, pid, rd, tmp));
 }
 
-int	setup_heredoc_fd(t_redir_data *rd, t_minishell *shell, int idx,
-		t_list *redirs_head)
+int	setup_heredoc_fd(t_redir_data *rd, t_minishell *shell, int idx)
 {
 	char	*num;
 	char	*tmp;
@@ -129,5 +114,5 @@ int	setup_heredoc_fd(t_redir_data *rd, t_minishell *shell, int idx,
 		free(tmp);
 		return (ret);
 	}
-	return (fork_heredoc(tmp, rd, shell, redirs_head));
+	return (fork_heredoc(tmp, rd, shell));
 }

@@ -1,16 +1,13 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I./include -I./libft
-DEBUG_FLAG = -g3 -g
 LDFLAGS = -lreadline -lhistory
 
 SRC_DIR = src
 OBJ_DIR = obj
 
-SRC =
-
 SIGNALS_DIR = Signals
-SIGNALS_SRC = signals.c signal_status.c
+SIGNALS_SRC = signals.c signal_status.c set_signal.c
 
 TOK_DIR = Tokenizer
 TOK_SRC = tokenizer.c tokenizer_utils.c tokenizer_factory.c \
@@ -20,33 +17,41 @@ PARSER_DIR = Parser
 PARSER_SRC = parser.c parse_command.c parse_simple_cmd.c node_factory.c node_free.c
 
 EXPAND_DIR = Expander
-EXPAND_SRC = expander.c expander_utils.c expand_word.c expand_utils.c
+EXPAND_SRC = expander.c expand_word.c expand_args.c
 EXPAND_BONUS_DIR = Expander_bonus
-EXPAND_SRC_BONUS = expander_bonus.c expander_utils_bonus.c expand_word_bonus.c \
-	expand_utils_bonus.c expand_astersk_bonus.c
-
+EXPAND_SRC_BONUS = expander_bonus.c expand_args_bonus.c expand_word_bonus.c \
+	expand_asterisk_bonus.c generate_expanded_list_bonus.c \
+	is_matching_bonus.c add_to_args_bonus.c \
+	handle_wild_redirect_bonus.c generate_expanded_list_asterisk_bonus.c
+EXPAND_SHARED_DIR = Expander_shared
+EXPAND_SHARED_SRC = expand_dollar.c expand_args_utils.c
 HEREDOC_DIR = Heredoc
-HEREDOC_SRC = heredoc.c heredoc_io.c heredoc_nonint.c
+HEREDOC_SRC = heredoc.c heredoc_io.c heredoc_nonint.c heredoc_utils.c
 
 BUILTIN_DIR = Builtins
 BUILTIN_SRC = builtin_dispatch.c echo.c cd.c pwd.c env.c export.c export_sort.c \
-	unset.c mutable_env.c env_crud.c exit.c
+	unset.c mutable_env.c env_crud.c exit.c exit_utils.c
 
 MAIN_DIR = Main
-MAIN_SRC = main.c initializers.c history.c shell_cleanup.c parse_and_execute.c prompt.c prompt_utils.c
+MAIN_SRC = main.c initializers.c history.c shell_cleanup.c parse_and_execute.c prompt.c prompt_utils.c non_interactive.c
 
 EXEC_DIR = Execution
-EXEC_SRC = execution.c execute_cmd.c exeute_cmd_utils.c execute_oper.c execute_pipe.c \
-	execute_subshell.c execution_utils.c handle_redirections.c
+EXEC_SRC = execution.c execute_cmd.c exec_cmd_utils.c exec_cmd_utils_2.c exec_cmd_err.c \
+	execute_oper.c execute_pipe.c exec_pipe_utils.c exec_pipe_utils_2.c \
+	execute_subshell.c process_utils.c handle_redirect.c handle_redirect_utils.c
+EXEC_SRC_BONUS = execution.c execute_cmd.c exec_cmd_utils.c exec_cmd_utils_2.c exec_cmd_err.c \
+	execute_oper_bonus.c execute_pipe.c exec_pipe_utils.c exec_pipe_utils_2.c \
+	execute_subshell_bonus.c process_utils.c handle_redirect.c handle_redirect_utils.c
 
 UTILS_DIR = utils
-UTILS_SRC = string_utils.c
+UTILS_SRC = string_utils.c fd_utils.c string_utils_2.c
 
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(SIGNALS_DIR)/, $(SIGNALS_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXPAND_DIR)/, $(EXPAND_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXPAND_SHARED_DIR)/, $(EXPAND_SHARED_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(HEREDOC_DIR)/, $(HEREDOC_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
@@ -58,10 +63,11 @@ BONUS_OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(PARSER_DIR)/, $(PARSER_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(EXPAND_BONUS_DIR)/, $(EXPAND_SRC_BONUS:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXPAND_SHARED_DIR)/, $(EXPAND_SHARED_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(HEREDOC_DIR)/, $(HEREDOC_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(BUILTIN_DIR)/, $(BUILTIN_SRC:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(MAIN_DIR)/, $(MAIN_SRC:.c=.o)) \
-	$(addprefix $(OBJ_DIR)/$(EXEC_DIR)/, $(EXEC_SRC:.c=.o)) \
+	$(addprefix $(OBJ_DIR)/$(EXEC_DIR)/, $(EXEC_SRC_BONUS:.c=.o)) \
 	$(addprefix $(OBJ_DIR)/$(UTILS_DIR)/, $(UTILS_SRC:.c=.o))
 
 LIBFT_DIR= ./libft
@@ -90,9 +96,6 @@ bonus: .bonus
 	$(CC) $(CFLAGS) $(BONUS_OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
 	@touch .bonus
 
-debug: CFLAGS += $(DEBUG_FLAG)
-debug: re
-
 $(LIBFT): $(LIBFT_OBJ)
 	make bonus -C $(LIBFT_DIR)
 
@@ -118,6 +121,10 @@ $(OBJ_DIR)/$(EXPAND_DIR)/%.o: $(SRC_DIR)/$(EXPAND_DIR)/%.c
 
 $(OBJ_DIR)/$(EXPAND_BONUS_DIR)/%.o: $(SRC_DIR)/$(EXPAND_BONUS_DIR)/%.c
 	mkdir -p $(OBJ_DIR)/$(EXPAND_BONUS_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/$(EXPAND_SHARED_DIR)/%.o: $(SRC_DIR)/$(EXPAND_SHARED_DIR)/%.c
+	mkdir -p $(OBJ_DIR)/$(EXPAND_SHARED_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/$(BUILTIN_DIR)/%.o: $(SRC_DIR)/$(BUILTIN_DIR)/%.c
@@ -149,6 +156,3 @@ fclean: clean
 	make fclean -C $(LIBFT_DIR)
 
 re: fclean all
-
-TOK_OBJ = $(addprefix $(OBJ_DIR)/$(TOK_DIR)/, $(TOK_SRC:.c=.o))
-

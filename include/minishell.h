@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 08:41:13 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:40:19 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <linux/limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <sys/ioctl.h>
@@ -43,8 +44,7 @@ typedef enum e_tokenType
 	OR,
 	OPEN_PAREN,
 	CLOSE_PAREN,
-	ASTERISK,
-	BACKGROUND
+	ASTERISK
 }					t_tokenType;
 
 typedef enum e_dir_mode
@@ -52,7 +52,8 @@ typedef enum e_dir_mode
 	DIR_OUT_TRUNC = 1,
 	DIR_OUT_APPEND,
 	DIR_IN_FILE,
-	DIR_IN_HEREDOC
+	DIR_IN_HEREDOC,
+	NOT_FOUND
 }					t_dir_mode;
 
 typedef struct s_redir_data
@@ -87,12 +88,15 @@ typedef struct s_minishell
 	char			*prompt;
 	char			**env;
 	t_list			*history;
-	struct termios	new_termos;
-	struct termios	original_termos;
+	t_list			*openfiles;
 	int				is_interactive;
+	int				is_child;
 	int				exit_status;
 	char			*username;
 	char			*servername;
+	int				builtin_temp_stdin;
+	int				builtin_temp_stdout;
+	struct s_tree	*current_tree;
 }					t_minishell;
 
 /*AST Node Types*/
@@ -196,12 +200,18 @@ typedef struct s_expand
 
 void				expander(t_tree *tree, t_minishell *shell);
 char				*expand_word(char *word, char **env, int exit_status);
+char				*expand_word_heredoc(char *word, char **env,
+						int exit_status);
+char				**expand_one_arg(char **args, int i, t_minishell *shell);
+void				strip_empty_args(t_tree *node, int count);
+int					calc_len_args(char **args);
+void				free_args(char **args);
 char				*expand_dollar(char *word, t_expand *ctx);
 char				*append_char(char *result, char c);
 char				*append_str(char *result, char *s);
 int					init_heredocs(t_tree *tree, t_minishell *shell);
 int					setup_heredoc_fd(t_redir_data *rd, t_minishell *shell,
-						int idx, t_list *redirs_head);
+						int idx);
 int					read_heredoc_nointeractive(t_redir_data *rd,
 						t_minishell *shell, char *tmp);
 void				push_heredoc_line(int fd, char *line, t_redir_data *rd,
@@ -209,25 +219,28 @@ void				push_heredoc_line(int fd, char *line, t_redir_data *rd,
 void				print_eof_warning(char *limiter);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
-void				expand_one_arg(char **args, int i, t_minishell *shell);
-char				*append_astersk(char *result, char *pattern);
-
+char				**add_to_args(char **args, int i, char *expanded,
+						int *flags);
+char				*get_unquoted_var_val(char *word, int *i, char **env,
+						int exit_status);
+int					unquoted_dollar_has_space(char *word, char **env,
+						int exit_status);
+int					calc_arr_len(char **arr);
 /*Tokenizer*/
 t_tokenType			identify_token(char *s);
-t_list				*tokenizer(char *line);
+t_list				*tokenizer(char *line, int *err);
 void				free_token(void *ptr);
-t_token				*create_token(char *str, int *i);
+t_token				*create_token(char *str, int *i, int *err);
 t_token				*create_pipe_token(int *i);
-t_token				*create_background_token(int *i);
 t_token				*create_redirect_token(char *str, int *i);
 t_token				*create_and_or_token(char *str, int *i);
 t_token				*create_paren_token(char *str, int *i);
-t_token				*create_word_token(char *str, int *i);
+t_token				*create_word_token(char *str, int *i, int *err);
 int					is_whitespace(char c);
 void				skip_whitespaces(char *ptr, int *i);
 t_dir_mode			identify_redirection_mode(char *str, int *i);
-char				*extract_word(char *str, int *i);
-int					word_boundary(char *str);
+char				*extract_word(char *str, int *i, int *err);
+int					word_boundary(char *str, int *err);
 
 /*Builtins*/
 int					is_builtin(char *cmd);
@@ -240,31 +253,50 @@ int					ft_unset(char **args, t_minishell *shell);
 int					ft_env(t_minishell *shell);
 int					ft_exit(char **args, t_minishell *shell);
 int					call_builtin(int idx, char **args, t_minishell *shell);
+int					check_boundries(const char *nptr);
 
 // Execution
 int					exec_tree(t_tree *node, t_minishell *shell);
 int					exec_cmd(t_tree *node, t_minishell *shell);
 int					exec_pipe(t_tree *node, t_minishell *shell);
 int					exec_and_or(t_tree *node, t_minishell *shell);
-void				close_heredoc_fds(t_tree *node);
-int					child_exit_status(int status);
-void				secure_close(int fd, t_tree *node, t_minishell *shell);
-int					handle_redirections(t_tree *node);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
 						int exit_code);
-void				cmd_not_found(char *cmd_name, t_tree *node,
+void				handle_cmd_error(char *cmd_name, t_tree *node,
 						t_minishell *shell);
+void				update_underscore_var(t_tree *node, t_minishell *shell);
+int					redir_has_ambiguous_target(t_redir_data *rd);
+int					pipe_error_and_close(int *temp_std);
+
+// Pipe utils
+int					wait_all(pid_t pid, t_minishell *shell);
+int					temp_redir(int *temp_stdin, int *temp_stdout);
+void				safe_close(int *fd, char *msg);
+int					restore_redir(int *temp_stdin, int *temp_stdout);
+int					restore_close_redir(int *fd, int *temp_stdin,
+						int *temp_stdout);
+// Execution utils
+int					child_exit_status(int status);
+void				print_sigquit_if_needed(int status, t_minishell *shell);
+void				secure_close(int fd, t_tree *node, t_minishell *shell);
+void				free_splitted(char **splitted);
+// Redirections
+int					handle_redirections(t_tree *node);
+int					redirect_input(t_redir_data *rd);
+int					redirect_output(t_redir_data *rd);
+int					redirect_append(t_redir_data *rd);
+int					redirect_heredoc(t_redir_data *rd);
 
 // Main
 t_minishell			*init_shell(void);
-int					init_terminal(t_minishell *shell);
 int					init_interactive_shell(t_minishell *shell);
 void				parse_and_execute(t_minishell *shell);
-void				free_splitted(char **splitted);
 char				*get_prompt(t_minishell *shell);
+int					is_command_a_directory(const char *path);
 char				*absoulute_path(char *cmd, char **env);
 char				*safe_join(char *str1, char *str2);
+void				normalize_spaces(char *s);
 void				print_welcome_message(void);
 
 void				consider_home_dir(char *buff, char **env);
@@ -272,4 +304,10 @@ void				change_color(char **prompt, char *color);
 void				prepare_prompt_beggining(char **prompt, t_minishell *shell);
 void				prepare_prompt_path(char **prompt, char *buff);
 void				init_prompt(t_minishell *shell);
+int					process_line_non_interactive(t_minishell *shell);
+
+void				close_tracked_fds(t_minishell *shell);
+void				track_fd(t_minishell *shell, int *heredoc_fd_ptr);
+int					is_all_spaces(char *str);
+
 #endif

@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/16 00:14:20 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:29:43 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 09:28:40 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,13 @@ void	free_token(void *ptr)
 	free(token);
 }
 
-t_token	*create_token(char *str, int *i)
+t_token	*create_token(char *str, int *i, int *err)
 {
 	t_tokenType	type;
 
 	type = identify_token(str);
 	if (type == PIPE)
 		return (create_pipe_token(i));
-	else if (type == BACKGROUND)
-		return (create_background_token(i));
 	else if (type == REDIRECT)
 		return (create_redirect_token(str, i));
 	else if (type == AND || type == OR)
@@ -41,5 +39,5 @@ t_token	*create_token(char *str, int *i)
 	else if (type == OPEN_PAREN || type == CLOSE_PAREN)
 		return (create_paren_token(str, i));
 	else
-		return (create_word_token(str, i));
+		return (create_word_token(str, i, err));
 }

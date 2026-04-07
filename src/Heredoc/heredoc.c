@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 15:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 22:00:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 00:14:45 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	push_heredoc_line(int fd, char *line, t_redir_data *rd,
 
 	if (rd->heredoc_expand)
 	{
-		expanded = expand_word(line, shell->env, shell->exit_status);
+		expanded = expand_word_heredoc(line, shell->env, shell->exit_status);
 		if (expanded)
 		{
 			ft_putstr_fd(expanded, fd);
@@ -63,21 +63,11 @@ void	push_heredoc_line(int fd, char *line, t_redir_data *rd,
 	}
 }
 
-void	print_eof_warning(char *limiter)
-{
-	ft_putstr_fd("minishell: warning: here-document delimited by"
-		" end-of-file (wanted `", 2);
-	ft_putstr_fd(limiter, 2);
-	ft_putstr_fd("')\n", 2);
-}
-
 static int	process_redir_list(t_list *redirs, t_minishell *shell, int *idx)
 {
 	t_redir_data	*rd;
 	char			*stripped;
-	t_list			*head;
 
-	head = redirs;
 	while (redirs)
 	{
 		rd = (t_redir_data *)redirs->content;
@@ -88,8 +78,9 @@ static int	process_redir_list(t_list *redirs, t_minishell *shell, int *idx)
 				return (-1);
 			free(rd->filename);
 			rd->filename = stripped;
-			if (setup_heredoc_fd(rd, shell, (*idx)++, head) == -1)
+			if (setup_heredoc_fd(rd, shell, (*idx)++) == -1)
 				return (-1);
+			track_fd(shell, &rd->heredoc_fd);
 		}
 		redirs = redirs->next;
 	}

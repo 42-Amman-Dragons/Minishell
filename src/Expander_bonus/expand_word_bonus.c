@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_word_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 17:43:54 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 09:34:32 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 static void	handle_normal(char *word, t_expand *ctx)
 {
-	char	*pattern;
-
 	if (word[ctx->i] == '\'')
 	{
 		ctx->state = EXP_SQUOTE;
@@ -26,22 +24,17 @@ static void	handle_normal(char *word, t_expand *ctx)
 		ctx->state = EXP_DQUOTE;
 		ctx->i++;
 	}
+	else if (word[ctx->i] == '$' && ft_isdigit(word[ctx->i + 1]))
+	{
+		if (word[ctx->i + 1] == '0')
+			ctx->result = append_str(ctx->result, ft_strdup("minishell"));
+		ctx->i += 2;
+	}
+	else if (word[ctx->i] == '$' && (word[ctx->i + 1] == '"' || word[ctx->i
+				+ 1] == '\''))
+		ctx->i++;
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != ' ')
 		ctx->result = append_str(ctx->result, expand_dollar(word, ctx));
-	else if (word[ctx->i] == '*')
-	{
-		if (ctx->result)
-			pattern = ft_strjoin(ctx->result, word + ctx->i);
-		else
-			pattern = ft_strdup(word + ctx->i);
-		free(ctx->result);
-		ctx->result = append_astersk(NULL, pattern);
-		if (!ctx->result)
-			ctx->result = pattern;
-		else
-			free(pattern);
-		ctx->i = ft_strlen(word);
-	}
 	else
 		ctx->result = append_char(ctx->result, word[ctx->i++]);
 }
@@ -53,6 +46,11 @@ static void	handle_squote(char *word, t_expand *ctx)
 		ctx->state = EXP_NORMAL;
 		ctx->i++;
 	}
+	else if (word[ctx->i] == '*')
+	{
+		ctx->result = append_char(ctx->result, '\x01');
+		ctx->i++;
+	}
 	else
 		ctx->result = append_char(ctx->result, word[ctx->i++]);
 }
@@ -62,6 +60,11 @@ static void	handle_dquote(char *word, t_expand *ctx)
 	if (word[ctx->i] == '"')
 	{
 		ctx->state = EXP_NORMAL;
+		ctx->i++;
+	}
+	else if (word[ctx->i] == '*')
+	{
+		ctx->result = append_char(ctx->result, '\x01');
 		ctx->i++;
 	}
 	else if (word[ctx->i] == '$' && word[ctx->i + 1] && word[ctx->i + 1] != '"')
@@ -104,10 +107,8 @@ char	*expand_word_heredoc(char *word, char **env, int exit_status)
 	ctx.state = EXP_NORMAL;
 	while (word[ctx.i])
 	{
-		if (word[ctx.i] == '$' && word[ctx.i + 1]
-			&& word[ctx.i + 1] != ' ')
-			ctx.result = append_str(ctx.result,
-					expand_dollar(word, &ctx));
+		if (word[ctx.i] == '$' && word[ctx.i + 1] && word[ctx.i + 1] != ' ')
+			ctx.result = append_str(ctx.result, expand_dollar(word, &ctx));
 		else
 			ctx.result = append_char(ctx.result, word[ctx.i++]);
 	}

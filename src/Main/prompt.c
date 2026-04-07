@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/12 14:58:00 by haya              #+#    #+#             */
-/*   Updated: 2026/03/22 23:22:06 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/12 14:58:00 by hal-la            #+#    #+#             */
+/*   Updated: 2026/04/07 09:50:40 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 static void	resolve_user_host(t_minishell *shell)
 {
-	if (!get_env_value("USER", shell->env))
-		set_env_value("USER", "user", shell);
 	shell->username = get_env_value("USER", shell->env);
 	if (!get_env_value("HOSTNAME", shell->env))
 		set_env_value("HOSTNAME", "42Dragons", shell);

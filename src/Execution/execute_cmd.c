@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/01 10:58:39 by haya              #+#    #+#             */
-/*   Updated: 2026/03/24 08:10:32 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/01 10:58:39 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/04/07 09:30:08 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 void	execve_cmd(t_tree *node, t_minishell *shell)
 {
 	char	*cmd_name;
+	char	*resolved;
 
 	if (handle_redirections(node) == -1)
 		free_and_exit(node, shell, 1);
+	close_tracked_fds(shell);
 	if (!node->data.cmd.args)
 		free_and_exit(node, shell, 0);
 	cmd_name = ft_strdup(node->data.cmd.args[0]);
@@ -25,43 +27,17 @@ void	execve_cmd(t_tree *node, t_minishell *shell)
 		free_and_exit(node, shell, 1);
 	if (!ft_strchr(node->data.cmd.args[0], '/'))
 	{
+		resolved = absoulute_path(cmd_name, shell->env);
+		if (!resolved)
+			handle_cmd_error(cmd_name, node, shell);
 		free(node->data.cmd.args[0]);
-		node->data.cmd.args[0] = absoulute_path(cmd_name, shell->env);
+		node->data.cmd.args[0] = resolved;
 	}
-	if (!node->data.cmd.args[0])
-		cmd_not_found(cmd_name, node, shell);
 	if (execve(node->data.cmd.args[0], node->data.cmd.args, shell->env) == -1)
-	{
-		ft_putstr_fd(cmd_name, 2);
-		ft_putstr_fd(": command not found\n", 2);
-		free(cmd_name);
-		free_and_exit(node, shell, 127);
-	}
+		handle_cmd_error(cmd_name, node, shell);
 }
 
-int	temp_dup_error(int temp_stdin, int temp_stdout, t_minishell *shell)
-{
-	if (temp_stdin != -1)
-		close(temp_stdin);
-	if (temp_stdout != -1)
-		close(temp_stdout);
-	ft_putstr_fd("minishell: dup error\n", 2);
-	shell->exit_status = 1;
-	return (1);
-}
-
-int	redirection_failure(int temp_stdin, int temp_stdout, t_minishell *shell)
-{
-	if (dup2(temp_stdin, STDIN_FILENO) == -1
-		|| dup2(temp_stdout, STDOUT_FILENO) == -1)
-		perror("minishell: dup2");
-	close(temp_stdin);
-	close(temp_stdout);
-	shell->exit_status = 1;
-	return (shell->exit_status);
-}
-
-int	run_cmd(t_minishell *shell, t_tree *node)
+int	handle_external_cmd(t_minishell *shell, t_tree *node)
 {
 	int	id;
 	int	status;
@@ -79,42 +55,61 @@ int	run_cmd(t_minishell *shell, t_tree *node)
 		set_signals_child();
 		execve_cmd(node, shell);
 	}
-	close_heredoc_fds(node);
 	waitpid(id, &status, 0);
 	set_signals_prompt();
+	print_sigquit_if_needed(status, shell);
 	shell->exit_status = child_exit_status(status);
 	return (shell->exit_status);
+}
+
+int	handle_builtin(int idx, t_tree *node, t_minishell *shell)
+{
+	if (temp_redir(&shell->builtin_temp_stdin,
+			&shell->builtin_temp_stdout) == -1)
+		return (shell->exit_status = 1);
+	track_fd(shell, &shell->builtin_temp_stdin);
+	track_fd(shell, &shell->builtin_temp_stdout);
+	if (handle_redirections(node) == -1)
+	{
+		restore_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout);
+		return (shell->exit_status = 1);
+	}
+	shell->exit_status = call_builtin(idx, node->data.cmd.args, shell);
+	if (restore_redir(&shell->builtin_temp_stdin,
+			&shell->builtin_temp_stdout) == -1)
+		shell->exit_status = 1;
+	return (shell->exit_status);
+}
+
+static int	handle_redir_only_cmd(t_tree *node, t_minishell *shell)
+{
+	if (temp_redir(&shell->builtin_temp_stdin,
+			&shell->builtin_temp_stdout) == -1)
+		return (shell->exit_status = 1);
+	if (handle_redirections(node) == -1)
+	{
+		restore_redir(&shell->builtin_temp_stdin, &shell->builtin_temp_stdout);
+		return (shell->exit_status = 1);
+	}
+	if (restore_redir(&shell->builtin_temp_stdin,
+			&shell->builtin_temp_stdout) == -1)
+		return (shell->exit_status = 1);
+	return (shell->exit_status = 0);
 }
 
 int	exec_cmd(t_tree *node, t_minishell *shell)
 {
 	int	idx;
-	int	temp_stdin;
-	int	temp_stdout;
 
-	idx = -1;
+	expander(node, shell);
+	if (!node->data.cmd.args)
+		return (handle_redir_only_cmd(node, shell));
 	if (node->data.cmd.args)
 	{
+		update_underscore_var(node, shell);
 		idx = is_builtin(node->data.cmd.args[0]);
 		if (idx >= 0)
-		{
-			temp_stdin = dup(STDIN_FILENO);
-			temp_stdout = dup(STDOUT_FILENO);
-			if (temp_stdin == -1 || temp_stdout == -1)
-				return (temp_dup_error(temp_stdin, temp_stdout, shell));
-			if (handle_redirections(node) == -1)
-				return (redirection_failure(temp_stdin, temp_stdout, shell));
-			shell->exit_status = call_builtin(idx, node->data.cmd.args, shell);
-			if (dup2(temp_stdin, STDIN_FILENO) == -1
-				|| dup2(temp_stdout, STDOUT_FILENO) == -1)
-			{
-				perror("minishell: dup2");
-				shell->exit_status = 1;
-			}
-			close(temp_stdin);
-			close(temp_stdout);
-			return (shell->exit_status);
-		}
+			return (handle_builtin(idx, node, shell));
 	}
-	return (run_cmd(shell, node));
+	return (handle_external_cmd(shell, node));
 }

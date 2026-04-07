@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 22:30:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 03:41:46 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/03/27 23:46:00 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,14 @@ static void	print_export_entry(char *entry)
 	}
 	ft_putstr_fd("=\"", 1);
 	i++;
-	ft_putstr_fd(entry + i, 1);
+	while (entry[i])
+	{
+		if (entry[i] == '"')
+			ft_putstr_fd("\\\"", 1);
+		else
+			ft_putchar_fd(entry[i], 1);
+		i++;
+	}
 	ft_putstr_fd("\"\n", 1);
 }
 
@@ -97,7 +104,8 @@ int	print_sorted_env(t_minishell *shell)
 	i = 0;
 	while (i < count)
 	{
-		print_export_entry(shell->env[idx[i]]);
+		if (ft_strncmp(shell->env[idx[i]], "_=", 2) != 0)
+			print_export_entry(shell->env[idx[i]]);
 		i++;
 	}
 	free(idx);

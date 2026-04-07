@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 08:45:04 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/04 12:00:14 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,26 +33,15 @@ static t_redir_data	*build_redir(t_list **cur, t_token *rtok, int *err)
 	redir->heredoc_expand = 0;
 	redir->heredoc_fd = -1;
 	if (redir->mode == DIR_IN_HEREDOC && !ft_strchr(redir->filename, '\'')
-			&& !ft_strchr(redir->filename, '"'))
+		&& !ft_strchr(redir->filename, '"'))
 		redir->heredoc_expand = 1;
 	return (redir);
 }
 
-int	parse_redir(t_list **cur, t_list **redirs, int *err)
+static int	append_redir(t_list **redirs, t_redir_data *redir, int *err)
 {
-	t_redir_data	*redir;
-	t_token			*redir_tok;
-	t_list			*node;
+	t_list	*node;
 
-	redir_tok = advance(cur);
-	if (cur_type(cur) != WORD)
-	{
-		syntax_error(*cur, err);
-		return (1);
-	}
-	redir = build_redir(cur, redir_tok, err);
-	if (!redir)
-		return (1);
 	node = ft_lstnew(redir);
 	if (!node)
 	{
@@ -62,6 +51,28 @@ int	parse_redir(t_list **cur, t_list **redirs, int *err)
 		return (1);
 	}
 	ft_lstadd_back(redirs, node);
+	return (0);
+}
+
+int	parse_redir(t_list **cur, t_list **redirs, int *err)
+{
+	t_redir_data	*redir;
+	t_token			*redir_tok;
+
+	redir_tok = advance(cur);
+	if (cur_type(cur) != WORD)
+	{
+		if (!*cur)
+			*err = -1;
+		else
+			syntax_error(*cur, err);
+		return (0);
+	}
+	redir = build_redir(cur, redir_tok, err);
+	if (!redir)
+		return (1);
+	if (append_redir(redirs, redir, err))
+		return (1);
 	advance(cur);
 	return (0);
 }
@@ -73,7 +84,7 @@ t_tree	*parse_subshell(t_list **cur, int *err)
 
 	advance(cur);
 	child = parse_logic_expr(cur, err);
-	if (*err)
+	if (*err && *err > 0)
 		return (NULL);
 	if (cur_type(cur) != CLOSE_PAREN)
 	{
@@ -85,7 +96,7 @@ t_tree	*parse_subshell(t_list **cur, int *err)
 	redirs = NULL;
 	while (!*err && cur_type(cur) == REDIRECT)
 		parse_redir(cur, &redirs, err);
-	if (*err)
+	if (*err > 0)
 	{
 		free_tree(child);
 		ft_lstclear(&redirs, free_redir);

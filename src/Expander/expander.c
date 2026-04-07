@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:28:27 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:28:49 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ static void	expand_node(t_tree *node, t_minishell *shell)
 {
 	int	i;
 	int	count;
+	int	prev_len;
+	int	added;
 
 	i = 0;
 	count = 0;
@@ -47,32 +49,26 @@ static void	expand_node(t_tree *node, t_minishell *shell)
 		count++;
 	while (i < count)
 	{
-		expand_one_arg(node->data.cmd.args, i, shell);
-		i++;
+		prev_len = calc_len_args(node->data.cmd.args);
+		node->data.cmd.args = expand_one_arg(node->data.cmd.args, i, shell);
+		if (!node->data.cmd.args)
+			return ;
+		added = calc_len_args(node->data.cmd.args) - prev_len;
+		count += added;
+		i += 1 + added;
 	}
+	while (node->data.cmd.args[count])
+		count++;
 	strip_empty_args(node, count);
 	expand_redirs(node->data.cmd.redirections, shell);
-}
-
-static void	expand_traversal(t_tree *tree, t_minishell *shell)
-{
-	if (tree->type == NODE_CMD)
-		expand_node(tree, shell);
-	else if (tree->type == NODE_SUBSHELL)
-	{
-		expand_redirs(tree->data.subshell.redirections, shell);
-		expand_traversal(tree->data.subshell.child, shell);
-	}
-	else
-	{
-		expand_traversal(tree->data.oper.left, shell);
-		expand_traversal(tree->data.oper.right, shell);
-	}
 }
 
 void	expander(t_tree *tree, t_minishell *shell)
 {
 	if (!tree)
 		return ;
-	expand_traversal(tree, shell);
+	if (tree->type == NODE_CMD)
+		expand_node(tree, shell);
+	else if (tree->type == NODE_SUBSHELL)
+		expand_redirs(tree->data.subshell.redirections, shell);
 }

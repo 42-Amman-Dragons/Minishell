@@ -6,13 +6,13 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 16:26:38 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/17 05:29:40 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/05 10:54:50 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_dir_mode	identify_redirection_mode(char *str, int *i)
+static t_dir_mode	handle_double_ops(char *str, int *i)
 {
 	if (ft_strncmp("<<", str, 2) == 0)
 	{
@@ -24,7 +24,12 @@ t_dir_mode	identify_redirection_mode(char *str, int *i)
 		(*i) += 2;
 		return (DIR_OUT_APPEND);
 	}
-	else if (ft_strncmp("<", str, 1) == 0)
+	return (NOT_FOUND);
+}
+
+static t_dir_mode	handle_single_ops(char *str, int *i)
+{
+	if (ft_strncmp("<", str, 1) == 0)
 	{
 		(*i)++;
 		return (DIR_IN_FILE);
@@ -35,6 +40,16 @@ t_dir_mode	identify_redirection_mode(char *str, int *i)
 		return (DIR_OUT_TRUNC);
 	}
 	return (DIR_IN_FILE);
+}
+
+t_dir_mode	identify_redirection_mode(char *str, int *i)
+{
+	t_dir_mode	mode;
+
+	mode = handle_double_ops(str, i);
+	if (mode != NOT_FOUND)
+		return (mode);
+	return (handle_single_ops(str, i));
 }
 
 t_token	*create_redirect_token(char *str, int *i)

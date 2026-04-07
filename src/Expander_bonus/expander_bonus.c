@@ -6,11 +6,18 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 17:28:04 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:29:37 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
+
+static int	try_wild_redirect(char **expanded, t_redir_data *rd)
+{
+	if (!ft_strchr(*expanded, '*'))
+		return (0);
+	return (handle_wild_redirect(expanded, rd) == 1);
+}
 
 static void	expand_redirs(t_list *redirs, t_minishell *shell)
 {
@@ -26,12 +33,8 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 					shell->exit_status);
 			if (expanded)
 			{
-				// @TODO: redirection errors.
-				// This bug needs fixing, it should be similar to the mandatory
-				// The error message for "" is different from $NONEXISTENT_VAR, the first should be "ambiguous redirect" and the second should be "No such file or directory" 
-				if (expanded[0] == '\0')
+				if (try_wild_redirect(&expanded, rd))
 				{
-					free(expanded);
 					redirs = redirs->next;
 					continue ;
 				}
@@ -72,25 +75,12 @@ static void	expand_node(t_tree *node, t_minishell *shell)
 	expand_redirs(node->data.cmd.redirections, shell);
 }
 
-static void	expand_traversal(t_tree *tree, t_minishell *shell)
-{
-	if (tree->type == NODE_CMD)
-		expand_node(tree, shell);
-	else if (tree->type == NODE_SUBSHELL)
-	{
-		expand_redirs(tree->data.subshell.redirections, shell);
-		expand_traversal(tree->data.subshell.child, shell);
-	}
-	else
-	{
-		expand_traversal(tree->data.oper.left, shell);
-		expand_traversal(tree->data.oper.right, shell);
-	}
-}
-
 void	expander(t_tree *tree, t_minishell *shell)
 {
 	if (!tree)
 		return ;
-	expand_traversal(tree, shell);
+	if (tree->type == NODE_CMD)
+		expand_node(tree, shell);
+	else if (tree->type == NODE_SUBSHELL)
+		expand_redirs(tree->data.subshell.redirections, shell);
 }

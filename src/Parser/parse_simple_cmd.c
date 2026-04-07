@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/23 16:23:00 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:26:41 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,6 @@ static int	add_word(t_list **words, t_list **cur, int *err)
 	return (0);
 }
 
-/* frees only the t_list nodes, NOT the char* content.
-** used after list_to_args() succeeds: strings are transferred
-** into args[] by pointer, so ft_lstclear(&words, free) would
-** double-free them when free_args(args) is called later. */
 static void	free_words_list(t_list *words)
 {
 	t_list	*tmp;
@@ -82,7 +78,7 @@ static int	collect_tokens(t_list **cur, t_list **words, t_list **redirs,
 			add_word(words, cur, err);
 		else
 			parse_redir(cur, redirs, err);
-		if (*err)
+		if (*err && *err > 0)
 		{
 			ft_lstclear(words, free);
 			ft_lstclear(redirs, free_redir);

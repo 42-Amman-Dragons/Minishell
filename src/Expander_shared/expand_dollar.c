@@ -1,48 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_utils_bonus.c                               :+:      :+:    :+:   */
+/*   expand_dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/24 00:00:00 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/04/05 02:39:59 by mabuqare          #+#    #+#             */
+/*   Updated: 2026/04/07 17:28:55 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
-
-char	*append_char(char *result, char c)
-{
-	char	tmp[2];
-	char	*joined;
-
-	tmp[0] = c;
-	tmp[1] = '\0';
-	if (!result)
-		return (ft_strdup(tmp));
-	joined = ft_strjoin(result, tmp);
-	free(result);
-	if (!joined)
-		return (NULL);
-	return (joined);
-}
-
-char	*append_str(char *result, char *s)
-{
-	char	*joined;
-
-	if (!s)
-		return (result);
-	if (!result)
-		return (s);
-	joined = ft_strjoin(result, s);
-	free(result);
-	free(s);
-	if (!joined)
-		return (NULL);
-	return (joined);
-}
+#include "minishell.h"
 
 static char	*extract_var_name(char *str, int *i)
 {
@@ -70,7 +38,8 @@ char	*expand_dollar(char *word, t_expand *ctx)
 	name = extract_var_name(word, &ctx->i);
 	if (!name || name[0] == '\0')
 	{
-		free(name);
+		if (name)
+			free(name);
 		return (ft_strdup("$"));
 	}
 	value = get_env_value(name, ctx->env);
@@ -78,4 +47,44 @@ char	*expand_dollar(char *word, t_expand *ctx)
 	if (!value)
 		return (ft_strdup(""));
 	return (ft_strdup(value));
+}
+
+static char	*return_val(char *name, char **env, int *i, int j)
+{
+	char	*val;
+
+	val = get_env_value(name, env);
+	free(name);
+	*i = j - 1;
+	if (!val)
+		return (ft_strdup(""));
+	return (ft_strdup(val));
+}
+
+char	*get_unquoted_var_val(char *word, int *i, char **env, int exit_status)
+{
+	int		j;
+	char	*name;
+
+	j = *i + 1;
+	if (!word[j])
+		return (NULL);
+	if (word[j] == '?')
+	{
+		*i = j;
+		return (ft_itoa(exit_status));
+	}
+	if (word[j] == '$')
+	{
+		*i = j;
+		return (NULL);
+	}
+	while (ft_isalnum(word[j]) || word[j] == '_')
+		j++;
+	if (j == *i + 1)
+		return (NULL);
+	name = ft_substr(word, *i + 1, j - *i - 1);
+	if (!name)
+		return (NULL);
+	return (return_val(name, env, i, j));
 }
