@@ -3,10 +3,10 @@
 7. generate_expanded_list_asterisk (bonus) --> `new_args = ft_calloc(args_len + expanded_len + 1, sizeof(char *));` invalid free.
 
 
+1. append_string_to_list  --> `new_list = malloc(sizeof(char *) * (size + 2));`
 
 # Checked
 
-1. append_string_to_list  --> `new_list = malloc(sizeof(char *) * (size + 2));`
 3. handle_normal --> if any of the result fails the programs stops reciving inputs and does not close (maby it enters an infinite loop or deadlock).
 4. process_entry --> `*result = append_string_to_list(result, ft_strdup(cf->d_name));` strdup failer resulted in leaks.
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_asterisk_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/08 09:53:10 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/04/07 09:53:47 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/07 12:24:06 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	**append_string_to_list(char ***list, char *str)
 		new_list[i] = (*list)[i];
 		i++;
 	}
-	new_list[i] = str;
+	new_list[i] = ft_strdup(str);
 	new_list[i + 1] = NULL;
 	free(*list);
 	*list = NULL;

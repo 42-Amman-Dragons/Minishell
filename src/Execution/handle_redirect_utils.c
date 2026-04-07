@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_redirect_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/27 00:00:00 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/04/07 09:39:55 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 12:21:50 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	redir_has_ambiguous_target(t_redir_data *rd)
 {
+	if (!rd)
+		return (1);
 	if (!rd->filename)
 		return (1);
 	if (rd->filename[0] == '\0')
