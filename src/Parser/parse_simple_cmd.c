@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_simple_cmd.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/03/31 11:24:53 by haya             ###   ########.fr       */
+/*   Updated: 2026/04/07 09:51:31 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static void	free_words_list(t_list *words)
 }
 
 static int	collect_tokens(t_list **cur, t_list **words, t_list **redirs,
-		int *err)
+						  int *err)
 {
 	while (cur_type(cur) == WORD || cur_type(cur) == REDIRECT)
 	{

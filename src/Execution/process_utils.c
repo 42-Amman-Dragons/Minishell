@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/01 11:42:48 by haya              #+#    #+#             */
-/*   Updated: 2026/04/05 00:20:32 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/01 11:42:48 by hal-law           #+#    #+#             */
+/*   Updated: 2026/04/07 09:40:06 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

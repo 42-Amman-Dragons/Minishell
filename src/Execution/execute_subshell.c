@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_subshell.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/03 10:07:01 by haya              #+#    #+#             */
-/*   Updated: 2026/04/04 12:07:21 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/03 10:07:01 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/04/07 09:39:30 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_wild_redirect_bonus.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/04 19:30:11 by haya              #+#    #+#             */
-/*   Updated: 2026/04/06 21:54:35 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/04/04 19:30:11 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/04/07 09:40:49 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

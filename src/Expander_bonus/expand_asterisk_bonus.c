@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_asterisk_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/08 09:53:10 by haya              #+#    #+#             */
-/*   Updated: 2026/04/06 22:23:21 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/08 09:53:10 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/04/07 09:53:47 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/01 11:14:26 by haya              #+#    #+#             */
-/*   Updated: 2026/04/05 00:23:49 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/01 11:14:26 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/04/07 09:38:57 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

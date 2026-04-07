@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pipe_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/27 00:00:00 by haya              #+#    #+#             */
-/*   Updated: 2026/04/05 00:27:28 by mabuqare         ###   ########.fr       */
+/*   Created: 2026/03/27 00:00:00 by hal-lawa          #+#    #+#             */
+/*   Updated: 2026/04/07 09:49:01 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	temp_redir(int *temp_stdin, int *temp_stdout)
 int	restore_redir(int *temp_stdin, int *temp_stdout)
 {
 	if (dup2(*temp_stdin, STDIN_FILENO) == -1 || dup2(*temp_stdout,
-			STDOUT_FILENO) == -1)
+													  STDOUT_FILENO) == -1)
 	{
 		perror("minishell: dup2");
 		safe_close(temp_stdin, "close error");
