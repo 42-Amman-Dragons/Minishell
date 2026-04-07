@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   add_to_args_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/30 12:12:34 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/04/07 09:40:26 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 15:20:17 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ char	**handle_qouted_asterisk(char **args, int i, char *expanded)
 	new_args = generate_expanded_list_asterisk(args, i, matched_paths);
 	if (!new_args)
 	{
-		free(expanded);
-		return (free_args_expanded_asterisk(args, matched_paths));
+		if (expanded)
+			free(expanded);
+		return (free_args_expanded_asterisk(&args, &matched_paths));
 	}
 	free(expanded);
 	return (new_args);

@@ -6,7 +6,7 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/06 21:43:41 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:20:08 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,6 @@ int		is_matching(char *pattern, char *file_name);
 int		handle_wild_redirect(char **expanded, t_redir_data *rd);
 char	**generate_expanded_list_asterisk(char **args, int i, char **expanded);
 int		calc_arr_len(char **arr);
-void	*free_args_expanded_asterisk(char **args, char **expanded);
+void	*free_args_expanded_asterisk(char ***args, char ***expanded);
 
 #endif

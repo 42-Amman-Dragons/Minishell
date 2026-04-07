@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/06 23:22:14 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/07 11:44:41 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:40:19 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,10 +171,10 @@ int					parse_redir(t_list **cur, t_list **redirs, int *err);
 t_tokenType			cur_type(t_list **cur);
 t_token				*advance(t_list **cur);
 t_tree				*create_oper_node(t_node_type type, t_tree *l, t_tree *r,
-						 int *err);
+						int *err);
 t_tree				*create_cmd_node(char **args, t_list *redirs, int *err);
 t_tree				*create_subshell_node(t_tree *child, t_list *redirs,
-							 int *err);
+						int *err);
 void				free_tree(t_tree *tree);
 void				free_args(char **args);
 void				free_redir(void *ptr);
@@ -201,7 +201,7 @@ typedef struct s_expand
 void				expander(t_tree *tree, t_minishell *shell);
 char				*expand_word(char *word, char **env, int exit_status);
 char				*expand_word_heredoc(char *word, char **env,
-						  int exit_status);
+						int exit_status);
 char				**expand_one_arg(char **args, int i, t_minishell *shell);
 void				strip_empty_args(t_tree *node, int count);
 int					calc_len_args(char **args);
@@ -211,20 +211,20 @@ char				*append_char(char *result, char c);
 char				*append_str(char *result, char *s);
 int					init_heredocs(t_tree *tree, t_minishell *shell);
 int					setup_heredoc_fd(t_redir_data *rd, t_minishell *shell,
-					 int idx);
+						int idx);
 int					read_heredoc_nointeractive(t_redir_data *rd,
-							   t_minishell *shell, char *tmp);
+						t_minishell *shell, char *tmp);
 void				push_heredoc_line(int fd, char *line, t_redir_data *rd,
-					   t_minishell *shell);
+						t_minishell *shell);
 void				print_eof_warning(char *limiter);
 int					word_has_quotes(char *word);
 void				strip_empty_args(t_tree *node, int count);
 char				**add_to_args(char **args, int i, char *expanded,
-				   int *flags);
+						int *flags);
 char				*get_unquoted_var_val(char *word, int *i, char **env,
-						   int exit_status);
+						int exit_status);
 int					unquoted_dollar_has_space(char *word, char **env,
-							  int exit_status);
+						int exit_status);
 int					calc_arr_len(char **arr);
 /*Tokenizer*/
 t_tokenType			identify_token(char *s);
@@ -262,9 +262,9 @@ int					exec_pipe(t_tree *node, t_minishell *shell);
 int					exec_and_or(t_tree *node, t_minishell *shell);
 int					exec_subshell(t_tree *node, t_minishell *shell);
 void				free_and_exit(t_tree *node, t_minishell *shell,
-				   int exit_code);
+						int exit_code);
 void				handle_cmd_error(char *cmd_name, t_tree *node,
-					  t_minishell *shell);
+						t_minishell *shell);
 void				update_underscore_var(t_tree *node, t_minishell *shell);
 int					redir_has_ambiguous_target(t_redir_data *rd);
 int					pipe_error_and_close(int *temp_std);
@@ -290,7 +290,6 @@ int					redirect_heredoc(t_redir_data *rd);
 
 // Main
 t_minishell			*init_shell(void);
-int					init_terminal(t_minishell *shell);
 int					init_interactive_shell(t_minishell *shell);
 void				parse_and_execute(t_minishell *shell);
 char				*get_prompt(t_minishell *shell);

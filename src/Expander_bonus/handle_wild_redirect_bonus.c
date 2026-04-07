@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_wild_redirect_bonus.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 19:30:11 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/04/07 12:23:14 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:27:27 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	handle_single_match(char **expanded, char **matched_paths)
 static int	handle_ambiguous(char **expanded, t_redir_data *rd,
 		char **matched_paths)
 {
-	if(matched_paths)
+	if (matched_paths)
 		free_args(matched_paths);
 	free(*expanded);
 	free(rd->filename);
@@ -59,7 +59,7 @@ int	handle_wild_redirect(char **expanded, t_redir_data *rd)
 	if (!matched_paths)
 	{
 		restore_astersks(*expanded);
-		if(*expanded)
+		if (*expanded)
 		{
 			free(*expanded);
 			*expanded = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_simple_cmd.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/07 09:51:31 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:26:41 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,6 @@ static int	add_word(t_list **words, t_list **cur, int *err)
 	return (0);
 }
 
-/* frees only the t_list nodes, NOT the char* content.
-** used after list_to_args() succeeds: strings are transferred
-** into args[] by pointer, so ft_lstclear(&words, free) would
-** double-free them when free_args(args) is called later. */
 static void	free_words_list(t_list *words)
 {
 	t_list	*tmp;
@@ -74,7 +70,7 @@ static void	free_words_list(t_list *words)
 }
 
 static int	collect_tokens(t_list **cur, t_list **words, t_list **redirs,
-						  int *err)
+		int *err)
 {
 	while (cur_type(cur) == WORD || cur_type(cur) == REDIRECT)
 	{

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   expand_word.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/07 09:49:52 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:23:58 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void handle_normal(char *word, t_expand *ctx)
+static void	handle_normal(char *word, t_expand *ctx)
 {
 	if (word[ctx->i] == '\'')
 	{

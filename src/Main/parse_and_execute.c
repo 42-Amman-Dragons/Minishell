@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_and_execute.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:20:00 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/04/07 09:31:30 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:39:21 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ void	parse_and_execute(t_minishell *shell)
 	tree = build_tree(shell);
 	if (!tree)
 	{
-		if (!shell->is_interactive && shell->exit_status == 2)
-			exit(cleanup_shell(shell, 2));
+		if (!shell->is_interactive && shell->exit_status != 0)
+			exit(cleanup_shell(shell, shell->exit_status));
 		return ;
 	}
 	shell->current_tree = tree;

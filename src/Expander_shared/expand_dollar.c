@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_dollar.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/05 02:39:59 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/07 09:36:16 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:28:55 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*expand_dollar(char *word, t_expand *ctx)
 	name = extract_var_name(word, &ctx->i);
 	if (!name || name[0] == '\0')
 	{
-		if(name)
+		if (name)
 			free(name);
 		return (ft_strdup("$"));
 	}

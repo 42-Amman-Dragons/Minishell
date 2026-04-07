@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node_free.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/25 01:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/07 12:18:59 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:25:18 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	free_tree(t_tree *tree)
 		return ;
 	if (tree->type == NODE_CMD)
 	{
-		if(tree->data.cmd.args)
+		if (tree->data.cmd.args)
 			free_args(tree->data.cmd.args);
 		ft_lstclear(&tree->data.cmd.redirections, free_redir);
 	}

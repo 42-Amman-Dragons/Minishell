@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generate_expanded_list_asterisk_bonus.c            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 19:37:51 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/04/07 09:34:44 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:27:03 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,24 +57,32 @@ static void	fill_expanded_args_asterisk(char **new_args, char **args, int i,
 	}
 }
 
-void	*free_args_expanded_asterisk(char **args, char **expanded)
+void	*free_args_expanded_asterisk(char ***args, char ***expanded)
 {
-	free_args(args);
-	free_args(expanded);
+	if (*args)
+	{
+		free_args(*args);
+		*args = NULL;
+	}
+	if (*expanded)
+	{
+		free_args(*expanded);
+		*expanded = NULL;
+	}
 	return (NULL);
 }
 
 char	**generate_expanded_list_asterisk(char **args, int i, char **expanded)
 {
+	char	**new_args;
 	int		args_len;
 	int		expanded_len;
-	char	**new_args;
 
 	args_len = calc_len_args(args);
 	expanded_len = calc_len_args(expanded);
 	new_args = ft_calloc(args_len + expanded_len + 1, sizeof(char *));
 	if (!new_args)
-		return (free_args_expanded_asterisk(args, expanded));
+		return (NULL);
 	fill_expanded_args_asterisk(new_args, args, i, expanded);
 	free(args);
 	return (new_args);

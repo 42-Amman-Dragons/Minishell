@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   initializers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:30:32 by hal-law           #+#    #+#             */
-/*   Updated: 2026/04/07 09:36:38 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:40:14 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,6 @@ void	init_prompt(t_minishell *shell)
 {
 	print_welcome_message();
 	shell->prompt = get_prompt(shell);
-}
-
-int	init_terminal(t_minishell *shell)
-{
-	if (!shell->is_interactive)
-		return (0);
-	return (0);
 }
 
 t_minishell	*init_shell(void)
@@ -41,8 +34,6 @@ t_minishell	*init_shell(void)
 
 int	init_interactive_shell(t_minishell *shell)
 {
-	if (init_terminal(shell) != 0)
-		return (-1);
 	set_signals_prompt();
 	if (load_history(shell) != 0)
 		return (-1);

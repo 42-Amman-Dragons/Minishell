@@ -6,11 +6,18 @@
 /*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 04:00:00 by mabuqare          #+#    #+#             */
-/*   Updated: 2026/04/06 21:43:16 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:29:37 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
+
+static int	try_wild_redirect(char **expanded, t_redir_data *rd)
+{
+	if (!ft_strchr(*expanded, '*'))
+		return (0);
+	return (handle_wild_redirect(expanded, rd) == 1);
+}
 
 static void	expand_redirs(t_list *redirs, t_minishell *shell)
 {
@@ -26,13 +33,10 @@ static void	expand_redirs(t_list *redirs, t_minishell *shell)
 					shell->exit_status);
 			if (expanded)
 			{
-				if (ft_strchr(expanded, '*'))
+				if (try_wild_redirect(&expanded, rd))
 				{
-					if (handle_wild_redirect(&expanded, rd) == 1)
-					{
-						redirs = redirs->next;
-						continue ;
-					}
+					redirs = redirs->next;
+					continue ;
 				}
 				free(rd->filename);
 				rd->filename = expanded;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   non_interactive.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabuqare <mabuqare@student.42amman.com>    +#+  +:+       +#+        */
+/*   By: mabuqare  <mabuqare@student.42amman.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/04 00:00:00 by hal-lawa          #+#    #+#             */
-/*   Updated: 2026/04/07 09:41:15 by mabuqare         ###   ########.fr       */
+/*   Updated: 2026/04/07 17:24:38 by mabuqare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,10 @@ static void	join_next_line(t_minishell *shell)
 	}
 }
 
-// ft_putendl_fd("minishell$ ", STDOUT_FILENO);
-/* fixed prompt for tester */
 int	process_line_non_interactive(t_minishell *shell)
 {
 	size_t	len;
 
-	// ft_putendl_fd("minishell$ ", STDOUT_FILENO);
 	shell->line = get_next_line(STDIN_FILENO);
 	if (!shell->line)
 		return (1);
