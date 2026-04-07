@@ -13,7 +13,7 @@ The pipeline follows these stages:
 - **Expansion**: expands environment variables, handles quoting rules, and performs glob expansion (bonus).
 - **Execution**: traverses the AST, applies redirections, and executes commands accordingly.
 
-## Building
+## Instructions
 
 Clone the repository:
 ```
@@ -31,7 +31,7 @@ Build the bonus part (includes wildcards, `&&`, `||`, and subshells):
 make bonus
 ```
 
-## Usage
+### Usage
 
 Interactive mode:
 ```

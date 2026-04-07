@@ -1,13 +1,10 @@
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I./include -I./libft
-DEBUG_FLAG = -g3 -g
 LDFLAGS = -lreadline -lhistory
 
 SRC_DIR = src
 OBJ_DIR = obj
-
-SRC =
 
 SIGNALS_DIR = Signals
 SIGNALS_SRC = signals.c signal_status.c set_signal.c
@@ -99,14 +96,6 @@ bonus: .bonus
 	$(CC) $(CFLAGS) $(BONUS_OBJ) -L. $(LIBFT)  $(LDFLAGS) -o $(NAME)
 	@touch .bonus
 
-debug: CFLAGS += $(DEBUG_FLAG)
-debug: re
-
-debug_bonus: CFLAGS += $(DEBUG_FLAG)
-debug_bonus: re
-	rm .bonus
-debug_bonus: bonus
-
 $(LIBFT): $(LIBFT_OBJ)
 	make bonus -C $(LIBFT_DIR)
 
@@ -167,13 +156,3 @@ fclean: clean
 	make fclean -C $(LIBFT_DIR)
 
 re: fclean all
-
-
-leaks_bonus: debug_bonus
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
-		--suppressions=readline.supp ./$(NAME)
-
-leaks: debug
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
-		--suppressions=readline.supp ./$(NAME)
-
